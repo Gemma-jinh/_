@@ -1,0 +1,727 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+  회원가입 & 로그인
+   ========================================================================== */
+
+.member-container--fc {
+	@include xl-min {
+		padding-top: 20px;
+	}
+}
+.member-wrap--fc {
+  padding: 0;
+  width: 100%;
+  font-size: 0.75rem;
+//  line-height: 1; 
+  color: #414141;
+	margin-bottom: 6.25rem;
+
+  .member-title--fc {
+    padding-bottom: 1.25rem;
+    font-weight: normal;
+    font-size: 1.875rem;
+    line-height: 1;
+    color: #303030;
+    text-align: center;
+  }
+
+  a {
+    display: block;
+    font-size: 0.75rem;
+    color: #606060;
+    text-decoration: none;
+
+    &:hover {
+      color: black;
+    }
+  }
+
+  input, select, textarea {
+    font-size: 0.8125rem;
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  input, select {
+    display: inline-block;
+  }
+
+  input {
+    &[type="text"], &[type="password"] {
+      padding: 0 0.4375rem;
+      height: 2.1875rem;
+    }
+  }
+
+  select {
+    padding: 0 0.4375rem;
+    height: 2.1875rem;
+  }
+  
+  select {
+    padding: 0 0 0 10px;
+    min-width: 150px;
+    background: #fff url("/img/common/select-arrow.gif") no-repeat right center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -ms-appearance: none;
+    cursor: pointer;
+
+    &::-ms-expand {
+      display: none;
+    }
+  }
+
+  textarea {
+    padding: 10px;
+    height: 150px;
+    width: 100%;
+    color: #666;
+  }
+
+  input[type="file"] {
+    border: 0 none;
+  }
+
+  .login-form-wrap--fc {
+    position: relative;
+    margin: 0 auto;
+    padding-top: 9.375rem;
+    width: 31.25rem;
+    border-top: 1px solid #e1e1e1;
+    text-align: center;
+
+    &:before {
+      display: inline-block;
+      z-index: 66;
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      width: 64px;
+      height: 89px;
+      margin-left: -32px;
+      background: url("/img/member/icon_lock.png") no-repeat 0 0;
+      background-size: 100% auto;
+      content: '';
+		
+		@include md-max {
+			top: 20px;
+		}
+    }
+
+    .login-input--fc {
+      width: 100%;
+
+      li {
+        margin: 0 0 10px;
+      }
+    }
+
+    input {
+      &[type="text"], &[type="password"] {
+        width: 100%;
+        height: 60px;
+      }
+    }
+
+    .save-id-wrap--fc {
+      float: left;
+      width: 50%;
+      text-align: left;
+    }
+
+    .find-btn-wrap--fc {
+      float: right;
+      width: 50%;
+      text-align: right;
+
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        font-size: 1rem;
+      }
+    }
+
+    .login-btn-wrap--fc {
+      clear: both;
+      padding: 30px 0 0;
+      width: 100%;
+      text-align: center;
+
+      a {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 50px;
+
+        &.btn-login--fc {
+          background: #464646;
+          color: #fff;
+        }
+
+        &.btn-join--fc {
+          background: #d3d3d3;
+          color: #464646;
+        }
+      }
+    }
+  }
+
+  .join-form-wrap--fc {
+    width: 100%;
+
+    legend {
+      padding: 30px 0 10px;
+      font-weight: bold;
+      font-size: 1rem;
+      line-height: 20px;
+      color: #303030;
+
+      span {
+        display: inline-block;
+        margin: 7px 0 0;
+        width: 100%;
+        font-weight: normal;
+        font-size: 13px;
+        line-height: 18px;
+        color: #666;
+      }
+    }
+
+    .box-wrap--fc {
+      overflow-x: hidden;
+      margin-bottom: 15px;
+      padding: 15px 20px;
+      width: 100%;
+      height: 230px;
+      border: 1px solid #bebebe;
+      border-top-color: #303030;
+      white-space: pre-line;
+      font-size: 14px;
+      line-height: 18px;
+      color: #666;
+      text-align: left;
+
+      + .join-agree--fc label strong {
+        color: #f84a4a;
+      }
+    }
+  }
+
+  .form-table--fc {
+    width: 100%;
+    table-layout: fixed;
+    border-top: 2px solid $color-base;
+	border-bottom: 1px solid $td-bor-color;
+
+    tr {
+      border-bottom: 1px solid $td-bor-color;
+
+      &:last-child {
+        border-bottom: 0 none;
+      }
+
+      th {
+        padding: 16px 10px 16px 20px;
+        background: $th-bg;
+        font-weight: bold;
+        font-size: 13px;
+        line-height: 18px;
+        color: $th-color;
+        text-align: left;
+        vertical-align: middle;
+
+        &.required:after {
+          display: inline-block;
+          width: 14px;
+          height: 11px;
+          margin-top: -3px;
+          margin-left: 7px;
+          background: url("/img/common/required.png") no-repeat 0 0;
+          vertical-align: middle;
+          content: '';
+        }
+      }
+
+      td {
+        padding: 7px 13px 8px;
+        font-size: 13px;
+        line-height: 18px;
+        color: $td-color;
+		background-color: $td-bg;
+        vertical-align: middle;
+
+        .info-text--fc {
+          display: inline-block;
+          margin-left: 10px;
+          padding: 5px 0;
+          vertical-align: middle;
+        }
+
+        input, select, span, label {
+			display: inline-block;
+			margin-right: -5px;
+			font-size: inherit;
+        }
+		
+		input[type="checkbox"] + label {
+			line-height: 23px;
+			
+			@include md-max {
+				line-height: 18px;
+			}
+		}
+
+        .check-btn--fc {
+          display: inline-block;
+          margin-right: -5px;
+          margin-right: 0;
+          border: 1px solid #dedede;
+          background: #f3f3f3;
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 33px;
+          vertical-align: middle;
+        }
+      }
+
+      &.join-form-id--fc input {
+        min-width: 250px;
+      }
+
+      &.join-form-password--fc input {
+        min-width: 320px;
+
+        &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder {
+          color: #f84a4a;
+        }
+      }
+
+      &.join-form-tel--fc {
+			input {
+				max-width: 70px;
+				margin-right: 5px;
+				margin-left: 0;
+				padding: 0 0.4375rem;
+				height: 35px;
+				box-sizing: border-box;
+				font-size: 13px;
+				color: #666;
+				vertical-align: middle;
+				margin-top: 0 !important;
+				
+				& ~ input {
+					margin-left: 5px;
+				}
+			}
+		}
+
+      &.join-form-email--fc {
+        input {
+          min-width: 250px;
+        }
+
+        span {
+          display: inline-block;
+          margin-top: 7px;
+          width: 100%;
+        }
+      }
+
+      &.join-form-address--fc input.address--fc {
+        margin-top: 7px;
+        width: 100%;
+      }
+
+      &.join-form-radio--fc p, &.join-form-check--fc p {
+        display: inline-block;
+        margin-right: 30px;
+      }
+
+      &.join-form-birth {
+        select {
+          width: 23%;
+          min-width: auto;
+        }
+
+        input {
+          margin-left: 10px;
+          width: 23%;
+          max-width: 150px;
+
+          &:first-of-type {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .join-result-wrap--fc {
+    .result-title--fc {
+      border-top: 1px solid #e1e1e1;
+      padding: 4.375rem 0 1.875rem;
+      width: 100%;
+      font-weight: 100;
+      font-size: 30px;
+      line-height: 36px;
+      color: #303030;
+      text-align: center;
+    }
+
+    .result-text--fc {
+      width: 100%;
+      font-size: 14px;
+      line-height: 20px;
+      color: #666;
+      text-align: center;
+
+      span {
+        font-weight: bold;
+        color: #303030;
+      }
+    }
+
+    .warning-message--fc {
+      margin: 50px 0 15px;
+      width: 100%;
+      color: #f84a4a;
+      text-align: center;
+    }
+
+    .form-table--fc {
+      margin: 0 auto;
+      width: 65%;
+      margin-bottom: 50px;
+    }
+  }
+
+	.join-btn-wrap--fc {
+		max-width: 440px;
+		margin-top: 2.8125rem;
+		margin-right:auto;
+		margin-left:auto;
+		text-align: center;
+		
+		ul {
+			font-size: 0;
+			
+			li {
+				display: inline-block;
+				vertical-align: top;
+				width: 50%;
+				padding-left: 10px;
+				
+				a {
+					display: block;
+					font-size: 1.25rem;
+					font-weight: 500;
+					color: $member-btn-cancel-color;
+					border: 1px solid $member-btn-cancel-bor-color;
+					background-color: $member-btn-cancel-bg-color;
+					padding: 0.875rem 0.5rem;
+				}
+				
+				&:first-child {
+					padding-right: 10px;
+					padding-left: 0;
+					
+					a {
+						background-color: $member-btn-confirm-bg-color;
+						border-color: $member-btn-confirm-bor-color;
+						color: $member-btn-confirm-color;
+					}
+				}
+				
+				
+			}
+		}
+	}
+	.login-btn--sns--fc {
+		margin-top: 2.8125rem;
+		
+		ul {
+			margin-top: 2.8125rem;
+            text-align: left;
+			font-size: 0;
+            margin: 0 -0.4375rem;
+			
+			li {
+				display: inline-block;
+				vertical-align: top;
+				padding: 0 0.4375rem;
+				
+				a {
+					display: block;
+					width: 3.125rem;
+					height: 3.125rem;
+					// border: 1px solid #d3d3d3;
+					// border-radius: 50%;
+					font-size: 0;
+					color: transparent;
+					
+					&.for_kakao {
+						background: #fff url('/img/icon/ico_login_kakao.jpg') no-repeat center/3.125rem;
+					}
+					
+					&.for_naver {
+						background: #fff url('/img/icon/ico_login_naver.jpg') no-repeat center/3.125rem;
+					}
+					
+					&.for_facebook {
+						background: #fff url('/img/icon/ico_login_facebook.jpg') no-repeat center/3.125rem;
+					}
+					
+					&.for_google {
+						background: #fff url('/img/icon/ico_login_google.jpg') no-repeat center/3.125rem;
+					}
+					
+					&.for_twitter {
+						background: #fff url('/img/icon/ico_login_twitter.png') no-repeat center/1.5rem;
+					}
+				}
+			}
+		}
+	}
+	.hr_txt {
+		overflow: hidden;
+		
+		span {
+			position: relative;
+			display: inline-block;
+			font-size: 1rem;
+			font-weight: 500;
+			color: #444;
+			
+			&:before {
+				content: "";
+				position: absolute;
+				top: 50%;
+				right: 100%;
+				width: 50%;
+				height: 1px;
+				border-top: 1px dashed #d7d7d7;
+				margin-right: 1.875rem;
+			}
+			
+			&:after {
+				content: "";
+				position: absolute;
+				top: 50%;
+				left: 100%;
+				width: 50%;
+				height: 1px;
+				border-top: 1px dashed #d7d7d7;
+				margin-left: 1.875rem;
+			}
+		}
+	}
+	.member-wrap .join-form-wrap .box-wrap {
+		border-top-color: #bebebe;
+	}
+	.member-wrap p label {
+		height: auto;
+		line-height: 1.5;
+		font-size: 1rem;
+	}
+	.member-wrap .join-result-wrap .result-title {
+		border-top: 0;
+	}
+
+	@media (min-width: 1201px) {
+		.join-btn-wrap--fc ul li a:hover {
+			background-color: $member-btn-cancel-bg-color-hover;
+			border-color: $member-btn-cancel-bor-color-hover;
+			color: $member-btn-cancel-color-hover;
+		}
+		.join-btn-wrap--fc ul li:first-child a:hover {
+			background-color: $member-btn-confirm-bg-color-hover;
+			border-color: $member-btn-confirm-bor-color-hover;
+			color: $member-btn-confirm-color-hover;
+		}
+	}
+}
+
+@include md-min {
+  .member-wrap--fc .form-table--fc tr td .check-btn--fc {
+    margin-left: 10px;
+    padding: 0 15px;
+  }
+  
+  .member-wrap--fc .form-table--fc tr.join-form-check--fc p {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  
+  .member-wrap--fc .form-table--fc tr.join-form-birth select {
+    max-width: 150px;
+  }
+  
+  .member-wrap--fc .form-table--fc tr.join-form-birth span {
+    margin-left: 7px;
+    margin-right: 7px !important;
+  }
+}
+
+@include md-max {
+  .member-wrap--fc .member-title--fc {
+    font-size: 1.25rem;
+  }
+  
+  .member-wrap--fc textarea {
+    font-size: 13px;
+    line-height: 18px;
+  }
+  
+  .member-wrap--fc .login-form-wrap--fc {
+    width: 100%;
+  }
+  
+  .member-wrap--fc .join-form-wrap--fc legend {
+    padding: 20px 0 10px;
+    font-size: 14px;
+  }
+  
+  .member-wrap--fc .join-form-wrap--fc .box-wrap--fc {
+    height: 150px;
+    padding: 15px;
+    font-size: 12px;
+    line-height: 17px;
+  }
+  
+  .member-wrap--fc .form-table--fc colgroup {
+    display: none;
+  }
+  
+  .member-wrap--fc .form-table--fc tr th {
+    display: block;
+    width: 100%;
+    background: none;
+    padding: 16px 0 16px 15px;
+	padding-bottom: 0;
+  }
+  
+  .member-wrap--fc .form-table--fc tr th.required:after {
+//    background-size: 100% auto; 
+    margin-left: 3px;
+    width: 10px;
+    height: 8px;
+  }
+	
+	.member-wrap--fc .form-table--fc tr td {
+		display: block;
+    	width: 100%;
+	}
+  
+  .member-wrap--fc .form-table--fc tr td .info-text--fc {
+    margin-top: 7px;
+    margin-left: 0;
+    width: 100%;
+    padding: 0;
+  }
+  
+  .member-wrap--fc .form-table--fc tr td .check-btn--fc {
+    float: right;
+    width: 38%;
+    font-size: 12px;
+    text-align: center;
+  }
+  
+	.member-wrap--fc .form-table--fc tr td input[type="text"],
+	.member-wrap--fc .form-table--fc tr td input[type="password"],
+	.member-wrap--fc .form-table--fc tr td input[type="tel"],
+	.member-wrap--fc .form-table--fc tr td input[type="number"] {
+		height: 35px;
+	}
+	
+  .member-wrap--fc .form-table--fc tr.join-form-id--fc input {
+    min-width: 0;
+    width: 60%;
+  }
+  
+  .member-wrap--fc .form-table--fc tr.join-form-password--fc input {
+    min-width: 0;
+    width: 100%;
+  }
+	.member-wrap--fc .form-table--fc tr.join-form-name--fc input + input {
+		margin-top: 5px;
+	}
+  
+  .member-wrap--fc .form-table--fc tr.join-form-email--fc input {
+    width: 60%;
+    min-width: 0;
+  }
+  
+  .member-wrap--fc .form-table--fc tr.join-form-email--fc select {
+    width: 100%;
+    margin-top: 7px;
+  }
+  
+  .member-wrap--fc .form-table--fc tr.join-form-address--fc .post--fc {
+    width: 60%;
+  }
+  
+  .member-wrap--fc .form-table--fc tr {
+    &.join-form-radio--fc p, &.join-form-check--fc p {
+      margin-top: 7px;
+      margin-right: 0;
+      width: 100%;
+    }
+
+    &.join-form-radio--fc p:first-child, &.join-form-check--fc p:first-child {
+      margin-top: 0;
+    }
+  }
+  
+  .member-wrap--fc .form-table--fc tr.join-form-birth span {
+    width: 10.33333333333333%;
+    text-align: center;
+  }
+  
+  .member-wrap--fc .join-result-wrap--fc .result-title--fc {
+    padding: 3.125rem 0 0.9375rem;
+    font-size: 26px;
+    line-height: 30px;
+  }
+  
+  .member-wrap--fc .join-result-wrap--fc .warning-message--fc {
+    margin: 30px 0 15px;
+  }
+  
+  .member-wrap--fc .join-result-wrap--fc .form-table--fc {
+    margin: 0 0 10px;
+    width: 100%;
+  }
+  
+  .join-form-select--fc select, .join-form-name--fc input {
+    width: 100%;
+  }
+}
+
+/* 회원탈퇴 */
+.btn-withdrawal--fc {
+	display: block;
+    margin-top: 1rem;
+    text-align: right;
+}
+.member-wrap--fc .btn-withdrawal--fc a {
+	display: inline-block;
+    font-size: 0.875rem;
+    padding: .5rem 1rem;
+    background-color: $member-btn-withdrawal-bg-color;
+    color: $member-btn-withdrawal-color;
+    border: 1px solid $member-btn-withdrawal-bor-color;
+	
+	@include xl-min {
+		&:hover {
+			background-color: $member-btn-withdrawal-bg-color-hover;
+			border-color: $member-btn-withdrawal-bor-color-hover;
+			color: $member-btn-withdrawal-color-hover;
+		}
+	}
+}

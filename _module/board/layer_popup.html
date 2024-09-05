@@ -1,0 +1,41 @@
+<!-- Popup itself -->
+<div id="g-popup" class="white-popup mfp-with-anim mfp-hide">
+    <div class="layer_popups">
+        <div class="showroom-wrap">
+            <div class="showroom-box">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="layer" style="z-index:1000;">
+	<div class="bg"></div>
+	<div class="pop-layer" id="layer">
+		<div class="pop-container">
+			<div class="pop-conts">
+                <form name="form" method="post" action="/index.php?tpf=_module/board/process" onsubmit="return false;">
+                <input type="hidden" name="url" value="{{URL}}">
+                <input type="hidden" name="mode" value="view">
+                <input type="hidden" name="board_code">
+                <input type="hidden" name="board_data_code">
+                    <p class="board-password-txt">
+                        <strong><?=_LANG('먼저 비밀번호를 입력하여 주세요.')?></strong><br />
+                    </p>
+                    <p class="board-password-input"><label for="board-password"><?=_LANG('비밀번호')?></label><input type="password" name="password" /></p>
+                    <p class="board-password-btn" style="text-align:center;">
+                    <a href="#" class="board-password-btn-list"><?=_LANG('창닫기')?></a><a href="#none" onclick="register();" class="board-password-btn-ok"><?=_LANG('확인')?></a>
+                    </p>
+                </form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+function onclickView(board_code, board_data_code) {
+    $('[name="board_code"]').val(board_code);
+    $('[name="board_data_code"]').val(board_data_code);
+    layer_open('layer');
+    return false;
+}
+</script>

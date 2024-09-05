@@ -1,0 +1,311 @@
+<section class="content-header">
+    <h1>
+    폼 문항 관리
+    <small>research detail</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">폼 문항 관리</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <div align="center"><h2><?=$title?></h2></div>
+                    <label style="margin-top:5px;">총 <?=$data['total']?> 문항</label>
+                    <table class="table table-bordered table-hover">
+                    <form name="form_list" method="post" action="?tpf=admin/form/process">
+		            <input type="hidden" name="mode" id="mode">
+                    <thead>
+                    <tr>
+                        <td style="width:30px;"><input type="checkbox" name="select_all" onclick=selectAllCheckBox('form_list'); /></td>
+                        <td style="width:80px; color:red;"><b>문항 번호</b></td>
+                        <td>문항명</td>
+                        <td style="width:140px;">입력 종류</td>
+                        <td style="width:100px;">필수항목</td>
+                        <td style="width:200px;">입력 예시</td>
+                        <td style="width:140px;">입력값 체크</td>
+                        <td style="width:100px;">리스트 표출</td>
+                        <td style="width:60px;">
+                        <i onclick="<?=$onclick_change_down?>" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer;"></i>
+                        <i onclick="<?=$onclick_change_up?>" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer;"></i>
+                        </td>
+                        <td style="width:80px;">명령</td>
+                    </tr>
+                    </thead>
+<?php
+if (!empty($data['list'])) {
+    foreach($data['list'] as $key => $val) {
+        $arrInputExample = explode("\n",$val['input_example']);
+        echo '      <tr>
+                        <td><input type="checkbox" name="list[]" value="'.$val['code'].'" /></td>
+                        <td>'.$val['code'].'</td>
+                        <td align="left">'.$val['label'].'</td>
+                        <td>'.@$arrFormInputType[$val['input_type']].'</td>
+                        <td>'; if($val['is_require'] == 'y') echo '<i class="fa fa-check"></i>'; echo '</td>
+                        <td align="left">';
+                        if (($val['input_type'] == 'select' or $val['input_type'] == 'radio' or $val['input_type'] == 'checkbox' or $val['input_type'] == 'survey') and $arrInputExample[0] != '') {    // 콤보박스,라디오,체크박스일때만 표출
+                            foreach($arrInputExample as $key2 => $val2) {
+                                echo '<li style="margin-left:10px;">'.$val2;
+                            }
+                        }
+                        echo '</td>
+                        <td>'.@$arrFormCheckType[$val['check_type']].'</td>
+                        <td>'; if($val['is_show'] == 'y') echo '<i class="fa fa-check"></i>'; echo '</td>
+                        <td><input type="radio" name="order_code" value="'.$val['order_code'].'"'; if($val['order_code'] == $order_code) { echo ' checked';} echo' /></td>
+                        <td><button type="button" onclick="onclickUpdate('.$val['code'].');" class="btn btn-primary btn-xs">상세보기</button></td>
+                    </tr>';
+    }
+}
+else {
+        echo '      <tr><td colspan="10"><br>등록된 자료가 없습니다.<br><br></td></tr>';
+}
+?>
+                    </form>
+                    </table>
+                    <br>
+
+                    <span style="float:left;">
+                    <button type="button" onclick="selectDelete('deleteItem');" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택 삭제</button>
+                    <button type="button" onclick="onclickInsert()" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 문항 등록</button>
+                    </span>
+                    <span style="float:right;">
+					<button type="button" onclick="javascript:onclickHtmlDesign('list','<?=$form_code?>')" class="btn btn-primary btn-sm"><i class="fa fa-list"></i> 폼 HTML 디자인 - 리스트</button>
+					<button type="button" onclick="javascript:onclickHtmlDesign('view','<?=$form_code?>')" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> 폼 HTML 디자인 - 상세보기</button>
+					<button type="button" onclick="javascript:onclickHtmlDesign('write','<?=$form_code?>')" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> 폼 HTML 디자인 - 쓰기</button>
+                    <button type="button" onclick="javascript:history.back();" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 폼 관리 바로 가기</button>
+                    </span>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 600px;">
+        <div class="modal-content">
+            <form name="form_register" method="post" action="?tpf=admin/form/process">
+            <input type="hidden" name="mode" id="mode">
+            <input type="hidden" name="form_code" value="<?=$form_code?>">
+            <input type="hidden" name="code">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">폼 문항 관리</h4>
+            </div>
+            <div class="modal-body">
+
+            <div class="row" style="margin:0">
+                <div class="col-xs-4">
+                <span style="float:left;"><h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 문항 정보</p></h4></span>
+                </div>
+
+                <div class="col-xs-8" style="padding:0">
+
+                </div>
+            </div>
+
+            <table class="table table-bordered">
+            <tr>
+                <td class="menu">문항명</td>
+                <td align="left"><input type="text" name="label" class="form-control input-sm" /></textarea></td>
+            </tr>
+            <tr>
+                <td class="menu">입력 종류</td>
+                <td align="left">
+                <span style="float:left">
+                <select name="input_type" OnChange="if(this.value) checkInputType(this.value)" class="form-control input-sm" style="width:150px;">
+<?php
+foreach($arrFormInputType as $key => $val) {
+    echo '      <option value="'.$key.'">'.$val.'</option>';
+}
+?>
+                </select>
+                </span>
+                <span style="padding-left:10px; float:left">
+                <input type="checkbox" name="is_require" value="y" /> 필수항목 (※ 입력여부 체크)
+                </span>
+                </td>
+            </tr>
+            <tr id="displayPlaceholder">
+                <td class="menu">placeholder</td>
+                <td align="left"><input type="text" name="placeholder" class="form-control input-sm">※ 디폴트 표출 문구</td>
+            </tr>
+			<tr id="displayHtmlId">
+                <td class="menu">HTML ID</td>
+                <td align="left"><input type="text" name="html_id" class="form-control input-sm" />※ 라디오, 체크박스, 날짜, 파일 에서는 ID 사용 불가</td>
+            </tr>
+			<tr id="displayHtmlClass">
+                <td class="menu">HTML CLASS</td>
+                <td align="left"><input type="text" name="html_class" class="form-control input-sm" /></td>
+            </tr>
+            <tr id="displayInputExample" style="display:none;">
+                <td class="menu">입력 예시</td>
+                <td align="left">
+                <textarea name="input_example" rows="5" style="width:100%;" class="form-control input-sm" placeholder="매우 좋음
+좋음
+나쁨
+아주 나쁨"></textarea>
+                ※ radio, checkbox 의 경우 선택 항목
+                </td>
+            </tr>
+            <tr>
+                <td class="menu">입력값 체크</td>
+                <td align="left">
+                <select name="check_type" class="form-control input-sm" style="width:150px;">
+                <option value="">선택하기</option>
+<?php
+foreach($arrFormCheckType as $key => $val) {
+    echo '      <option value="'.$key.'">'.$val.'</option>';
+}
+?>
+                </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="menu">리스트</td>
+                <td align="left">
+                <input type="checkbox" name="is_show" value="y"> 표출
+                </td>
+            </tr>
+            </table>
+
+            </div>
+            <div class="modal-footer">
+            <!--<button type="button" onclick="" class="btn btn-danger">삭제</button>-->
+            <button type="button" onclick="register()" class="btn btn-primary">확인/수정</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalContentDesign" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:90%">
+        <div class="modal-content">
+            <form name="form_html_design" method="post" action="?tpf=admin/form/process">
+            <input type="hidden" name="mode" id="mode" value="updateHtmlDesign">
+            <input type="hidden" name="form_code" value="<?=$form_code?>">
+            <input type="hidden" name="design_type">
+            <input type="hidden" name="code">
+            <input type="hidden" name="html_design_list" value='<?=$html_design_list?>'>
+            <input type="hidden" name="html_design_view" value='<?=$html_design_view?>'>
+            <input type="hidden" name="html_design_write" value='<?=$html_design_write?>'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">폼 HTML 디자인 관리</h4>
+            </div>
+            <div class="modal-body">
+
+				<table class="table table-bordered">
+					<colgroup>
+						<col width="*" />
+						<col width="25%" />
+					</colgroup>
+					<tr>
+						<td class="menu">
+                        폼 HTML 디자인 - <span id="design_type_txt"></span>
+                        <span style="float:right">
+                        <button type="button" onclick="setTableForm()" class="btn btn-warning btn-xs"><i class="fa fa-list"></i> 디폴트 폼</button>
+                        </td>
+						<td class="menu">문항 목록</td>
+					</tr>
+					<tr>
+						<td align="left" style="padding:0">
+							<textarea name="html_design" id="content-editor" onfocus="javascript:this.value=''" rows="10" cols="80"><?=@$html_design?></textarea>
+						</td>
+						<td align="left">
+<?php
+if (!empty($data['list'])) {
+    echo '
+                        <table class="table table-bordered">
+                        <colgroup>
+                            <col width="*" />
+                            <col width="20%" />
+                            <col width="30%" />
+                        </colgroup>
+                        <tr>
+                            <td class="menu">문항명</td>
+                            <td class="menu">입력 종류</td>
+                            <td class="menu">치환코드</td>
+                        </tr>';
+    foreach($data['list'] as $key => $val) {
+        $is_require_txt = ($val["is_require"] == "y") ? " style=\"color:#ff0000;font-wighth:bode;\" " : "";
+        echo '          <tr>
+                            <td class="left"'.$is_require_txt.'>'.$val['label'].'</td>
+                            <td class="left">'.@$arrFormInputType[$val['input_type']].'</td>
+                            <td class="left">[code:'.$val['code'].']</td>
+                        </tr>';
+    }echo'
+                        <tr>
+                            <td class="left" style="font-wighth:bode;">게시글코드</td>
+                            <td class="left">-</td>
+                            <td class="left">[data_code]</td>
+                        </tr>
+    ';
+    if(!empty($is_captcha) && $is_captcha == "y" ) {
+        echo '          <tr id="displayCaptcha">
+                            <td class="left" style="color:#ff0000;font-wighth:bode;">보안코드</td>
+                            <td class="left">-</td>
+                            <td class="left">[code:captcha]</td>
+                        </tr>';
+    }
+    if(!empty($is_agree) && $is_agree == "y" ) {
+        echo '          <tr id="displayAgree">
+                            <td class="left" style="color:#ff0000;font-wighth:bode;">개인정보수집</td>
+                            <td class="left">-</td>
+                            <td class="left">[code:agree]</td>
+                        </tr>';
+    }
+    if(!empty($is_category) && $is_category == "y") {
+        echo '          <tr id="displayCategory">
+                            <td class="left" style="color:#ff0000;font-wighth:bode;">카테고리</td>
+                            <td class="left">-</td>
+                            <td class="left">[code:category]</td>
+                        </tr>';
+    }
+    echo '
+                        <tr id="displaySearch">
+                            <td class="left" style="font-wighth:bode;">검색폼</td>
+                            <td class="left">-</td>
+                            <td class="left"><button type="button" onclick="addForm(\'search\')" class="btn btn-warning btn-xs"><i class="fa fa-plus"></i> 사용</button></td>
+                        </tr>
+                        <tr id="displayCount">
+                            <td class="left" style="font-wighth:bode;">제품 수</td>
+                            <td class="left">-</td>
+                            <td class="left"><button type="button" onclick="addForm(\'count\')" class="btn btn-warning btn-xs"><i class="fa fa-plus"></i> 사용</button></td>
+                        </tr>
+                        <tr id="displayPage">
+                            <td class="left" style="font-wighth:bode;">페이지</td>
+                            <td class="left">-</td>
+                            <td class="left"><button type="button" onclick="addForm(\'page\')" class="btn btn-warning btn-xs"><i class="fa fa-plus"></i> 사용</button></td>
+                        </tr>
+                        </table>
+                        <span style="color:#ff0000">
+                        ※ &#60;IF[code:1]&#62;&#60;p&#62;[code:1]&#60;/p&#62;&#60;/IF[code:1]&#62; : [code:1]값이 존재 할때만 표출<br>
+                        ※ 붉은색 항목은 필수 항목 입니다.<br>
+                        ※ [no] : 데이타 순번입니다.<br>
+                        ※ [link] : 클릭시 상품 상세페이지로 이동 됩니다.<br>
+                        ※ [onclick] : 클릭시 submit() 합니다.<br>
+                        ※ &lt;for>&lt;/for> : 디폴트 폼기준 리스트 폼에서 필수 없을시 미표출
+                        </span>';
+} else {
+    echo '<span style="text-align:center;">등록된 문항이 없습니다.</span>';
+}
+?>
+						</td>
+					</tr>
+				</table>
+            </div>
+            <div class="modal-footer">
+				<button type="button" onclick="registerHtmlDesign()" class="btn btn-primary">확인/수정</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="//<?=_RESOURCE_URL?>/resource/js/ckeditor4.7.2/ckeditor.js"></script>

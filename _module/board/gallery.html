@@ -1,0 +1,109 @@
+<?=@$board_info['header']?>
+<!-- board-wrap -->
+<section class="board-wrap--fc">
+<?php
+if (!empty($arrCategory)) {
+?>
+<!-- 게시판 네비 -->
+<section class="category-tab--fc">
+    <ul>
+<?php
+if ($board_info['is_category_total'] == 'y') {  // 카테고리 [전체] 사용할때
+    echo '<li'; if(empty($this->reqData['category'])) { echo ' class="on"';} echo '><a href="'.$current_url.'">'._LANG('전체').'</a></li>';
+}
+foreach($arrCategory as $key => $val) {
+    echo '  <li'; if(@$this->reqData['category'] == $val or ($board_info['is_category_total'] != 'y' and empty($this->reqData['category']) and $key == 0)) { echo ' class="on"';} echo '><a href="'.$current_url.'&category='.base64_encode(base64_encode(trim($val))).'"><span>'.$val.'</span></a></li>';
+}
+?>
+    </ul>
+</section>
+<!-- //게시판 네비 -->
+<?php
+}
+?>
+
+	<!-- board-search-wrap -->
+    <section class="board-search-wrap--fc">
+        <form name="form_search" method="get" action="?tpf=board/list">
+        <input type="hidden" name="tpf" value="board/list">
+        <input type="hidden" name="url" value="{{URL}}">
+        <input type="hidden" name="board_code" value="<?=$board_code?>">
+        <input type="hidden" name="category" value="<?=base64_encode(base64_encode(trim(@$category)))?>">
+            <fieldset>
+                <legend><?=_LANG('검색')?></legend>
+                <p class="search-select-wrap--fc">
+                	<select name="field">
+<?php
+foreach($arrSearch as $key => $val) {
+    echo '      <option value="'.$key.'"'; if(!empty($field) && $field == $key) echo ' selected'; echo '>'.$val.'</option>';
+}
+?>
+                	</select>
+                </p>
+                <p class="search-input-wrap--fc"><input type="text" name="keyword" placeholder="<?=_LANG('검색어를 입력하세요.')?>" value="<?=!empty($keyword) ? $keyword : ""?>" onkeyup="if(event.keyCode == 13) form_search.submit();" /><a href="#" onclick="form_search.submit();"><?=_LANG('검색')?></a></p>
+            </fieldset>
+        </form>
+        <div class="board_list_total--fc">
+            Total <span class="search-total-num__accent--fc"><?=$data['total']?></span> 
+		</div>
+    </section>
+    <!-- //board-search-wrap -->
+
+    <!-- gallery-list -->
+<?php
+if (!empty($data['list'])) {
+    echo '<section id="inline-popups" class="inline-popups gallery-list--fc">';
+    $start_number = $data['start_number'];
+    foreach($data['list'] as $key => $val) {
+        echo '
+            <figure>';
+
+        if($val['is_secret'] == 'y') {  // 비밀글
+            echo '  <a href="#none" onclick="onclickView('.$this->reqData['board_code'].','.$val['code'].');return false;" title="'.$val['title'].'">';
+        }
+        else {                          // 일반글
+            // 레이이팝업 여부 분리 표출
+            if($board_info['is_popup'] == 'y') echo '<a href="#g-popup" data-effect="mfp-zoom-in" onclick="setData('.$this->reqData['board_code'].','.$val['code'].')">';
+            else if($board_info['is_link'] == 'y')  echo '<a href="'.$val['link'].'" target="_new">';
+            else echo '<a href="'.$folder.'?tpf=board/view&board_code='.$board_code.'&code='.$val['code'].'">';
+        }
+
+        echo '  <p class="thumb-wrap--fc embed-responsive-16by9"><img src="'; if (file_exists(_USER_DIR.'/board/'.$val['code'].'_tn')) { echo _USER_URL.'/board/'.$val['code'].'_tn';} else if ($val['image_url']) { echo $val['image_url'];} else { echo '/img/noimage.gif';} echo '" /></p>
+                <figcaption>
+                    <p class="gallery-title--fc">'.$val['title'].'</p>
+                    <p class="gallery-content--fc">'.strip_tags(htmlspecialchars_decode($val['content'])).'</p>
+					<!-- <ul>
+                        <li><span>'.$val['name'].' / '.$val['reg_date'].'</span></li>
+                        <li><span>'.strip_tags(htmlspecialchars_decode($val['content'])).'</span></li>
+                    </ul> -->
+                </figcaption>
+                </a>
+            </figure>';
+        $start_number--;
+    }
+    echo '</section>';
+}
+else {
+    echo '<div style="text-align:center; height:30px;">'._LANG('등록된 게시물이 없습니다.').'</div>';
+}
+?>
+    <!-- //gallery-list -->
+
+    <!-- btn -->
+<?php
+if ($board_info['auth_write'] != 1) {   // 최고관리자 권한이 아닐때
+    echo '<p class="btn-write-wrap--fc"><a href="'.$folder.'?tpf=board/write&board_code='.$board_code.'" class="btn-write--fc">'._LANG('글쓰기').'</a></p>';
+}
+?>
+    <!-- //btn -->
+
+    <!-- paging -->
+    <?php echo $data['page'];?>
+    <!-- paging -->
+
+</section>
+<!-- //board-wrap -->
+
+<?php
+include_once _DOCUMENT_ROOT_DIR."/html/_module/board/layer_popup.html";
+?>

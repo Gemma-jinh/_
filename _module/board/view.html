@@ -1,0 +1,229 @@
+<?php
+/*
+기타 1~6 사용법
+1) 관리자 - 게시판 - 리스트 - 기타필드1~6 입력 : 게시글리스트에 해당 타이틀로 필드 노출
+2) 게시글 리스트 값 입력
+3) $data['etc1'] ~ $data['etc6'] 6개 값 변수에 담겨있음
+*/
+?>
+<style>
+strong{
+ font-weight:bold;
+}
+em {
+   font-weight: bold;
+   font-style: italic;
+}
+</style>
+
+<?=@$board_info['header']?>
+<?php
+if ($board_info['google_translate']) {
+    echo '<div id="google_translate_element" style="text-align:right;"></div><script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: \'ko\', includedLanguages: \''.$board_info['google_translate'].'\', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay:false}, \'google_translate_element\');
+    }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>';
+}
+?>
+
+<!-- board-wrap -->
+<section class="board-wrap--fc">
+    <!-- board-view -->
+    <article class="board-view--fc">
+        <header>
+            <h1><?=$data['title']?></h1>
+            <address>
+                <p><time datetime="2017.06.15"><?=$data['reg_date']?></time></p>
+                <p>view : <?=$data['hitting']?></p>
+                <p><?=$data['name']?></p>      
+            </address>
+        </header>
+        <ul class="board-view-link--fc">
+            <li><strong><?=_LANG('링크')?></strong><a href="<?=$data['etc1']?>" target="_blank"><?=$data['etc1']?></a></li>
+        </ul>
+
+        <script>
+            $(function(){
+                $('.board-view-link--fc > li').each(function() {
+                    // console.log( index + ": " + $( this ).text() );
+
+                    $('.board-view-link--fc > li a:empty').parent('li').addClass('empty');
+                    $('.board-view-link--fc > li.empty').hide();
+                });
+                    
+            });
+        </script>
+
+        <section class="board-conts--fc">
+            <figure>
+<?php
+if (!empty($data['files'])) {
+    foreach($data['files'] as $key => $val) {
+        if (checkImage($val['file_ext'])) echo '<p style="text-align:center;"><img src="'.$val['url'].'" alt="'.$val['orig_name'].'" style="max-width:100%;"></p>';
+    }
+}
+?>
+
+<?php
+if (!empty($data['link'])) {
+    if ($board_info['type'] == 'movie') {   // 동영상 링크
+        echo '<div align="center" class="embed-responsive-16by9"><iframe src="'.$data['link'].'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+    }
+    else {                                  // 일반 링크
+        echo ' <li><img src="/img/icon_link.gif" style="float:left;padding-right:5px;"> <a href="'.$data['link'].'" target="_new"><strong>'.$data['link'].'</strong></a></li>';
+    }
+}
+?>
+            </figure>
+            <p><?=$data['content']?></p>
+        </section>
+
+        <ul class="board-view-file--fc">
+<?php
+if (!empty($data['files'])) {
+    foreach($data['files'] as $key => $val) {
+        echo '  <li><strong>'._LANG('파일').'</strong><a href="/index.php?tpf=common/save_as&file_path='.$val['file_path'].'&file_name='.$val['file_name'].'&orig_name='.urlencode($val['orig_name']).'" style="cursor:pointer;"><span>'.$val['orig_name'].'</span> ('.$val['file_size'].'K)</a></li>';
+    }
+}
+?>
+        </ul>
+
+<?php
+if ($board_info['show_memo'] == 'y') {  // 댓글 표출
+?>
+        <section class="comment-wrap--fc">
+            <ul>
+<?php
+    if (!empty($memo['list'])) {
+        foreach($memo['list'] as $key => $val) {
+
+        $reply_icon = '';
+        if($val['length_depth'] > 1)	{
+            for($j=2; $j<$val['length_depth']; $j++) { $reply_icon .= '&nbsp;&nbsp;';}
+            $reply_icon .= '<img src="/img/sub/icon_reply.gif">';
+        }
+
+        echo '  <li class="comment-list--fc">
+                    <span>'.$reply_icon.$val['name'].'</span>
+                    <span>'.nl2br($val['content']).'</span>
+                    <span>'.$val['reg_date'].'</span>
+                    <a href="#none" onclick="deleteMemo('.$val['code'].')"><img src="/img/common/btn_comment_del.gif" alt="댓글삭제" /></a>
+                    <span>
+                    <button type="button" class="btn btn-re-comments--fc" onclick="updateMemo('.$val['code'].')">
+                      <span class="btn__txt--fc">수정</span>
+                    </button>
+                    <button type="button" class="btn btn-re-comments--fc" onclick="replyMemo('.$val['code'].')">
+                      <span class="btn__txt--fc">답글</span>
+                    </button>
+                    </span>
+                </li>';
+        }
+    }
+    else {
+        echo '  <li class="no-comment--fc">'._LANG('등록된 댓글이 없습니다.').'</li>';
+    }
+?>
+
+            </ul>
+            <form name="form_memo" method="post" action="/index.php?tpf=_module/board/process">
+            <input type="hidden" name="url" value="{{URL}}">
+            <input type="hidden" name="mode" value="insertMemo">
+            <input type="hidden" name="delete_password">
+            <input type="hidden" name="code">
+            <input type="hidden" name="board_code" value="<?=$data['board_code']?>">
+            <input type="hidden" name="board_data_code" value="<?=$data['code']?>">
+            <div class="comment-write--fc">
+                <p><label for="name"><?=_LANG('글쓴이')?></label><input type="text" id="name" name="name" onclick="checkMemoAuth()" value=<?=getLoginName()?>><label for="password"><?=_LANG('비밀번호')?></label><input type="password" id="password" name="password" /></p>
+
+                <div>
+                    <p><textarea name="content" cols="30" rows="10"></textarea></p>
+<?php
+    if (!getLoginId()) {	// 로그인 전
+?>
+                    <p><a href="#none" onclick="checkMemoAuth()"><?=_LANG('댓글등록')?></a></p>
+<?php
+    }else {					// 로그인 후
+?>
+                    <p><a href="#none" onclick="registerMemo()"><?=_LANG('댓글등록')?></a></p>
+<?php
+    }
+?>
+                </div>
+				<?php
+if ($board_info['is_captcha'] == 'y') {
+        echo '  <p class="board-view-captcha--fc">
+						<label for="auth_key">'._LANG('보안코드').'</label>
+							<i onclick="reloadCaptcha()" class="btn-reload--fc"></i><img id="displayCaptcha" src="/index.php?tpf=common/captcha" alt="자동입력방지" />
+						<input type="text" id="auth_key" name="auth_key" title="스팸방지" maxlength="4" />
+						<span>'._LANG('스팸방지를 위해 위쪽에 보이는 보안코드를 입력해주세요.').'</span>
+                </p>';
+}
+?>
+            </div>
+            </form>
+        </section>
+<?php
+}
+?>
+
+        <ul class="post-navi--fc">
+<?php
+    echo '  <li class="prev-post--fc">';
+		if (!empty($extend['prev']['title'])) {
+			echo '<strong>'._LANG('이전글').'</strong>';
+			if($extend['prev']['is_secret'] == 'y') {  // 비밀글
+				echo '<a href="#none" onclick="onclickView('.$data['board_code'].','.$extend['prev']['code'].');return false;"> <img src="/img/icon_lock.gif" alt="비밀글" class="board-list-lock-icon--fc">';
+			}
+			else {                          // 일반글
+				echo '<a href="?tpf=board/view&board_code='.$data['board_code'].'&code='.$extend['prev']['code'].'">';
+			}
+			echo $extend['prev']['title'].'</a><span>'.$extend['prev']['reg_date'].'</span>';
+		}
+	echo '</li>';
+
+?>
+<?php
+    echo '<li class="next-post--fc">';
+		if (!empty($extend['next']['title'])) {
+			echo '<strong>'._LANG('다음글').'</strong>';
+			if($extend['next']['is_secret'] == 'y') {  // 비밀글
+				echo '<a href="#none" onclick="onclickView('.$data['board_code'].','.$extend['next']['code'].');return false;"> <img src="/img/icon_lock.gif" alt="비밀글" class="board-list-lock-icon--fc">';
+			}
+			else {                          // 일반글
+				echo '<a href="?tpf=board/view&board_code='.$data['board_code'].'&code='.$extend['next']['code'].'">';
+			}
+			echo $extend['next']['title'].'</a><span>'.$extend['next']['reg_date'].'</span>';
+		}
+	echo '</li>';
+
+?>
+        </ul>
+
+        <!-- btn -->
+        <div class="btn-view-wrap--fc">
+			 <p>
+<?php
+if ($board_info['auth_reply'] == 0 or (getLoginLevel() != 0 and $board_info['auth_reply'] >= getLoginLevel())) {  // 최고관리자 권한이 아닐때
+    echo'  <a href="?tpf=board/write&action=reply&board_code='.$data['board_code'].'&code='.$data['code'].'" class="btn-reply--fc">'._LANG('답글').'</a>';
+}
+if ($board_info['auth_update'] == 0 or (getLoginLevel() != 0 and $board_info['auth_update'] >= getLoginLevel())) {  // 최고관리자 권한이 아닐때
+    echo'   <a href="?tpf=board/write&action=update&board_code='.$data['board_code'].'&code='.$data['code'].'" class="btn-modify--fc">'._LANG('수정').'</a>';
+}
+if ($board_info['auth_delete'] == 0 or (getLoginLevel() != 0 and $board_info['auth_delete'] >= getLoginLevel())) {  // 최고관리자 권한이 아닐때
+    echo'   <a href="#" onclick="onclickDelete('.$data['board_code'].','.$data['code'].');" class="btn-del--fc">'._LANG('삭제').'</a>';
+}
+?></p>
+        <a href="?tpf=board/list&board_code=<?=$data['board_code']?>&category=<?=$category?>" class="btn-list--fc"><?=_LANG('목록')?></a>
+        </div>
+        <!-- //btn -->
+    </article>
+    <!-- //board-view -->
+
+</section>
+<!-- //board-wrap -->
+
+<?php
+include_once _DOCUMENT_ROOT_DIR."/html/_module/board/layer_popup.html";
+?>

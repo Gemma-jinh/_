@@ -1,0 +1,293 @@
+@charset "UTF-8";
+
+// sm: 575
+// md: 767
+// lg: 991
+// xl: 1199
+
+@mixin bp-max($breakpoint) {
+	@media (max-width: $breakpoint) {
+		@content;
+	}
+}
+
+@mixin bp-min($breakpoint) {
+	@media (min-width: $breakpoint) {
+		@content;
+	}
+}
+
+// max-width: 575px
+@mixin sm-max {
+	@media (max-width: #{$breakpoint-sm}) {
+		@content;
+	}
+}
+
+// max-width: 576px
+@mixin sm-min {
+	@media (min-width: #{$breakpoint-sm + 1px}) {
+		@content;
+	}
+}
+
+// max-width: 767px
+@mixin md-max {
+	@media (max-width: #{$breakpoint-md}) {
+		@content;
+	}
+}
+
+// min-width: 768px
+@mixin md-min {
+	@media (min-width: #{$breakpoint-md + 1px}) {
+		@content;
+	}
+}
+
+// max-width: 991px
+@mixin lg-max {
+	@media (max-width: #{$breakpoint-lg}) {
+		@content;
+	}
+}
+
+// min-width: 992px
+@mixin lg-min {
+	@media (min-width: #{$breakpoint-lg + 1px}) {
+		@content;
+	}
+}
+
+// max-width: 1199px
+@mixin xl-max {
+	@media (max-width: #{$breakpoint-xl}) {
+		@content;
+	}
+}
+
+// min-width: 1200px
+@mixin xl-min {
+	@media (min-width: #{$breakpoint-xl + 1px}) {
+		@content;
+	}
+}
+
+// variables.scss에서 header 상단(sns, 로그인, 사이트맵, 다국어)영역을 사용안함(none)으로 설정했을 경우 #contents의 padding-top 변경
+@mixin contents-pc-padding-top($site-config-header-top) {
+	@if $site-config-header-top == block {
+		padding-top: $contents-pc-padding-top; // header 상단 높이 + .header-bottom 높이
+	}
+	@else if $site-config-header-top == none {
+		padding-top: $header-pc-height; // .header-bottom 높이
+	}
+}
+@mixin contents-tablet-padding-top($site-config-header-top) {
+	@if $site-config-header-top == block {
+		padding-top: $contents-tablet-padding-top; // header 상단 높이 + .header-bottom 높이
+	}
+	@else if $site-config-header-top == none {
+		padding-top: $header-tablet-height; // .header-bottom 높이
+	}
+}
+@mixin contents-mobile-padding-top($site-config-header-top) {
+	@if $site-config-header-top == block {
+		padding-top: $contents-mobile-padding-top; // header 상단 높이 + .header-bottom 높이
+	}
+	@else if $site-config-header-top == none {
+		padding-top: $header-mobile-height; // .header-bottom 높이
+	}
+}
+
+// variables.scss에서 header 상단(sns, 로그인, 사이트맵, 다국어)영역을 사용안함(none)으로 설정했을 경우 header 상단 높이 0처리
+@mixin sta-height-zero($site-config-header-top) {
+	@if $site-config-header-top == none {
+		height: 0 !important;
+	}
+}
+// variables.scss에서 header 상단(sns, 로그인, 사이트맵, 다국어)영역을 사용안함(none)으로 설정했을 경우 header.fixed top 0으로 고정
+@mixin header-fixed-top-zero($site-config-header-top) {
+	@if $site-config-header-top == none {
+		top: 0 !important;
+	}
+}
+
+@mixin transition($time: .2s all ease-in-out) {
+	@each $prefix in -moz-, -o-, -webkit-, '' {
+		#{$prefix}transition: $time;
+	}
+}
+
+@mixin transform($args...) {
+	-webkit-transform: $args;
+	-moz-transform: $args;
+	-ms-transform: $args;
+	transform: $args;
+}
+
+@mixin clearfix {
+	&:after {
+		display: block;
+		content: " ";
+		clear: both;
+	}
+}
+
+@mixin d-flex {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+}
+
+@mixin colspace($space) {
+	margin-left: -$space;
+	margin-right: -$space;
+
+	> [class^="col-"] {
+		padding-right: $space;
+		padding-left: $space;
+	}
+}
+
+@mixin align-items-center {
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+}
+
+@mixin align-items-baseline {
+	-webkit-box-align: baseline;
+	-ms-flex-align: baseline;
+	align-items: baseline;
+}
+
+@mixin justify-content-center {
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+}
+
+@mixin flex-col($width) {
+	position: relative;
+	width: 100%;
+	min-height: 1px;
+	-webkit-box-flex: 0;
+	-ms-flex: 0 0 $width;
+	flex: 0 0 $width;
+	max-width: $width;
+}
+
+@mixin fit-thumb($padding-bottom, $max-height) {
+	position: relative;
+	display: table;
+	width: 100%;
+	height: 0;
+	padding-bottom: $padding-bottom;
+
+	> img {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		@include transform(translate(-50%, -50%));
+		display: table-cell;
+		vertical-align: middle;
+		max-height: $max-height;
+	}
+}
+
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+      @content;
+  }
+  @-moz-keyframes #{$name} {
+      @content;
+  }
+  @-ms-keyframes #{$name} {
+      @content;
+  }
+  @keyframes #{$name} {
+      @content;
+  }
+}
+
+@mixin gradient-base {
+    background: #0064c2;
+    background: -webkit-linear-gradient(to right, #0064c2, #4ff4f3);
+    background: -moz-linear-gradient(to right, #0064c2, #4ff4f3);
+    background: -ms-linear-gradient(to right, #0064c2, #4ff4f3);
+    background: -o-linear-gradient(to right, #0064c2, #4ff4f3);
+    background: linear-gradient(to right, #0064c2, #4ff4f3);
+}
+
+@mixin gradient-base-reverse {
+    background: #4ff4f3;
+    background: -webkit-linear-gradient(to right, #4ff4f3, #0064c2);
+    background: -moz-linear-gradient(to right, #4ff4f3, #0064c2);
+    background: -ms-linear-gradient(to right, #4ff4f3, #0064c2);
+    background: -o-linear-gradient(to right, #4ff4f3, #0064c2);
+    background: linear-gradient(to right, #4ff4f3, #0064c2);
+}
+
+
+
+// border gradient
+@mixin gradient-border {
+    border-width: 5px;
+    border-image-width: 5px;
+    border-style: solid;
+    -webkit-border-image: linear-gradient(to bottom, #3ad2c2 0%, #2bafea 100%);
+    -moz-border-image: linear-gradient(to bottom, #3ad2c2 0%, #2bafea 100%);
+    border-image: linear-gradient(to bottom, #3ad2c2 0%, #2bafea 100%);
+    border-image-slice: 1;
+    background: transparent;
+}
+
+// gradient-text
+@mixin gradient-txt {
+    background: #0065c2;
+    /* IE10+ */
+    background: -ms-linear-gradient(left, #0065c2 0%, #4ff4f3 100%);
+    /* Old browsers */
+    background: -moz-linear-gradient(left, #0065c2 0%, #4ff4f3 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #0065c2 0%, #4ff4f3 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #0065c2 0%, #4ff4f3 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0065c2', endColorstr='#4ff4f3', GradientType=0);
+    /* IE6-9 */
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+}
+
+@mixin gradient-txt2 {
+    background: #1683e9;
+    /* IE10+ */
+    background: -ms-linear-gradient(left, #1683e9 0%, #4ff4f3 100%);
+    /* Old browsers */
+    background: -moz-linear-gradient(left, #1683e9 0%, #4ff4f3 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #1683e9 0%, #4ff4f3 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #1683e9 0%, #4ff4f3 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1683e9', endColorstr='#4ff4f3', GradientType=0);
+    /* IE6-9 */
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+}
+
+// custom
+// rem으로 변환
+@function remove-unit($value) {
+	@return ($value / ($value * 0 + 1));
+}
+
+@function rem($px, $base: 16) {
+	@return (remove-unit($px / $base)) * 1rem;
+}

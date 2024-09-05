@@ -1,0 +1,142 @@
+<style>
+textarea {
+    width:180px;
+    height:100px;
+}
+</style>
+
+<section class="content-header">
+    <h1>
+    메일 설정
+    <small>sms setting</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>커뮤니티 관리</li>
+        <li class="active">메일 설정</li>
+    </ol>
+</section>
+
+<section class="content">
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-body">
+
+                <form name="form_register" method="post" action="/index.php?tpf=admin/community/email_process">
+                <input type="hidden" name="mode" value="updateEmail">
+                <input type="hidden" name="locale" value="<?=$locale?>">
+
+				<h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 메일 발송 문구 설정 </p></h4>
+                <div style="text-align:right;">
+<?php
+if(count($arrLocal) > 1) {
+    foreach($arrLocal as $key => $val) {
+        echo '<button type="button" id="locale_'.$key.'" onclick="parent.location.href=\'?tpf=admin/community/email&locale='.$key.'\'" class="btn btn-'; if($key == $locale) {echo 'primary';}else { echo 'default';} echo '"><i class="fa fa-globe" aria-hidden="true"></i> '.$val.'</button>';
+    }
+}
+?>
+                </div></br>
+
+				<table class="table table-bordered table-hover">
+				<thead>
+                    <tr>
+                        <td rowspan="3" class="menu" style="width:350px;">발송항목</td>
+						<td colspan="4">발송대상 및 메일 문구설정</td>
+						<td rowspan="3" class="menu" style="width:350px;">치환문구 설명</td>
+                    </tr>
+					<tr>
+                        <td colspan="2">회원</td>
+						<td colspan="2">관리자</td>
+                    </tr>
+                    <tr>
+                        <td>자동발송</td>
+						<td>문구</td>
+                        <td>자동발송</td>
+						<td>문구</td>
+                    </tr>
+                </thead>
+                <tbody>
+<?php
+$index = 1;
+if (!empty($arrCommunityAction['list'])) {
+    foreach($arrCommunityAction['list'] as $key => $val) {
+        echo '  <tr>
+                    <input type="hidden" name="msg['.$val['action'].'][code]" value="'.@$arrInfo[$val['action']]["code"].'" />
+                    <td class="content">'.$val['name'].'</td>
+                    <td class="content"><input type="checkbox" name="msg['.$val['action'].'][is_send]" value="y" '.checkBoxChecked(@$arrInfo[$val['action']]["is_send"], 'y').'/></td>
+                    <td class="content">
+                    <button type="button" onclick="onclickUpdate(\''.@$arrInfo[$val['action']]["code"].'\',\''.$val['action'].'\');" class="btn btn-primary btn-xs">편집</button></td>
+                    <td class="content"><input type="checkbox" name="msg['.$val['action'].'][is_send_admin]" value="y" '.checkBoxChecked(@$arrInfo[$val['action']]["is_send_admin"], 'y').'/></td>
+                    <td class="content">
+                    <button type="button" onclick="onclickUpdate(\''.@$arrInfo[$val['action']]["code"].'\',\''.$val['action'].'\',\'admin\');" class="btn btn-primary btn-xs">편집</button>
+                    </td>
+                    <td align="left">
+                        <ul>';
+        $arrReplaceKey = getCommunityTemplateKeyword("email", $key, getLocale());
+        if (!empty($arrReplaceKey)) {
+            foreach($arrReplaceKey as $val2){
+                echo '      <li>{{'.$val2.'}} : '.$arrCommunityReplaceName[$val2].'</li>';
+            }
+        }
+        echo '      </ul>
+                    </td>
+                </tr>';
+        $index++;
+    }
+}
+?>
+				</tbody>
+                </table>
+                <br>
+
+				</form>
+
+                <div style="text-align:center;"><button type="button" onclick="register()" class="btn btn-primary">확인</button></div>
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:1000px;">
+        <div class="modal-content">
+            <form name="formContent" method="post" action="?tpf=admin/community/email_process" enctype="multipart/form-data">
+            <input type="hidden" name="mode" id="mode" value="update">
+            <input type="hidden" name="code" id="code">
+            <input type="hidden" name="action" id="action">
+            <input type="hidden" name="is_admin" id="is_admin">
+            <input type="hidden" name="locale" id="locale" value="<?=$locale?>">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">메일 문구설정 관리</h4>
+            </div>
+            <div class="modal-body">
+
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 메일 문구설정</h4>
+            <table class="table table-bordered">
+            <tr>
+                <td class="menu">제목</td>
+                <td align="left">
+                <span style="float:left;width:80%;"><input type="text" name="title" id="title" class="form-control input-sm"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="menu">내용</td>
+                <td align="left"><textarea name="content" id="content" rows="10" cols="80"></textarea></td>
+            </tr>
+            </table>
+            </div>
+            <div class="modal-footer">
+            <button type="button" onclick="registerContent()" class="btn btn-primary">확인</button>&nbsp;&nbsp;&nbsp;
+            <button type="button" onclick="getDefaultTemplate();" class="btn btn-warning">기본문구 가져오기</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="//<?=_RESOURCE_URL?>/resource/js/ckeditor4.7.2/ckeditor.js"></script>

@@ -1,0 +1,45 @@
+<section class="section_best--fc">
+<div class="parallax obj_1" data-100-top="transform: translateY(0%);" data-bottom-top="transform: translateY(50%);">
+<div class="best_slider--fc best_slider_img_wrap--fc">
+
+<?php
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        echo '<div class="best_slider_img_wrap_cont--fc"><img src="'._USER_URL.'/product/'.$val['code'].'_1" /></div>';
+    }
+}
+?>
+
+</div>
+</div>
+
+<div class="inner">
+<div class="row no-gutters--fc">
+<div class="parallax obj_2 col-md-12 offset-md-12 col-lg-6 offset-lg-6" data-bottom-top="transform: translateY(25%);" data-center="transform: translateY(0%);">
+<h2 class="fadeUp">BEST SELLERS</h2>
+
+<div class="best_slider--fc best_slider_wrap--fc fadeUp">
+<?php
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        echo '
+        <div class="best_slider_cont--fc">
+        <div class="best_slider_cont_inner--fc">
+        <h4>'.$val['category_name'].'</h4>
+
+        <dl>
+            <dt>'.$val['title'].'</dt>
+            <dd>'.nl2br(@$val['list_title']).'</dd>
+        </dl>
+        <a class="read_more--fc" href="/index.php?tpf=product/view&category_code='.$val['category_code'].'&code='.$val['code'].'">MORE <i class="fa fa-chevron-right" aria-hidden="true"></i></a></div>
+        </div>';
+    }
+}
+?>
+</div>
+
+<div class="btn_wrap--fc"><button class="direction_btn prev--fc" role="button" type="button">Prev</button><button class="direction_btn--fc next" role="button" type="button">Next</button></div>
+</div>
+</div>
+</div>
+</section>

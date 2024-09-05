@@ -1,0 +1,274 @@
+<!-- fullcalendar -->
+<link href="//mir9.co.kr/resource/css/bootstrap-colorselector.css" rel="stylesheet" />
+<link href="//mir9.co.kr/resource/js/AdminLTE-2.4.2/bower_components/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet" type="text/css" />
+<link href="//mir9.co.kr/resource/js/AdminLTE-2.4.2/bower_components/fullcalendar/dist/fullcalendar.print.css" rel="stylesheet" type="text/css" media='print' />
+<link href="//mir9.co.kr/resource/css/jquery-ui.css" rel="stylesheet">
+
+<style>
+.fc-view-container{margin-top:15px;}
+.fc-widget-content{min-height:80px}
+.fc-event, .fc-event:hover{color:black}
+option{
+color:black;
+}
+option:disabled {
+  color: red;
+}
+</style>
+
+<!--  회의실예약 -->
+<section class="reservation-contents">
+  <div class="reservation-content">
+    <div class="inner">
+      <!-- snb -->
+      <aside id="reservationSnb" class="snb">
+        <div class="snb__inner">
+          <div class="snb__header">
+            <p>회의실 선택</p>
+          </div>
+          <nav class="snb__nav-wrap">
+            <ul class="snb__nav">
+<?php
+if(!empty($arrData_room_list['list'])){
+$title="전체 예약";
+$room_code=0;
+$class="";
+foreach($arrData_room_list['list'] as $key => $val) {
+    if($val['code']==@$this->reqData['room_code']){
+        $title=$val['title'].' '.$val['number'];
+        $room_code=$val['code'];
+    }
+    echo'
+                <li ';if($val['code']==@$this->reqData['room_code']){echo' class="on"';}echo'><a href="?room_code='.$val['code'].'">'.$val['title'].' '.$val['number'].'</a></li>
+    ';
+    }
+}
+?>
+            </ul>
+          </nav>
+        </div>
+        <br />
+        <br />
+        <div class="snb__inner" style="background-color:inherit;">
+            <nav class="snb__nab-wrap">
+                <div style="display:flex;">
+                    <div style="width:70%; height:30px; background-color:#ddedfd;"></div>
+                    <div style="width:30%; height:30px; line-height: 30px; text-align: center;">대기</div>
+                </div>
+                <div style="display:flex; padding-top: 15px;">
+                    <div style="width:70%; height:30px; background-color:#c0fec0;"></div>
+                    <div style="width:30%; height:30px; line-height: 30px; text-align: center;">승인</div>
+                </div>
+                <div style="display:flex; padding-top: 15px;">
+                    <div style="width:70%; height:30px; background-color:#ffb9aa;"></div>
+                    <div style="width:30%; height:30px; line-height: 30px; text-align: center;">반려</div>
+                </div>
+            </nav>
+        </div>
+      </aside>
+      <!-- snbCont  -->
+      <div id="reservationCont" class="subCont">
+        <div class="subCont--header">
+          <h3 class="subCont--header__tit">일정선택</h3>
+<?php
+if($room_code!=0){
+echo'
+          <a href="#" data-toggle="modal" data-target="#viewDetailInfo"  onclick="viewRoomData('.$room_code.')" class="btn btn-radius">
+';
+}else{
+echo'
+          <a class="btn btn-radius">
+';
+}
+?>
+            <i class="ico ico-notice"></i>
+            <span class="txt"><?=$title?></span>
+          </a>
+        </div>
+        <div class="subCont--wrap">
+          <article id="calendar" class="article--cont"></article><!-- calendar -->
+          <article class="article--cont box-notice">
+            <p class="box-notice__tit">※ 이용 안내</p>
+            <ul class="box-notice__list">
+              <li>현재보다 이전 날짜와 시간에서는 예약 등록, 수정 및 삭제가 불가능 합니다.</li>
+              <li>예약 등록은 해당 날짜, 시간대를 클릭하고 회의실을 선택하시거나, 반대로 회의실을 선택하신 후 날짜, 시간대를 선택하시면 됩니다.</li>
+              <li>회의실 예약은 09:00~18:00까지 가능하며, 30분 단위로 가능합니다.</li>
+              <li>주말에는 회의실 운영을 하지 않으므로 예약이 불가능합니다.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--  // 회의실예약 -->
+<!-- 회의실 상세 정보 팝업 시작 -->
+<div class="modal fade show" id="viewDetailInfo" tabindex="-1" role="dialog" aria-hidden="true" style="display:none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="ico ico-notice"></i><span id="meeting_room"></span>  상세 정보
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form class="form basic-form">
+                        <div class="fit-table-wrap">
+                            <table class="table td-space-1">
+                                <colgroup>
+                                    <col />
+                                    <col />
+                                </colgroup>
+                                <tbody>
+                                   <tr>
+                                        <td colspan="2" id="thumb" class="t_c"><img src="/img/noimage.gif" alt="noimg" id="image_view"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>사용인원</th>
+                                        <td id="capacity"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-close btn-gray mx-auto" data-dismiss="modal" aria-label="Close">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--//회의실 상세 정보 팝업 끝 -->
+
+
+
+<!-- 신규 예약 등록 -->
+<div class="modal fade show" id="register" tabindex="-1" role="dialog" aria-hidden="true" style="display:none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="ico ico-notice"></i>신규 예약 등록</h5>
+            </div>
+            <div class="modal-body">
+                <form class="form basic-form" name="form_register" method="post" action="/index.php?tpf=_module/reservation/process" enctype="multipart/form-data">
+                <input type="hidden" name="mode" id="mode" value="insert">
+                <input type="hidden" name="member_code" id="member_code" value="<?=$_SESSION['login_code']?>">
+                    <div class="fit-table-wrap">
+                        <table class="table">
+                            <colgroup>
+                                <col />
+                                <col />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th>회원명</th>
+                                    <td><?=$_SESSION['login_name']?></td>
+                                </tr>
+                                <tr>
+                                    <th>회의실</th>
+                                    <td>
+                                        <select class="select select-sm" name="meeting_room_code" style="width:225px" id="meeting_room_code" onchange="getReservationData($('#datepicker1').val());">
+                                            <option value="">선택</option>
+<?php
+if(!empty($arrData_room_list['list'])){
+foreach($arrData_room_list['list'] as $key => $val) {
+echo'
+                                            <option value="'.$val['code'].'">'.$val['title'].'</option>
+';
+}
+}
+?>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>시작일자</th>
+                                    <td>
+                                        <input type="text" class="input-date input-sm" name="start_date" style="width:110px" id="datepicker1" readonly onchange="getReservationData($('#datepicker1').val()),changeStartData();">
+                                        <select class="select select-time" style="width:35%;" name="start_time" id="startTime" >
+                                            <option>회의실 선택</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>종료일자</th>
+                                    <td>
+                                        <input type="text" class="input-date input-sm" name="end_date" style="width:110px" id="datepicker2" readonly onchange="getReservationData($('#datepicker2').val()),changeEndData()">
+                                        <select class="select select-time" style="width:35%;" name="end_time" id="endTime" >
+                                            <option>회의실 선택</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-close btn-gray" data-dismiss="modal" aria-label="Close">닫기</button>
+                <button type="button" class="btn btn-edit btn-orange" onclick="register();">등록</button>
+            </div>
+        </div>
+    </div>
+</div>        <!-- 예약 상세 보기 및 수정 -->
+<div class="modal fade show" id="view" tabindex="-1" role="dialog" aria-hidden="true" style="display:none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="ico ico-notice"></i>예약 상세 정보</h5>
+            </div>
+            <div class="modal-body">
+                <form class="form basic-form">
+                    <input type="hidden" name="status" value="S">
+                    <input type="hidden" name="reserv_no" id="view_reserv_no">
+                    <div class="fit-table-wrap">
+                        <table class="table">
+                            <colgroup>
+                                <col />
+                                <col />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th>회원명</th>
+                                    <td id="view_member_name"></td>
+                                </tr>
+                                <tr>
+                                    <th>회의실</th>
+                                    <td id="view_conference_roomname"></td>
+                                </tr>
+                                <tr>
+                                    <th>시작일자</th>
+                                    <td>
+                                        <span>
+                                            <span class="label__txt" id="view_startDate"></span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>종료일자</th>
+                                    <td>
+                                        <span>
+                                            <span class="label__txt" id="view_endDate"></span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>예약상태</th>
+                                    <td id="view_status"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-delete btn-orange mr-auto" onclick="deleteReserv();" id="viewDelete" style="display:none;">삭제</button>
+                <button type="button" class="btn btn-close btn-gray" data-dismiss="modal" aria-label="Close" style="margin:0 auto;">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>

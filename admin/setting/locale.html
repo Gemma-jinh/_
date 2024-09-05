@@ -1,0 +1,156 @@
+<section class="content-header">
+    <h1>
+    다국어 번역
+    <small>locale</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>설정</li>
+        <li class="active">다국어 번역</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+
+                <div style="float:left;">
+                    <a href="#none" onclick="makeScript()" class="btn btn-warning"><i class="fa fa-refresh" aria-hidden="true"></i> 언어 스크립트 만들기</a>
+<?php
+if(getLoginId() == 'admin') {
+    echo '          &nbsp;<button type="button" onclick="onclickTranslate()" class="btn btn-warning"><i class="fa fa-globe"></i> 자동번역</button>';
+}
+?>
+                </div>
+
+                <div class="btn-group pull-right">
+<?php
+if (!empty($arrLocaleType)) {
+    foreach($arrLocaleType as $key => $val) {
+        echo '  <a href="?tpf=admin/setting/locale&locale='.$key.'" class="btn btn-'; if($key == $locale) { echo 'primary';} else { echo 'default';} echo '"><i class="fa fa-globe" aria-hidden="true"></i> '.$val.'</a>';
+    }
+}
+?>
+                </div>
+                <br>
+                <br>
+
+                <table class="table table-bordered">
+                <form name="form_register" method="post" action="?tpf=admin/setting/process">
+                <input type="hidden" name="mode" value="locale">
+                <input type="hidden" name="locale" value="<?=$locale?>">
+                <tr>
+                    <td class="menu" style="width:42%">국문</td>
+                    <td class="menu" style="width:42%"><?=@$arrLocaleType[$locale]?></td>
+                    <td class="menu" style="width:8%;">명령</td>
+                </tr>
+<?php
+if (!empty($data['list'])) {
+    foreach($data['list'] as $key => $val) {
+        echo '  <tr>
+                    <td><textarea rows="3" style="width:100%; background-color:#dddddd" readonly>'.$val['sentence'].'</textarea></td>
+                    <td><textarea name="sentence'.$val['code'].'" rows="3" style="width:100%;">'.@$val[$locale].'</textarea></td>
+                    <td style="padding-top:25px;">
+                        <a href="'.$val['file_url'].'" target="new"><button type="button" class="btn btn-primary btn-xs">보기</button></a>
+                        <button type="button" onclick="deleteScript('.$val['code'].');" class="btn btn-danger btn-xs">삭제</button>
+                    </td>
+                </tr>';
+    }
+}
+?>
+                </form>
+                </table>
+
+                <br>
+                <div align="center">
+                <button type="button" onclick="register();" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 확인</button>
+                </div>
+
+                <div style="text-align:right;">
+                    <?php echo $data['page'];?>
+                </div>
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">언어 스크립트</h4>
+            </div>
+            <div class="modal-body">
+
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 생성 내역</p></h4>
+            <table class="table table-bordered">
+                <tr>
+                    <td class="menu">파일 개수</td>
+                    <td align="left"><span id="file_count"></span></td>
+                </tr>
+                <tr>
+                    <td class="menu">문장 개수</td>
+                    <td align="left"><span id="sentence_count"></span></td>
+                </tr>
+                <tr>
+                    <td class="menu">중복 문장 개수</td>
+                    <td align="left"><span id="sentence_duplicate_count"></span></td>
+                </tr>
+            </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="closeModal();" class="btn btn-primary">닫기</button>&nbsp;&nbsp;&nbsp;
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalTranslate" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:400px;">
+        <div class="modal-content">
+            <form name="formTranslate" method="post" action="?tpf=admin/setting/process">
+            <input type="hidden" name="mode" id="mode" value="translate">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">자동 번역</h4>
+            </div>
+            <div class="modal-body">
+
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 자동 <span id="board_sub_title">번역</span></p></h4>
+            <p style="color:red;">※ 구글번역시에는 시간이 1분 이상 걸릴수 있으니 창을 닫지 마시고 기다려 주세요!!</p>
+            <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td class="menu">언어 선택</td>
+                <td align="left">
+                <select name="menu_locale" id="menu_locale" class="form-control input-sm">
+                    <option value="">선택</option>
+<?php
+$defaultLocale = getDefaultLocale();
+foreach($arrLocal as $key => $val) {
+    if($defaultLocale != $key) {
+        echo '      <option value="'.$key.'">'.$val.'</option>';
+    }
+}
+?>
+                </select>
+                </td>
+            </tr>
+            </tbody></table>
+            </div>
+
+            <div class="modal-footer">
+            <button type="button" onclick="registerTranslate()" class="btn btn-primary">확인</button>&nbsp;&nbsp;&nbsp;
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

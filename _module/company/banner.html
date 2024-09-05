@@ -1,0 +1,31 @@
+<article class="main_visual__slider custom">
+<?php
+if (!empty($arrBanner['list'])) {
+    foreach($arrBanner['list'] as $key => $val) {
+        $index = $key + 1;
+        echo '
+			<div class="slider_item item'.$index.'" style="background:url('.$val['file_url'].') no-repeat center/cover;">
+				<div class="slider_item__inner">
+					<div class="slider_item__inner__txtbox">
+						<h2>'.$val['title'].'</h2>
+						<p>'.$val['tag'].'</p>';
+
+						if($val['url'] != '') {
+							if($val['target'] == 'y') {
+								echo '
+									<a class="btn_view-more btn_w" href="'.$val['url'].'"><span>View More</span></a>
+								';
+							}
+							else {
+								echo '
+									<a class="btn_view-more btn_w" href="'.$val['url'].'" target="_blank"><span>View More</span></a>
+								';
+							}
+						}
+		echo '      </div>
+				</div>
+			</div>';
+    }
+}
+?>
+</article>

@@ -1,0 +1,221 @@
+<section class="content-header">
+    <h1>
+    연혁관리
+    <small>History</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>Setting</li>
+        <li class="active">연혁관리</li>
+    </ol>
+</section>
+
+<section class="content" style="padding:15px 15px 0 15px">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <div style="text-align:right;">
+<?php
+if(count($arrLocal) > 1) {
+    foreach($arrLocal as $key => $val) {
+        echo '<button type="button" id="locale_'.$key.'" onclick="parent.location.href=\'?tpf=admin/setting/history&locale='.$key.'\'" class="btn btn-'; if($key == $locale) {echo 'primary';}else { echo 'default';} echo '" style="margin-left:3px;"><i class="fa fa-globe" aria-hidden="true"></i> '.$val.'</button>';
+    }
+}
+?>
+                    </div>
+
+                    <!-- 연혁 그룹 추가시 display:none 해제하세요 -->
+                    <div style="text-align:right; display:none;">
+                        <br/>
+                        <a href="?tpf=admin/setting/history&locale=<?=$locale?>&type=1"><button type="button" class="btn btn-<?php if($type == '1') { echo 'primary';} else { echo 'default';} ?>">연혁 1</button></a>
+                        <a href="?tpf=admin/setting/history&locale=<?=$locale?>&type=2"><button type="button" class="btn btn-<?php if($type == '2') { echo 'primary';} else { echo 'default';} ?>">연혁 2</button></a>
+                    </div>
+
+                    <label style="margin-top:5px;">총 <?=$data['total']?> 건</label>
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                    <form name="form_list" method="post" action="?tpf=admin/setting/history_process">
+		            <input type="hidden" name="mode" id="mode">
+		            <thead>
+                    <tr>
+                        <td style="width:30px;"><input type="checkbox" name="select_all" onclick=selectAllCheckBox('form_list'); /></td>
+                        <td style="width:60px;">NO</td>
+                        <td style="width:100px;">년도</td>
+                        <td style="width:100px;">월</td>
+                        <td style="width:100px;">일</td>
+                        <td style="*">내용</td>
+                        <td style="width:80px;">명령</td>
+                    </tr>
+                    </thead>
+<?php
+// 리스트
+if (!empty($data['list'])) {
+    foreach($data['list'] as $key => $val) {
+        echo '      <tr>
+                        <td><input type="checkbox" name="list[]" value="'.$val['code'].'" /></td>
+                        <td>'.$data['start_number'].'</td>
+                        <td>'.$val['year'].'</td>
+                        <td>'.$val['month'].'</td>
+                        <td>'.$val['date'].'</td>
+                        <td style="text-align:left;">'.nl2br($val['title']).'</td>
+                        <td><button type="button" onclick="onclickUpdate('.$val['code'].');" class="btn btn-primary btn-xs">상세보기</button></td>
+                    </tr>';
+                    $data['start_number']--;
+    }
+}
+else {
+        echo '      <tr><td colspan="10"><br>등록된 자료가 없습니다.<br><br></td></tr>';
+}
+?>
+                    </form>
+                    </table>
+                    <br>
+                    <button type="button" onclick="selectDelete();" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
+                    <button type="button" onclick="onclickInsert()"  class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 연혁 등록</button>
+<?php
+if(getLoginId() == 'admin') {
+    echo '          <button type="button" onclick="onclickCopyContent();" class="btn btn-warning btn-sm" style="margin-left:20px;"><i class="fa fa-copy"></i> 연혁 복사</button>';
+}
+?>
+                    <div style="text-align:right;">
+                        <?php echo $data['page'];?>
+                    </div>
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:650px;">
+        <div class="modal-content">
+            <form name="form_register" method="post" action="?tpf=admin/setting/history_process" enctype="multipart/form-data">
+            <input type="hidden" name="mode" id="mode" value="insert">
+            <input type="hidden" name="code" id="code">
+            <input type="hidden" name="type" id="type" value="<?=$type?>">
+<?php
+if ((!empty($locale)) || count($arrLocal) > 1) {
+    echo '  <input type="hidden" name="locale" id="locale" value="'.$locale.'">';
+}
+?>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">연혁 관리</h4>
+            </div>
+            <div class="modal-body">
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 연혁 <span id="board_sub_title">등록</span></p></h4>
+            <table class="table table-bordered">
+                <tr>
+                    <td class="menu">년도</td>
+                    <td align="left">
+                    <select name="year" class="form-control input-sm" style="width:120px;">
+                    <option value="">선택</option>
+<?php
+for ($i=date('Y'); $i>=$start_year; $i--) {
+    echo '          <option value="'.$i.'"'; if(!empty($month) && $month == $i) echo ' selected'; echo '>'.$i.'</option>';
+}
+?>
+                    </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">월</td>
+                    <td align="left">
+                    <select name="month" class="form-control input-sm" style="width:120px;">
+                    <option value="">선택</option>
+<?php
+for ($i=1; $i<=12; $i++) {
+    echo '          <option value="'.$i.'"'; if(!empty($month) && $month == $i) echo ' selected'; echo '>'.$i.'</option>';
+}
+?>
+                    </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">일</td>
+                    <td align="left"><input type="text" name="date" class="form-control input-sm" placeholder="예) 23" style="width:26%;" /></td>
+                </tr>
+<?php
+        echo '  <tr>
+                    <td class="menu">내용</td>
+                    <td align="left"><textarea name="contents" rows="4" style="width:100%"></textarea></td>
+                </tr>';
+?>
+                <tr>
+                    <td class="menu">파일 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+                    <td align="left">
+                    <input type="file" name="file1" class="form-control input-sm" style="width:70%; display:inline;">
+                    <span id="display_file" style="display:none;">
+                    <button type="button" onclick="winOpen('?tpf=common/image_view&file_name=history/'+$('[name=code]').val());" class="btn btn-success btn-xs">보기</button>
+                    <button type="button" onclick="confirmIframeDelete('?tpf=common/image_delete&file_name=history/'+$('[name=code]').val()+'&code='+$('#code').val());" class="btn btn-danger btn-xs">삭제</button>
+                    </span>
+                    <div style="font-weight:normal">※ 이미지 크기 : 1920 X 580</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">HTML CLASS</td>
+                    <td align="left"><input type="text" name="html_class" class="form-control input-sm" /></td>
+                </tr>
+
+            </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="register()" class="btn btn-primary">확인</button>&nbsp;&nbsp;&nbsp;
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCopyList" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:400px;">
+        <div class="modal-content">
+            <form name="historyCopyContent" method="post" action="?tpf=admin/setting/history_process">
+                <input type="hidden" name="mode" id="mode" value="copyContent">
+                <input type="hidden" name="locale" value="<?=$locale?>">
+                <input type="hidden" name="code" id="code">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="myModalLabelPortfolio">연혁 복사</h4>
+                </div>
+                <div class="modal-body">
+                    <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 연혁 <span id="board_sub_title">복사</span></p></h4>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="menu">구글 동시 번역</td>
+                                <td align="left"><input type="checkbox" name="is_translate" value="y"></td>
+                            </tr>
+                            <tr>
+                                <td class="menu">언어 선택</td>
+                                <td align="left">
+                                    <select name="to_locale"class="form-control input-sm">
+                                        <option value="">선택</option>
+<?php
+$defaultLocale = getDefaultLocale();
+if(!empty($arrLocal)) {
+    foreach($arrLocal as $key => $val) {
+        if($key != $defaultLocale) {
+            echo '                      <option value="'.$key.'">'.$val.'</option>';
+        }
+    }
+}
+?>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="registerCopyContent()" class="btn btn-primary">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

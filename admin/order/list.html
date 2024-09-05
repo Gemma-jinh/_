@@ -1,0 +1,231 @@
+<section class="content-header">
+    <h1>
+    주문 관리
+    <small>order list</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">주문 관리</a></li>
+        <li class="active">Data tables</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <label style="margin-top:5px;">총 <?=$data['total']?> 건</label>
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                    <form name="form_search" id="form_search" method="post" action="?tpf=admin/order/list">
+                        <div class="has-feedback">
+                        <span>
+                        <input type="text" name="keyword" id="keyword" value="<?=!empty($keyword) ? $keyword : ""?>" class="form-control input-sm" placeholder="주문검색"/>
+                        <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                        <div class="has-feedback">
+                        <select name="payment_status" OnChange="if(this.value) location.href='index.php?tpf=admin/order/list&payment_status='+this.value+'&payment_type=<?=$payment_type?>'" class="form-control input-sm" style="float:left; width:130px; margin-right:5px;">
+                        <option value="">상태</option>
+<?php
+foreach($arrPaymentStatus as $key => $val) {
+    echo '              <option value="'.$key.'"'; if($payment_status == $key) { echo' selected';} echo '>'.$val.'</option>';
+}
+?>
+                        </select>
+
+                        <select name="payment_type" OnChange="if(this.value) location.href='index.php?tpf=admin/order/list&payment_status=<?=$payment_status?>&payment_type='+this.value" class="form-control input-sm" style="float:left; width:130px; margin-right:5px;">
+                        <option value="">결제방법</option>
+                        <option value="cash"<?php if($payment_type == 'cash') { echo' selected';}?>>무통장</option>
+                        <option value="card"<?php if($payment_type == 'card') { echo' selected';}?>>신용카드</option>
+                        </select>
+
+                        <select name="field" class="form-control input-sm" style="float:left; width:130px;">
+<?php
+foreach($arrSearch as $key => $val) {
+    echo '      <option value="'.$key.'"'; if(!empty($field) && $field == $key) echo ' selected'; echo '>'.$val.'</option>';
+}
+?>
+                        </select>
+                        </div>
+                    </form>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                    <form name="form_list" method="post" action="?tpf=admin/order/process">
+		            <input type="hidden" name="mode" id="mode">
+                    <input type="hidden" name="search_data">
+                    <thead>
+                    <tr>
+                        <td><input type="checkbox" name="select_all" onclick=selectAllCheckBox('form_list'); /></td>
+                        <td>주문번호</td>
+                        <td style="width:120px;">주문일자</td>
+                        <td>상품명</td>
+                        <td style="width:80px;">주문자</td>
+                        <td style="width:110px;">연락처</td>
+                        <td style="width:80px;">결제금액</td>
+                        <td style="width:80px;">결제방법</td>
+                        <td style="width:90px;">상태</td>
+                        <td style="width:60px;">명령</td>
+                    </tr>
+                    </thead>
+<?php
+if (!empty($data['list'])) {
+    foreach($data['list'] as $key => $val) {
+        echo '      <tr>
+                        <td><input type="checkbox" name="list[]" value="'.$val['code'].'" /></td>
+                        <td>'.$val['order_number'].'</td>
+                        <td>'.$val['order_date'].'</td>
+                        <td align="left">'.$val['goodname'].'</td>
+                        <td>'.$val['name'].'</td>
+                        <td>'.$val['mobile'].'</td>
+                        <td align="right" style="color:#ff0505; font-weight:bold">'.$val['total_price'].'</td>
+                        <td>'.@$arrPaymentType[$val['payment_type']].'</td>
+                        <td style="font-weight:bold">'.$arrPaymentStatus[$val['payment_status']].'</td>
+                        <td><button type="button" onclick="onclick_update('.$val['code'].');" class="btn btn-primary btn-xs">보기</button></td>
+                    </tr>';
+    }
+}
+else {
+        echo '      <tr><td colspan="11"><br>등록된 자료가 없습니다.<br><br></td></tr>';
+}
+?>
+                    </form>
+                    </table>
+                    <br>
+
+                    <button type="button" onclick="selectDelete();" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
+                    <button type="button" onclick="downloadExcel();" class="btn btn-warning btn-sm"><i class="fa" aria-hidden="true"></i> Excel 다운로드</button>
+                    <form name="form_download" method="post" action="?tpf=admin/order/process">
+                        <input type="hidden" name="mode" value="downloadExcel">
+                        <input type="hidden" name="search_data">
+                    </form>
+
+                    <div style="text-align:right;">
+                    <?php echo $data['page'];?>
+                    </div>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="form_register" method="post" action="?tpf=admin/order/process">
+            <input type="hidden" name="mode" id="mode" value="update_payment_status">
+            <input type="hidden" name="payment_code" id="payment_code">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">주문내역 상세 보기</h4>
+            </div>
+            <div class="modal-body">
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 구매 내역</p></h4>
+
+            <span id="order_list_txt"></span>
+
+            <div class="col-xs-5" style="padding:0 5px 0 0;">
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 결제 정보</p></h4>
+            <table class="table table-bordered">
+            <tr>
+                <td class="menu">주문자</td>
+                <td align="left"><span id="order_name"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">주문자 휴대폰</td>
+                <td align="left"><span id="order_mobile"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">주문번호</td>
+                <td align="left"><span id="order_number"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">결제금액</td>
+                <td align="left"><span id="total_price"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">결제방법</td>
+                <td align="left"><span id="payment_type"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">입금계좌번호</td>
+                <td align="left"><span id="bank_account"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">입금은행명</td>
+                <td align="left"><span id="bank_name"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">예금주명</td>
+                <td align="left"><span id="bank_depositor"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">입금자명</td>
+                <td align="left"><span id="pay_name"></span></td>
+            </tr>
+            </table>
+            </div>
+
+            <div class="col-xs-7" style="padding:0 0 0 5px;">
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 수취인 정보</p></h4>
+            <table class="table table-bordered">
+            <tr>
+                <td class="menu">성명</td>
+                <td align="left"><span id="receiver_name"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">휴대폰</td>
+                <td align="left"><span id="receiver_mobile"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">배송지 주소</td>
+                <td align="left">
+                <span id="receiver_addr"></span>
+                <span id="receiver_region"></span>
+                <span id="receiver_city"></span>
+                <span id="receiver_state"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="menu">메모</td>
+                <td align="left"><span id="request_message"></span></td>
+            </tr>
+            <tr>
+                <td class="menu">관리자 메모</td>
+                <td align="left">
+                <span style="float:left">
+                <textarea name="memo" id="memo" class="form-control input-sm" rows="5" style="width:200px;"></textarea>
+                </span>
+                <span style="padding:20px 0 0 10px; float:left">
+                <button type="button" onclick="updateMemo()" class="btn btn-primary btn-sm">저장<br>하기</button>
+                </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="menu">상태</td>
+                <td align="left">
+                <span style="float:left">
+                <input type="text" name="delivery_code" id="delivery_code" class="form-control input-sm" style="float:left; margin-right:2px; width:100px;" placeholder="송장번호">
+                <select name="payment_status" id="payment_status" class="form-control input-sm" style="width:90px;">
+<?php
+foreach($arrPaymentStatus as $key => $val) {
+    echo '      <option value="'.$key.'">'.$val.'</option>';
+}
+?>
+                </select>
+                </span>
+                <span style="padding-left:10px; float:left"><button type="button" onclick="updatePaymentStatus()" class="btn btn-primary btn-sm">저장하기</button></span>
+                </td>
+            </tr>
+            </table>
+            </div>
+
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

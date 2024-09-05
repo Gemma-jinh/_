@@ -1,0 +1,28 @@
+<div class="product_slider_wrap--fc">
+	<ul class="product_slider--fc">
+<?php
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        if ($val['url']) {  // 링크주소 있을때
+            $url = $val['url'];
+        }
+        else {              // 디폴트 연결
+            if ($folder == '' and !empty($val['category_url'])) $folder = '/'.$val['category_url'];
+            $url = $folder.'?tpf=product/view&category_code='.$val['category_code'].'&code='.$val['code'];
+        }
+
+        echo '
+        <li class="product_slider__item--fc">
+            <a href="'.$url.'">
+                <div class="imgWrap--fc">'; if(!empty($arrFile[$val['code']][6]['url'])) echo '<img src="'.$arrFile[$val['code']][6]['url'].'" alt="thumnail image">'; echo '</div>
+                <p class="item_name--fc">'; if(!empty($val['arrContent'][1])) echo $val['arrContent'][1]; echo '</p>
+            </a>
+        </li>';
+    }
+}
+else {
+    echo '<div style="text-align:center;">'._LANG('등록된 자료가 없습니다.').'</div>';
+}
+?>
+	</ul>
+</div>

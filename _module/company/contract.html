@@ -1,0 +1,23 @@
+<?php
+if ($type == 'provision') {     // 이용약관
+?>
+<div class="subcontents--fc">
+    <?=nl2br($arrContract['provision'])?>
+</div>
+<?php
+}
+else if ($type == 'privacy') {  // 개인정보 취급방침
+?>
+<div class="subcontents--fc">
+    <?=nl2br($arrContract['privacy'])?>
+</div>
+<?php
+}
+else if ($type == 'email') {    // 이메일 무단 수집거부
+?>
+<div class="subcontents--fc">
+    <?=nl2br($arrContract['email'])?>
+</div>
+<?php
+}
+?>

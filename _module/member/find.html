@@ -1,0 +1,84 @@
+<section class="section-cart-list--fc">
+    <div class="inner">
+    <!-- member-wrap -->
+    <section class="member-wrap--fc">
+        <h3 class="sub-conts-tit"><?=_LANG('아이디/비밀번호 찾기')?></h3>
+        <!-- join-form-wrap -->
+        <section class="join-form-wrap--fc">
+            <form name="form1" action="/index.php?tpf=_module/member/process" method="post">
+            <input type="hidden" name="mode" value="find_id">
+                <fieldset>
+                    <legend><?=_LANG('아이디 찾기')?><span><?=_LANG('회원정보에 입력하신 성함과 휴대폰 번호를 입력해 주세요.')?></span></legend>
+                    <p class="t_r fz_18 color_999"><em style="color:#e40000">*</em> 필수입력 항목</p>
+                    <table class="form-table--fc">
+                        <colgroup>
+                            <col width="240px" />
+                            <col width="*" />
+                        </colgroup>
+                        <tbody>
+                            <tr class="join-form-name--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('성명')?></label></th>
+                                <td><input type="text" name="name" placeholder="<?=_LANG('성명을 입력해주세요.')?>" /></td>
+                            </tr>
+<!--
+                            <tr class="join-form-name--fc">
+                                <th scope="row"><?=_LANG('이메일 주소')?></th>
+                                <td><input type="text" name="email" placeholder="id@nugunashop.com" /></td>
+                            </tr>
+-->
+                            <tr class="join-form-tel--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('휴대폰 번호')?></label></th>
+                                <td><input type="tel" name="mobile1" value="<?=@$arrMember['mobile1']?>" placeholder="" required /> - <input type="tel" name="mobile2" value="<?=@$arrMember['mobile2']?>" placeholder="" required /> - <input type="tel" name="mobile3" value="<?=@$arrMember['mobile3']?>" placeholder="" required /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </form>
+
+            <div class="join-btn-wrap--fc">
+                <ul>
+                    <li><a href="#none" onclick="findId();" class="btn-confirm"><?=_LANG('아이디 찾기')?></a></li>
+                    <li><a href="/" class="btn-cancel"><?=_LANG('취소')?></a></li>
+                </ul>
+            </div>
+
+            <form class="mt-5" name="form2" action="/index.php?tpf=_module/member/process" method="post">
+            <input type="hidden" name="mode" value="find_password">
+                <fieldset>
+                    <legend><?=_LANG('비밀번호 찾기')?><span><?=_LANG('회원정보에 입력하신 이메일 주소로 새롭게 변경된 비밀번호를 보내드립니다.')?></span></legend>
+                    <p class="t_r fz_18 color_999"><em style="color:#e40000">*</em> 필수입력 항목</p>
+                    <table class="form-table--fc">
+                        <colgroup>
+                            <col width="240px" />
+                            <col width="*" />
+                        </colgroup>
+                        <tbody>
+                            <tr class="join-form-name--fc">
+                                <th scope="row" class="required"><?=_LANG('아이디')?></th>
+                                <td><input type="text" name="id" placeholder="<?=_LANG('아이디를 입력해주세요.')?>"/></td>
+                            </tr>
+                            <tr class="join-form-name--fc">
+                                <th scope="row" class="required"><?=_LANG('성명')?></th>
+                                <td><input type="text" name="name" placeholder="<?=_LANG('성명을 입력해주세요.')?>" /></td>
+                            </tr>
+                            <tr class="join-form-tel--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('휴대폰 번호')?></label></th>
+                                <td><input type="tel" name="mobile1" value="<?=@$arrMember['mobile1']?>" placeholder="" required /> - <input type="tel" name="mobile2" value="<?=@$arrMember['mobile2']?>" placeholder="" required /> - <input type="tel" name="mobile3" value="<?=@$arrMember['mobile3']?>" placeholder="" required /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </form>
+
+            <div class="join-btn-wrap--fc">
+                <ul>
+                    <li><a href="#find" onclick="findPassword();" class="btn-confirm"><?=_LANG('비밀번호 찾기')?></a></li>
+                    <li><a href="/" class="btn-cancel"><?=_LANG('취소')?></a></li>
+                </ul>
+            </div>
+        </section>
+        <!-- //join-form-wrap -->
+    </section>
+    <!-- //member-wrap -->
+</div>
+</section>

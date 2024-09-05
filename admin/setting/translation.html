@@ -1,0 +1,87 @@
+<section class="content-header">
+    <h1>
+    컨텐츠 전체 복사&번역
+    <small>Translation</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>Setting</li>
+        <li class="active">컨텐츠 전체 복사&번역</li>
+    </ol>
+</section>
+
+<section class="content" style="padding:15px 15px 0 15px">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="col-md-6">
+
+                    <form name="formCopyTranslation" method="post" action="?tpf=admin/setting/process">
+                    <input type="hidden" name="mode" id="mode" value="copyTranslateAll">
+                    <div class="modal-body">
+                    <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 메뉴 선택</p></h4>
+                    <table class="table table-bordered" style="width:500px;">
+                        <tbody>
+                        <tr>
+                            <td class="menu">언어 선택</td>
+                            <td align="left">
+                                <select name="to_locale"class="form-control input-sm">
+                                    <option value="">선택</option>
+<?php
+$defaultLocale = getDefaultLocale();
+if(!empty($arrLocal)) {
+    foreach($arrLocal as $key => $val) {
+        if($key != $defaultLocale) {
+            echo '                    <option value="'.$key.'">'.$val.'</option>';
+        }
+    }
+}
+?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="menu">컨텐츠</td>
+                            <td align="left">
+                            <input type="checkbox" name="content[]" value="menu"> 메뉴 관리 > 메뉴<br>
+                            <input type="checkbox" name="content[]" value="head"> 메뉴 관리 > 헤더<br>
+                            <input type="checkbox" name="content[]" value="bottom"> 메뉴 관리 > 하단<br>
+                            <input type="checkbox" name="content[]" value="history"> 설정 > 연혁<br>
+                            <input type="checkbox" name="content[]" value="locale"> 설정 > 다국어<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="menu">진행 상태</td>
+                            <td align="left">
+<?php
+if ($translation_status == 'done') {
+    echo '                  <button type="button" class="btn btn-sm"><i class="fa fa-check-circle"></i> 완료</button>';
+}
+else if ($translation_status == 'ing') {
+    echo '                  <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-rotate-right"></i> 진행중</button>';
+}
+?>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p style="color:red">
+                    ※ 복사 & 번역을 원하는 컨텐츠를 선택하세요<br>
+                    ※ 본 작업시 선택된 언어의 기존 자료는 삭제됩니다.<br>
+                    ※ 작업은 번역 문구수에 따라 3-5분 이상 소요 될수 있습니다.
+                    </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="register()" class="btn btn-primary">확인</button>
+                    </div>
+                    </form>
+                    </div>
+
+                    <div class="col-md-6">
+                    </div>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>

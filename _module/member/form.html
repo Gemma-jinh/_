@@ -1,0 +1,181 @@
+<link href="//<?=_RESOURCE_URL?>/resource/css/jquery-ui.css" rel="stylesheet">
+<link href="https://<?=_RESOURCE_URL?>/resource/css/s9jss_single.css" rel="stylesheet">
+
+<section class="section-cart-list--fc">
+    <div class="inner">
+<?php
+if (isLogin()) {
+    // include('html/_skin/'._SKIN.'/layout/inc_mypage_tabs.php');
+}
+?>
+    <!-- member-wrap -->
+    <section class="member-wrap--fc">
+        <h3 class="sub-conts-tit"><?=_LANG('회원가입')?></h3>
+        <!-- join-form-wrap -->
+        <section class="join-form-wrap--fc">
+            <p class="t_r fz_18 color_999"><em style="color:#e40000">*</em> 필수입력 항목</p>
+            <form name="form" method="post" action="/index.php?tpf=_module/member/process">
+            <input type="hidden" name="mode" value="<?=$mode?>">
+                <fieldset>
+                    <!-- join-form-table -->
+                    <table class="form-table--fc">
+                        <colgroup>
+                            <col width="220" />
+                            <col width="*" />
+                        </colgroup>
+                        <tbody>
+                             <tr class="join-form-id--fc">
+                                <th scope="row" class="required"><label for="id"><?=_LANG('아이디')?></label></th>
+                                <td>
+    <?php
+    if (!isLogin()) {   // 등록
+        echo '                  <input type="text" name="id" id="id" placeholder="'._LANG('영문과 숫자 4~15자로 입력하세요.').'" required /><a href="#none" onclick="onclickCheckId();" class="check-btn--fc">'._LANG('중복확인').'</a>';
+    }
+    else {              // 수정
+        echo $arrMember['id'];
+    }
+    ?>
+                                </td>
+                            </tr>
+                            <tr class="join-form-password--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('비밀번호')?></label></th>
+                                <td>
+                                    <input type="password" name="password" placeholder="" required />
+                                    <span class="info-text--fc"><?=_LANG('영문소문자와 숫자, 특수문자 포함 8~15자로 입력하세요.')?></span>
+                                </td>
+                            </tr>
+                            <tr class="join-form-password--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('비밀번호 확인')?></label></th>
+                                <td>
+                                <input type="password" name="password_confirm" placeholder="" required />
+                                <span class="info-text--fc"><?=_LANG('비밀번호 확인을 위해 한번 더 입력하세요.')?></span>
+                                </td>
+                            </tr>
+                            <tr class="join-form-name--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('성명')?></label></th>
+                                <td>
+                                <input type="text" name="name" value="<?=@$arrMember['name']?>" placeholder="" required />
+                                </td>
+                            </tr>
+                            <tr class="join-form-tel--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('휴대폰')?></label></th>
+                                <td>
+                                    <input type="tel" name="mobile1" value="<?=@$arrMember['mobile'][0]?>" placeholder="" required="" maxlenght="3"> - 
+                                    <input type="tel" name="mobile2" value="<?=@$arrMember['mobile'][1]?>" placeholder="" required="" maxlength="4"> - 
+                                    <input type="tel" name="mobile3" value="<?=@$arrMember['mobile'][2]?>" placeholder="" required="" maxlength="4">
+                                </td>
+                            </tr>       
+                            
+                            <!--  회사전화번호 추가 -->
+                            <tr class="join-form-tel--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('회사전화번호')?></label></th>
+                                <td>
+                                    <input type="tel" name="tel1" value="<?=@$arrMember['tel'][0]?>" placeholder="" required="" maxlength="3"> -
+                                    <input type="tel" name="tel2" value="<?=@$arrMember['tel'][1]?>" placeholder="" required="" maxlength="4"> -
+                                    <input type="tel" name="tel3" value="<?=@$arrMember['tel'][2]?>" placeholder="" required="" maxlength="4">
+                                </td>
+                            </tr>
+
+                            <tr class="join-form-email--fc">
+                            	<th scope="row" class="required"><label for="">E-mail</label></th>
+                                <td>
+                                    <!-- 이메일 변경 / 관련 스크립트  sub.js -->
+                                    <div class="email-form">  
+                                        <div class="col-email-2">
+                                            <input type="text" id="email1" name="email1" value="<?=@$arrMember['email'][0]?>" placeholder=""><em>@</em><input type="text" id="email2" name="email2" value="<?=@$arrMember['email'][1]?>" placeholder="">
+                                            <div class="select w1">
+                                                <select id="selEmail" name="sel_email">
+                                                <option value="etc">직접입력</option>
+                                                <option value="naver.com">naver.com</option>                                        
+                                                <option value="hanmail.net">hanmail.net</option>
+                                                <option value="gmail.com">gmail.com</option>
+                                                <option value="yahoo.com">yahoo.com</option>
+                                                <option value="hotmail.com">hotmail.com</option>
+                                                <option value="korea.com">korea.com</option>
+                                                <option value="nate.com">nate.com</option>
+                                                </select> 
+                                            </div>
+                                        </div>
+                                        <a href="#none" onclick="checkEmailForm();" class="check-btn--fc"><?=_LANG('중복확인')?></a>
+                                        <span>
+                                            <input type="checkbox" id="email_agree" name="is_receive_email" value="y"<?php if(@$arrMember['is_receive_email'] == 'y') { echo ' checked';}?> />
+                                            <label for="email_agree"><?=_LANG('E-mail 수신동의')?></label>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="join-form-name--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('주소')?></label></th>
+                                <td class="addr_area">
+<?php
+if (getLocale() == 'ko') {
+if(getLoginLevel()!="99"){  // 회원
+?>
+                                                    <input type="text" name="zipcode" value="<?=@$arrMember['zipcode']?>" style="width:7.9375rem; background-color:#f9f9f9;" /><a href="#none" onclick="openDaumPostcode();" class="check-btn--fc btn_post">
+                                                            <?=_LANG('우편번호')?></a><br />
+                                                    <input style="width:100%" type="text" name="addr" value="<?=@$arrMember['addr']?>" /><input style="width:100%" type="text" name="addr_etc" value="<?=@$arrMember['addr_etc']?>" />
+                                    <?php
+}
+else {  // 비회원
+?>
+                                                    <input type="text" name="zipcode" readonly style="width:3.9375rem; background-color:#eee;margin-right:0.625rem;" /><a href="#none" onclick="openDaumPostcode();" class="check-btn--fc btn_post"><?=_LANG('우편번호')?></a><br />
+                                                    <input style="width:100%" type="text" name="addr" /><input style="width:100%" type="text" name="addr_etc" />
+                                    <?php
+}
+}
+else {      // 영문
+?>
+                                                    <select name="receiver_region" onchange="selectCountry(this.value)" style="appearance: button">
+                                                        <option value="">Country/Region</option>
+                                        <?php
+if (!empty($arrDeliveryCountry['list'])) {
+foreach($arrDeliveryCountry['list'] as $key => $val) {
+                                                echo '  <option value="'.$val['code'].'">'.$val['country'].'</option>';
+}
+}
+?>
+                                                    </select>
+                                                    <input type="text" name="receiver_addr" value="<?=$arrMember['addr']?>" placeholder="<?=_LANG('기본주소')?>" style="width:100%" /><br />
+                                                    <input type="text" name="receiver_addr_etc" value="<?=$arrMember['addr_etc']?>" placeholder="<?=_LANG('상세주소')?>" /><br />
+                                                    <input type="text" name="receiver_city" placeholder="City" />
+                                                    <input type="text" name="receiver_state" placeholder="State/Province/Region" />
+                                                    <input type="text" name="receiver_zipcode" value="<?=$arrMember['zipcode']?>" placeholder="ZIP" style="width:80px;" />
+<?php
+        }
+        ?>
+
+                                </td>
+                                <!-- 기존 <td>
+                                <input type="text" value="<?=@$arrMember['zipcode']?>" name="zipcode" id="zipcode" readonly class="form-control--fc input-sm--fc" style="width:15%; background-color:#dddddd; float:left;" />&nbsp;<a href="#none" onclick="callAddress();" class="check-btn--fc"><?=_LANG('주소입력')?></a><span id="displaySearch" style="float:right; font-size:13px; padding-top:10px; display:none;">[검색 자료 : <span id="displaySearchCount" style="color:red;"></span>건]</span><br>
+                                <input type="text" class="input-addr--fc" id="address" placeholder="주소입력 예) 느티마을4단, ㄱㄴㅍㅇㄴㅅ, 여의 메리츠, 행자부, 목동아파트, 테헤란로 152" style="display:none; margin:5px 0; width:100%;">
+                                <input type="text" value="<?=@$arrMember['addr']?>" name="addr" id="addr" readonly class="form-control--fc input-sm--fc" style="margin:5px 0; width:100%;  background-color:#dddddd;" />
+                                <input type="text" value="<?=@$arrMember['addr_etc']?>" name="addr_etc" id="addr_etc" placeholder="상세주소" class="form-control--fc input-sm--fc" style="width:100%;" />
+                                </td>
+                            -->
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- //join-form-table -->
+                </fieldset>
+            </form>
+
+            <div class="join-btn-wrap--fc">
+				<ul>					
+					<li><a href="#next" onclick="register('<?=$mode?>');" class="btn-confirm"><?=$title2?></a></li>
+                    <li><a href="/" class="btn-cancel"><?=_LANG('취소')?></a></li>
+				</ul>
+			</div>
+            <div class="btn-withdrawal--fc" style="display:<?=$displayWithdrawButton?>"><a href="/member/withdrawal" onclick=""><?=_LANG('회원탈퇴')?></a></div>
+
+        </section>
+        <!-- //join-form-wrap -->
+
+    </section>
+    <!-- //member-wrap -->
+    </div>
+
+    <form name="formID" method="post" action="/index.php?tpf=_module/member/process">
+    <input type="hidden" name="mode" value="checkId">
+    <input type="hidden" name="id">
+    </form>
+</section>

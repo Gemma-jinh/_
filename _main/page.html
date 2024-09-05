@@ -1,0 +1,95 @@
+<!-- 서브 내용 -->
+<?php
+if ($content) echo $content;
+
+// 팝업영역
+$popup_tag = '';
+if(!empty($arrPopup)) {
+	foreach($arrPopup as $key =>
+$val) { $popup_tag .= '
+<div
+  id="popuplayer'.$val['code'].'"
+  class="main_layer_pop_box"
+  style="
+    top: '.$val[' top_position '].' px;
+    left: '.$val[' left_position '].' px;
+  "
+>
+  <div
+    class="main_layer_pop_box__body"
+    style="width: '.$val[' width '].'; height: '.$val[' height '].'"
+  >
+    '.$val['content'].'
+  </div>
+  <div class="main_layer_pop_box__foot">
+    <form class="cb" name="popuplayer'.$val['code'].'">
+      <span style="color: grey; padding: 10px 0px; display: inline-block"
+        >'; if($val['popup_cookie'] == "y") { $popup_tag .= '
+        <label>
+          <input
+            type="checkbox"
+            name="popupcheck"
+            value="Y"
+            style="
+              display: inline-block !important;
+              border: none;
+              color: #ffffff;
+              width: 18px;
+              height: 18px;
+              vertical-align: middle;
+              margin-top: -4px;
+            "
+          />
+          <span style="color: #fff">'._LANG('오늘하루열지않음').'</span> </label
+        >'; } else { $popup_tag .= '
+        <input
+          type="hidden"
+          name="popupcheck"
+          value="Y"
+          style="border: none; color: #ffffff"
+        />'; } $popup_tag .= '
+        <span style="display: inline-block; width: 300px">&nbsp;</span>
+      </span>
+      <a
+        href="javascript:popupClose(\'popuplayer'.$val['code'].'\');"
+        style="float: right"
+        ><span
+          style="
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #8988;
+            display: inline-block;
+          "
+          >'._LANG('닫기').'</span
+        ></a
+      >&nbsp;&nbsp;
+    </form>
+  </div>
+</div>
+'; } } if (!empty($script_tag)) { $popup_tag .= '
+<script>
+  ".$script_tag.";
+</script>
+'; } ?>
+
+<script>
+  $(function () {
+    $(".main_layer_pop_box__body").each(function () {
+      if ($(this).find("iframe").length != 0) {
+        $(this).css({
+          position: "relative",
+          height: "0 !important",
+          "padding-bottom": "56.25%",
+          overflow: "hidden",
+        });
+        $(this).find("iframe").css({
+          position: "absolute",
+          top: "0",
+          left: "0",
+          width: "100%",
+          height: "100%",
+        });
+      }
+    });
+  });
+</script>

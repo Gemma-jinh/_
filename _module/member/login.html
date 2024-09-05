@@ -1,0 +1,65 @@
+<!-- member-wrap -->
+<div class="inner">
+	<section class="member-wrap--fc">
+        <h3 class="sub-conts-tit"><?=_LANG('소리탐정')?></h3>
+        <div class="row-box">
+            <!-- img box -->
+            <figure class="col-box img-bg-copy">
+                <img class="bg" src="/html/_skin/img/sub/member/img_login.jpg" alt=""/>
+            </figure>
+            <div class="col-box login-form">
+                <!-- login-form-wrap -->
+                <section class="login-form-wrap--fc">
+                    <form name="form" action="/index.php?tpf=_module/member/login_process" method="post">
+                    <input type="hidden" name="return_url" value="<?=@$return_url?>">
+                        <fieldset>
+                            <legend class="hidden"><?=_LANG('로그인')?></legend>
+                            <p class="fz_24"><?=_LANG('로그인 후 소리탐정을 이용하실 수 있습니다.')?></p>
+                            <ul class="login-input--fc">
+                                <li><input type="text" name="id" value="<?=$save_id?>" placeholder="<?=_LANG('아이디')?>" /></li>
+                                <li><input type="password" name="password" onkeyup="if(event.keyCode == 13) register()" placeholder="<?=_LANG('비밀번호')?>" /></li>
+                            </ul>
+                            <div style="overflow:hidden;">
+                                <p class="save-id-wrap--fc"><input type="checkbox" id="id_save" name="save_id" value="y" <?=$save_id_checked?> /><label for="id_save"><?=_LANG('아이디저장')?></label></p>
+                                <p class="find-btn-wrap--fc"><a href="/member/find"><?=_LANG('아이디/비밀번호 찾기')?></a></p>
+                            </div>
+                            <div class="join-btn-wrap--fc">
+                                <ul>
+                                    <li><a href="#" onclick="register();" class="btn-login"><?=_LANG('로그인')?></a></li>
+                                    <li><a href="/member/stipulation" class="btn-join"><?=_LANG('회원가입')?></a></li>
+                                    
+                                </ul>
+                            </div>
+
+                <?php
+                if ($arrSNS['kakao_sns_use'] == 'y' or $arrSNS['naver_sns_use'] == 'y' or $arrSNS['google_sns_use'] == 'y' or $arrSNS['facebook_sns_use'] == 'y' or $arrSNS['twitter_sns_use'] == 'y') {
+                echo '          <div class="login-btn--sns--fc">
+                                <!--<div class="hr_txt">
+                                    <span>'._LANG('또는 소셜 미디어를 사용하여 로그인').'</span>
+                                </div>-->
+                                <ul>';
+                if ($arrSNS['kakao_sns_use'] == 'y') echo '<li><a href="'.$kakao_login_url.'" class="for_kakao" data-tooltip-text="'._LANG('카카오 계정으로 로그인').'">'._LANG('카카오 계정으로 로그인').'</a></li>';
+                if ($arrSNS['naver_sns_use'] == 'y') echo '<li><a href="'.$naver_login_url.'" class="for_naver" data-tooltip-text="'._LANG('네이버 계정으로 로그인').'">'._LANG('네이버 계정으로 로그인').'</a></li>';
+                if ($arrSNS['google_sns_use'] == 'y') echo '<li><a href="'.$google_login_url.'" class="for_google" data-tooltip-text="'._LANG('구글 계정으로 로그인').'">'._LANG('구글 계정으로 로그인').'</a></li>';
+                if ($arrSNS['facebook_sns_use'] == 'y') echo '<li><a href="'.$facebook_login_url.'" class="for_facebook" data-tooltip-text="'._LANG('페이스북 계정으로 로그인').'">'._LANG('페이스북 계정으로 로그인').'</a></li>';
+                if ($arrSNS['twitter_sns_use'] == 'y') echo '<li><a href="'.$twitter_login_url.'" class="for_twitter" data-tooltip-text="'._LANG('트위터 계정으로 로그인').'">'._LANG('트위터 계정으로 로그인').'</a></li>';
+                echo '              </ul>
+                            </div>';
+                }
+                ?>
+
+                            <p class="login-btn-wrap--fc" style="display:none;">
+                                <a href="#none" onclick="register();" class="btn-login--fc"><?=_LANG('로그인')?></a>
+                                <a href="/index.php?tpf=_module/member/stipulation" class="btn-join--fc"><?=_LANG('회원가입')?></a>
+                            </p>
+                        </fieldset>
+                    </form>
+                </section>
+                <!-- //login-form-wrap -->
+            </div>
+        </div>
+		
+
+	</section>
+</div>
+<!-- //member-wrap -->

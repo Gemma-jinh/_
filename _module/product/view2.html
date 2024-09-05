@@ -1,0 +1,470 @@
+<!-- 제품 리스트 섹션 -->
+<div class="sub-cont-section section-02 bg_f3f5f8">
+	<div class="inner">
+		<!-- 제품 리스트 탭 (2차 카테고리 표출) -->
+		<div class="sub_tab_white">
+			<ul>
+                <li class="<?php if($category_code == '' || strlen($category_code) == 2 ) { echo ' on';}?>"><a href="?tpf=product/view2&category_code=<?=$parent_category_code?>"><?=_LANG('전체');?></a></li>
+<?php
+//if(getenv("REMOTE_ADDR") == "175.198.83.198") { echo "<div align=left><pre>"; var_dump($category_code); echo "</pre>"; die("<br>End</div>");}
+        if (!empty($arrCategory['list'])) {
+    			foreach($arrCategory['list'] as $key => $val) {
+?>
+                    <li class="<?php if($val['category_code'] == $category_code) { echo ' on';} ?>"><a href="?tpf=product/view2&category_code=<?=$val['category_code']?>" ><?=_LANG($val['title']);?></a></li>
+<?php
+				}
+        }
+?>
+			</ul>
+		</div>
+		<!-- // 제품 리스트 탭 (2차 카테고리 표출) -->
+
+		<!-- 제품 개수 -->
+		<p class="fs_17 fw_300 color_666 lh_1 mt50"><?=_LANG('총');?> <?=$arrProduct["total"]?><?=_LANG('건');?></p>
+		<!-- // 제품 개수 -->
+
+		<!-- 제품 리스트 -->
+		<div class="mt20">
+			<ul class="flex_box--fc ea-4 ea-lg-3 ea-sm-1 space-7 space-top-30">
+				<!-- 1EA 반복 -->
+<?php
+//if(getenv("REMOTE_ADDR") == "175.198.83.198") { echo "<div align=left><pre>";  var_dump($arrProduct['list']); var_dump($arrFile); echo "</pre>"; die("<br>End</div>");}
+        if (!empty($arrProduct['list'])) {
+		    foreach($arrProduct['list'] as $key => $val) {
+                // 링크 주소 변환
+                if ($val['url']) {  // 링크주소 있을때
+                    $url = $val['url'];
+                }
+                else {              // 디폴트 연결
+                    if ($folder == '' and !empty($val['category_url'])) $folder = '/'.$val['category_url'];
+                    $url = $folder.'?tpf=product/view2&category_code='.$val['category_code'].'&code='.$val['code'].'#product_focus';
+                }
+				$cateVal = @unserialize($val['category_name'])[$val['locale']];
+                $val['category_name'] = @unserialize($val['category_name'])[$val['locale']];
+?>
+
+				<li>
+					<div class="products_list_inner ef_bor_hover_wrap on">
+						<figure class="ef_bor_hover">
+							<!-- / 제품 이미지 -->
+							<img src="<?php if(!empty($arrFile[$val['code']]['url'])) echo $arrFile[$val['code']]['url']; ?>" alt="" />
+						</figure>
+						<p class="fs_17 fw_300 lh_1_4 t_c mt15"><?=_LANG($val['title_ko']);?></p>
+						<p class="fs_17 fw_300 lh_1_4 t_c"><?=_LANG($val['title_en']);?></p>
+						<a href="<?=$url?>"></a><!-- / 제품 링크 -->
+					</div>
+				</li>
+<?php
+		    }
+		}
+		else {
+            echo '<li style="width:100% !important;text-align:center;">'._LANG("등록된 자료가 없습니다.").'</li>';
+		}
+?>
+				<!-- // 1EA 반복 -->
+			</ul>
+
+<div id="product_focus"> </div>
+
+		</div>
+		<!-- // 제품 리스트 -->
+	</div>
+</div>
+<!-- // 제품 리스트 섹션 -->
+
+<!-- 제품 상세 상단 (이미지 + 간단한 스팩) -->
+<?php
+//if(getenv("REMOTE_ADDR") == "175.198.83.198") { echo "<div align=left><pre>"; var_dump($arrInfoProduct); echo "</pre>"; die("<br>End</div>");}
+if (count($arrCode) > 0) {  // 제품이 있을때면 보임 시작
+?>
+    <div class="sub-cont-section section-03">
+        <div class="inner">
+            <div class="products_detail_top">
+                <!-- 이미지 -->
+                <div class="products_detail_top__img">
+                    <figure>
+                        <img src="<?=$arrInfoProduct["arrFile"][0]["url"]?>" alt="" />
+                    </figure>
+                </div>
+                <!-- // 이미지 -->
+
+                <!-- 제품 정보 -->
+                <div class="products_detail_top__info">
+                    <h4 class="fs_17 fw700 color_point mt10"><?=$parent_category_name?></h4><!-- / 1차 카테고리 -->
+                    <div class="products_detail_top__info__tit_box">
+                        <div class="prd_tit">
+                            <h6 class="fs_40 fw_300 lh_1_3 mt15">
+                                <?=_LANG($arrInfoProduct["title_en"]);?>
+                                <small class="display_block fs_17 fw_300 color_666 mt5"><?=_LANG($arrInfoProduct["title_ko"]);?></small>
+                            </h6>
+                        </div>
+                        <div class="prd_btn">
+                            <button type="button" onclick="goToProductsList();"><?=_LANG('리스트 보기');?></button>
+                        </div>
+                    </div>
+
+                    <!-- 간단한 스팩 -->
+                    <div class="products_detail_top__info__spec">
+                        <?=$arrInfoProduct["content"]?>
+                    </div>
+                    <!-- // 간단한 스팩 -->
+                </div>
+                <!-- // 제품 정보 -->
+            </div>
+        </div>
+    </div>
+    <!-- // 제품 상세 (이미지 + 간단한 스팩) -->
+
+<div id="offlineTarget2_focus"> </div>
+
+    <div class="sub-cont-section section-04 section--products_spec tabname_event_wrap">
+        <div class="products_spec_tab_wrap">
+            <div class="inner">
+                <div class="products_spec_tab_btn tabname_btn_box">
+                    <ul>
+                        <!--
+                            / 탭 버튼 영역
+                            / (탭 버튼과 탭 컨텐츠 li의 data-name 값이 일치하는 것끼리 매칭되어 탭 이벤트 실행)
+                            / (탭 버튼의 data-name 값이 disabled 인 경우 탭기능을 사용하지 않고 a 태그의 링크로 이동)
+                        -->
+    <?php
+        if ($parent_category_code=="10" || $parent_category_code=="11") {   // 10,11 : 도면,형식기호,카탈로그
+    ?>
+                            <li class="on" data-name="dataTab-01"><a href="#tab"><?=_LANG('도면');?></a></li>
+                            <li data-name="dataTab-02"><a href="#tab"><?=_LANG('형식기호');?></a></li>
+                            <li data-name="dataTab-03"><a href="#tab"><?=_LANG('카탈로그');?></a></li>
+    <?php
+        }else if ($parent_category_code=="12" || $parent_category_code=="14") { // 12,14 : 형식기호,제품선정,카탈로그
+    ?>
+                            <li class="on" data-name="dataTab-01"><a href="#tab"><?=_LANG('형식기호');?></a></li>
+                            <li data-name="disabled"><a href="<?=$arrInfoProduct["product_url"]?>" target="_blank"><?=_LANG('제품선정');?></a></li>
+                            <li data-name="dataTab-02"><a href="#tab"><?=_LANG('카탈로그');?></a></li>
+    <?php
+        }else if ($parent_category_code=="13") {    // 13 : Part Number Guide,Dimensional Drawings,Performance Curves,Option
+    ?>
+                            <li class="on" data-name="dataTab-01"><a href="#tab">Part Number Guide</a></li>
+                            <li data-name="dataTab-02"><a href="#tab">Dimensional Drawings</a></li>
+                            <li data-name="dataTab-03"><a href="#tab">Performance Curves</a></li>
+                            <li data-name="dataTab-04"><a href="#tab">Option</a></li>
+    <?php
+        }else if ($parent_category_code=="15" || $parent_category_code=="16") { // 15,16 : 제원,카탈로그
+    ?>
+                            <li class="on" data-name="dataTab-01"><a href="#tab"><?=_LANG('제원');?></a></li>
+                            <li data-name="dataTab-02"><a href="#tab"><?=_LANG('카탈로그');?></a></li>
+    <?php
+        }
+    ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="inner">
+            <div class="tab_conts_box mt30">
+                <ul>
+                    <!-- / 탭 컨텐츠 영역 (탭 버튼과 탭 컨텐츠 li의 data-name 값이 일치하는 것끼리 매칭되어 탭 이벤트 실행) -->
+<?php
+    if ($parent_category_code=="10" || $parent_category_code=="11") {   // 10,11 : 도면,형식기호,카탈로그
+?>
+                        <li data-name="dataTab-01">
+                         <!-- 도면 -->
+                            <div class="form_search_wrap">
+                                <div class="form_search__right">
+                                    <form name="formSearch" method="get" action="?#offlineTarget2_focus">
+                                    <input type="hidden" name="tpf" value="product/view2">
+                                    <input type="hidden" name="category_code" value="<?=$this->reqData['category_code']?>">
+                                    <input type="hidden" name="code" value="<?=$this->reqData['code']?>">
+
+
+                                        <div class="form_search__right__inner">
+                                            <input type="text" name="motor_capacity" id="motor_capacity" value="<?=@$this->reqData['motor_capacity']?>" placeholder="모터용량 입력" />
+                                            <input type="text" name="reduction_ratio" id="reduction_ratio" value="<?=@$this->reqData['reduction_ratio']?>" placeholder="감속비 입력" />
+
+                                            <div class="prd_btn">
+                                                <button class="bg_base" onclick="javascript:search();"><?=_LANG('검색');?></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="table-wrap">
+                                <table class="table">
+                                    <colgroup>
+                                        <col style="width: 12%;" />
+                                        <col style="width: 12%;" />
+                                        <col style="width: 12%;" />
+                                        <col />
+                                        <col style="width: 8.125rem;" />
+                                        <col style="width: 8.125rem;" />
+                                        <col style="width: 8.125rem;" />
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th><?=_LANG('모델명');?></th>
+                                            <th><?=_LANG('형번');?></th>
+                                            <th><?=_LANG('감속비');?></th>
+                                            <th><?=_LANG('모터용량');?></th>
+                                            <th>CAD</th>
+                                            <th>PDF</th>
+                                            <th><?=_LANG('데이터시트');?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+    <?php
+        // 리스트
+        if (!empty($arrDrawing['list'])) {
+            foreach($arrDrawing['list'] as $key => $val) {
+    ?>
+
+                                        <tr>
+                                            <td><?=$val['model_name']?></td>
+                                            <td><?=$val['model_number']?></td>
+                                            <td><?=$val['reduction_ratio']?></td>
+                                            <td><?=$val['motor_capacity']?></td>
+                                            <td>
+                                                <div class="fs_0 t_c">
+                                                <?php
+                                                    if (!empty($arrFile2[$val['code']][1])) {    // 2D CAD
+                                                        echo '<a class="btn_down" href="/index.php?tpf=common/save_as&file_path='.$arrFile2[$val['code']][1]['file_path'].'&file_name='.$arrFile2[$val['code']][1]['file_name'].'&orig_name='.urlencode($arrFile2[$val['code']][1]['orig_name']).'" download>2D</a>';
+                                                    }
+                                                ?>
+                                                <?php
+                                                    if (!empty($arrFile2[$val['code']][2])) {    // 3D CAD
+                                                        echo '<a class="btn_down type_base" href="/index.php?tpf=common/save_as&file_path='.$arrFile2[$val['code']][2]['file_path'].'&file_name='.$arrFile2[$val['code']][2]['file_name'].'&orig_name='.urlencode($arrFile2[$val['code']][2]['orig_name']).'" download>3D</a>';
+                                                    }
+                                                ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="fs_0 t_c"></div>
+                                                <?php
+                                                    if (!empty($arrFile2[$val['code']][3])) {    // PDF
+                                                        echo '<a class="btn_down type_base" href="/index.php?tpf=common/save_as&file_path='.$arrFile2[$val['code']][3]['file_path'].'&file_name='.$arrFile2[$val['code']][3]['file_name'].'&orig_name='.urlencode($arrFile2[$val['code']][3]['orig_name']).'" download>Download</a>';
+                                                    }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <div class="fs_0 t_c"></div>
+                                                <?php
+                                                    if (!empty($arrFile2[$val['code']][4])) {    // 데이터시트
+                                                        echo '<a class="btn_down type_base" href="/index.php?tpf=common/save_as&file_path='.$arrFile2[$val['code']][4]['file_path'].'&file_name='.$arrFile2[$val['code']][4]['file_name'].'&orig_name='.urlencode($arrFile2[$val['code']][4]['orig_name']).'" download>Download</a>';
+                                                    }
+                                                ?>
+                                            </td>
+                                        </tr>
+    <?php
+            }
+        }
+        else {
+                echo '      <tr><td colspan="7"><br>등록된 자료가 없습니다.<br><br></td></tr>';
+        }
+    ?>
+                                    </tbody>
+                                </table>
+                                <p class="mb_only fc-point">* 좌우로 밀어보세요</p>
+                            </div>
+
+                            <?php echo $arrDrawing['page'];?>
+                            <!--div class="board-paging">
+                                <ol>
+                                    <li class="on"><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                </ol>
+                            </div-->
+                            <!-- // 도면 -->
+                        </li>
+                        <li data-name="dataTab-02">
+                            <!-- 형식기호 -->
+                            <div class="editor_inner">
+                                <?=$arrInfoProduct["type_code"]?>
+                            </div>
+                            <!-- // 형식기호 -->
+                        </li>
+                        <li data-name="dataTab-03">
+                            <!-- 카탈로그 -->
+                            <section class="board-wrap--fc">
+                                <section class="gallery-list--fc type_brochure">
+    <?php
+        // 리스트
+        if (!empty($data['list'])) {
+            foreach($data['list'] as $key => $val) {
+                if (file_exists(_USER_DIR.'/board/'.$val['code'].'_tn')) {
+                    $image_url = _USER_URL.'/board/'.$val['code'].'_tn';
+                } else if ($val['image_url']) {
+                    $image_url = $val['image_url'];
+                } else {
+                    $image_url = '/img/noimage.gif';
+                }
+    ?>
+                                    <figure>
+                                        <a href="#none"
+                                            onclick="location.replace('/index.php?tpf=common/save_as&file_path=<?=$val['file_path']?>&file_name=<?=$val['file_name']?>&orig_name=<?=urlencode($val['orig_name'])?>');">
+                                            <p class="thumb-wrap--fc embed-responsive-16by9">
+                                                <img src="<?=$image_url?>">
+                                            </p>
+                                            <figcaption>
+                                                <p class="brochure-title--fc"><?=$val['title']?></p>
+                                            </figcaption>
+                                        </a>
+                                    </figure>
+    <?php
+            }
+        }
+        else {
+                echo '<div style="text-align:center; height:30px;">'._LANG('등록된 게시물이 없습니다.').'</div>';
+        }
+    ?>
+                                </section>
+
+                                <?php echo $data['page'];?>
+                            </section>
+                            <!-- // 카탈로그 -->
+                        </li>
+<?php
+    }else if ($parent_category_code=="12" || $parent_category_code=="14") { // 12,14 : 형식기호,제품선정,카탈로그
+?>
+                        <li data-name="dataTab-01">
+                            <!-- 형식기호 -->
+                            <div class="editor_inner">
+                                 <?=$arrInfoProduct["type_code"]?>
+                            </div>
+                            <!-- // 형식기호 -->
+                        </li>
+                        <li data-name="dataTab-02">
+                            <!-- 카탈로그 -->
+                            <section class="board-wrap--fc">
+                                <section class="gallery-list--fc type_brochure">
+    <?php
+        // 리스트
+        if (!empty($data['list'])) {
+            foreach($data['list'] as $key => $val) {
+                if (file_exists(_USER_DIR.'/board/'.$val['code'].'_tn')) {
+                    $image_url = _USER_URL.'/board/'.$val['code'].'_tn';
+                } else if ($val['image_url']) {
+                    $image_url = $val['image_url'];
+                } else {
+                    $image_url = '/img/noimage.gif';
+                }
+    ?>
+                                    <figure>
+                                        <a href="#none"
+                                            onclick="location.replace('/index.php?tpf=common/save_as&file_path=<?=$val['file_path']?>&file_name=<?=$val['file_name']?>&orig_name=<?=urlencode($val['orig_name'])?>');">
+                                            <p class="thumb-wrap--fc embed-responsive-16by9">
+                                                <img src="<?=$image_url?>">
+                                            </p>
+                                            <figcaption>
+                                                <p class="brochure-title--fc"><?=$val['title']?></p>
+                                            </figcaption>
+                                        </a>
+                                    </figure>
+    <?php
+            }
+        }
+        else {
+                echo '<div style="text-align:center; height:30px;">'._LANG('등록된 게시물이 없습니다.').'</div>';
+        }
+    ?>
+                                </section>
+
+                                <?php echo $data['page'];?>
+                            </section>
+                            <!-- // 카탈로그 -->
+                        </li>
+
+<?php
+    }else if ($parent_category_code=="13") {    // 13 : Part Number Guide,Dimensional Drawings,Performance Curves,Option
+?>
+                        <li data-name="dataTab-01">
+                            <!-- Part Number Guide -->
+                            <div class="editor_inner">
+                                <?=$arrInfoProduct["number_guide"]?>
+                            </div>
+                            <!-- // Part Number Guide -->
+                        </li>
+                        <li data-name="dataTab-02">
+                            <!-- Dimensional Drawings -->
+                            <div class="editor_inner">
+                                <?=$arrInfoProduct["drawings"]?>
+                            </div>
+                            <!-- // Dimensional Drawings -->
+                        </li>
+                        <li data-name="dataTab-03">
+                            <!-- Performance Curves -->
+                            <div class="editor_inner">
+                                <?=$arrInfoProduct["curves"]?>
+                            </div>
+                            <!-- // Performance Curves -->
+                        </li>
+                        <li data-name="dataTab-04">
+                            <!-- Option -->
+                            <div class="editor_inner">
+                                <?=$arrInfoProduct["options"]?>
+                            </div>
+                            <!-- // Option -->
+                        </li>
+
+<?php
+    }else if ($parent_category_code=="15" || $parent_category_code=="16") { // 15,16 : 제원,카탈로그
+?>
+                        <li data-name="dataTab-01">
+                            <!-- 제원 -->
+                            <div class="editor_inner">
+                                <?=$arrInfoProduct["specification"]?>
+                            </div>
+                            <!-- // 제원 -->
+                        </li>
+                        <li data-name="dataTab-02">
+                            <!-- 카탈로그 -->
+                            <section class="board-wrap--fc">
+                                <section class="gallery-list--fc type_brochure">
+    <?php
+        // 리스트
+        if (!empty($data['list'])) {
+            foreach($data['list'] as $key => $val) {
+                if (file_exists(_USER_DIR.'/board/'.$val['code'].'_tn')) {
+                    $image_url = _USER_URL.'/board/'.$val['code'].'_tn';
+                } else if ($val['image_url']) {
+                    $image_url = $val['image_url'];
+                } else {
+                    $image_url = '/img/noimage.gif';
+                }
+    ?>
+                                    <figure>
+                                        <a href="#none"
+                                            onclick="location.replace('/index.php?tpf=common/save_as&file_path=<?=$val['file_path']?>&file_name=<?=$val['file_name']?>&orig_name=<?=urlencode($val['orig_name'])?>');">
+                                            <p class="thumb-wrap--fc embed-responsive-16by9">
+                                                <img src="<?=$image_url?>">
+                                            </p>
+                                            <figcaption>
+                                                <p class="brochure-title--fc"><?=$val['title']?></p>
+                                            </figcaption>
+                                        </a>
+                                    </figure>
+    <?php
+            }
+        }
+        else {
+                echo '<div style="text-align:center; height:30px;">'._LANG('등록된 게시물이 없습니다.').'</div>';
+        }
+    ?>
+                                </section>
+
+                                <?php echo $data['page'];?>
+                            </section>
+                            <!-- // 카탈로그 -->
+                        </li>
+<?php
+    }
+?>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+<?php
+}   // 제품이 있을때면 보임 끝
+
+?>
+
+

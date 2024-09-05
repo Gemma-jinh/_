@@ -1,0 +1,139 @@
+<link rel="stylesheet" type="text/css" href="//<?=_RESOURCE_URL?>/resource/css/jquery-ui.css" />
+
+<!-- board-wrap -->
+<section class="board-wrap--fc">
+<form name="formRegist<?=$form_code?>" method="post" action="/index.php?tpf=_module/form/process" enctype="multipart/form-data">
+<input type="hidden" name="url" value="{{URL}}">
+<input type="hidden" name="mode" id="mode" value="<?=$mode?>">
+<input type="hidden" name="form_code" value="<?=$form_code?>">
+<?php
+if(!empty($arrInfo["html_design_write"])) {   // 별도의 HTML 디자인 사용 시
+    $arrInfo["html_design_write"] = preg_replace('/\[onclick\]/', 'onclick="registerForm'.$form_code.'()"', $arrInfo["html_design_write"]);
+    echo $arrInfo["html_design_write"];
+} else {
+?>
+    <!-- basic-board-list -->
+    <table class="basic-board-row--fc">
+        <colgroup>
+            <col width="220" />
+            <col width="*" />
+        </colgroup>
+        <tbody>
+<?php
+	if (!empty($arrItem)) {
+		foreach($arrItem as $key => $val) {
+			echo '
+            <tr>
+                <th scope="row"'; if($val['is_require'] == 'y') { echo ' class="required"';} echo '><label for="">'.$val['label'].'</label></th>
+                <td>';
+
+			$tm_html_id = (!empty($val["html_id"])) ? " id=\"".$val["html_id"]."\"" : "";
+			$tm_html_class = (!empty($val["html_class"])) ? " class=\"".$val["html_class"]."\"" : "";
+
+			switch($val['input_type']) {
+				case "text":
+					echo '  <input type="text" name="data'.$val['code'].'" placeholder="'.$val['placeholder'].'" '.$tm_html_id.$tm_html_class.' />';
+				break;
+
+                case "tel":
+                    echo '  <input type="text" id="data_tel'.$val['code'].'_1" name="data_tel'.$val['code'].'[]" placeholder="'.$val['placeholder'].'" '.$tm_html_id.$tm_html_class.' maxlength="4" /> - <input type="text" id="data_tel'.$val['code'].'_2" name="data_tel'.$val['code'].'[]" placeholder="'.$val['placeholder'].'" '.$tm_html_id.$tm_html_class.' maxlength="4" /> - <input type="text" id="data_tel'.$val['code'].'_3" name="data_tel'.$val['code'].'[]" placeholder="'.$val['placeholder'].'" '.$tm_html_id.$tm_html_class.' maxlength="4" />';
+                break;
+
+                case "email":
+                    echo '  <input type="text" id="data_email'.$val['code'].'_1" name="data_email'.$val['code'].'[]" placeholder="'.$val['placeholder'].'" '.$tm_html_id.$tm_html_class.' /> @ <input type="text" id="data_email'.$val['code'].'_2" name="data_email'.$val['code'].'[]" placeholder="'.$val['placeholder'].'" '.$tm_html_id.$tm_html_class.' />';
+                break;
+
+				case "textarea":
+					echo '  <textarea name="data'.$val['code'].'" placeholder="'.$val['placeholder'].'" style="padding:5px; line-height:20px; width:100%; height:200px;" '.$tm_html_id.$tm_html_class.' ></textarea>';
+				break;
+
+                case "webeditor":
+                    echo '  <textarea id="content'.$form_code.'" name="data'.$val['code'].'" placeholder="'.$val['placeholder'].'" class="form-control input-sm--fc" style="padding:5px; line-height:20px; width:100%; height:200px;"></textarea>';
+                break;
+
+				case "select":
+					$arrInputExample = preg_split('/\n/',$val['input_example']);
+					echo '  <p>
+							<select name="data'.$val['code'].'" '.$tm_html_id.$tm_html_class.'>
+							<option value="">'.$val['label'].'</option>';
+					if (count($arrInputExample) > 0) {
+						foreach($arrInputExample as $key2 => $val2) {
+							echo '<option value="'.trim($val2).'">'.trim($val2).'</option>';
+						}
+					}
+					echo '  </select></p>';
+				break;
+
+				case "radio":
+					$arrInputExample = preg_split('/\n/',$val['input_example']);
+					if (count($arrInputExample) > 0) {
+						foreach($arrInputExample as $key2 => $val2) {
+							echo '
+							<p>
+							<input type="radio" id="label'.$key.'_'.$key2.'" '.$tm_html_class.' name="data'.$val['code'].'" value="'.trim($val2).'" style="font-size:0.8125rem;" />
+							<label for="label'.$key.'_'.$key2.'">'.trim($val2).'</label></p>';
+						}
+					}
+				break;
+
+				case "checkbox":
+					$arrInputExample = preg_split('/\n/',$val['input_example']);
+					if (count($arrInputExample) > 0) {
+						foreach($arrInputExample as $key2 => $val2) {
+							echo '
+							<p>
+							<input type="checkbox" id="label'.$key.'_'.$key2.'" '.$tm_html_class.' name="data'.$val['code'].'[]" value="'.trim($val2).'" style="font-size:0.8125rem;" />
+							<label for="label'.$key.'_'.$key2.'">'.trim($val2).'</label></p>';
+						}
+					}
+				break;
+
+				case "date":
+					echo '  <input type="text" id="datepicker'.$val['code'].'" '.$tm_html_class.' name="data'.$val['code'].'" readonly style="width:100px;" /> <i class="fa fa-calendar"></i>';
+				break;
+
+				case "file":
+					echo '  <input type="file" id="data'.$val['code'].'" '.$tm_html_class.' name="file[]" style="width:100%" />';
+				break;
+			}
+        echo '  </td>
+            </tr>';
+		}
+	}
+	if (@$arrInfo['is_captcha'] == 'y') {
+    echo '  <tr class="board-write-captcha--fc">
+                <th scope="row" class="required"><label for="">'._LANG('보안코드').'</label></th>
+                <td align="left">
+                    <img id="displayCaptcha" src="/index.php?tpf=common/captcha" alt="자동입력방지" style="float:left;" />
+                    <a href="#none" onclick="reloadCaptcha()"><img src="/img/reload.png" style="width:30px; padding:10px 0 0 5px;"></a><br>
+                    <input type="text" name="auth_key" title="스팸방지" />
+                    <span class="p_notice--fc">'._LANG('스팸방지를 위해 위쪽에 보이는 보안코드를 입력해주세요.').'</span>
+                </td>
+            </tr>';
+	}
+	if (@$arrInfo['is_agree'] == 'y') {
+    echo '  <tr class="board-row-subject--fc">
+                <th scope="row" class="required"><label for="">'._LANG('개인정보 수집·이용 동의').'</label></th>
+                <td>
+                <textarea style="padding:5px; line-height:20px; width:100%; height:200px;">'.$arrInfo['agree_content'].'</textarea>
+                <p>
+                <input type="checkbox" id="contract'.$form_code.'" name="contract'.$form_code.'" value="y" style="font-size:0.8125rem;" />
+                <label for="contract'.$form_code.'">'._LANG('위의 개인정보 수집·이용에 동의합니다.').'</label>
+                </p>
+                </td>
+            </tr>';
+	}
+?>
+            </tbody>
+        </table>
+
+        <p class="board-write-btn-wrap--fc">
+            <a href="#none" class="btn-confirm--fc" onclick="registerForm<?=$form_code?>()"><?=_LANG('전송하기')?></a>
+        </p>
+<?php
+}
+?>
+</form>
+</section>
+
+<script src="//<?=_RESOURCE_URL?>/resource/js/ckeditor4.7.2/ckeditor.js"></script>

@@ -1,0 +1,41 @@
+<div class="search_result_wrap--fc t_c">
+
+<div class="search_body--fc">
+<p class="search_tit--fc">Search results for</p>
+<?php
+if (!empty($arrProduct['list'])) {
+    echo '
+    <div class="search_header--fc">
+    <h2 class="result--fc"><em>&quot;'.@$product_name.'&quot;</em> 에 대해 총 <strong>'.$arrProduct['total'].'</strong>건이 검색되었습니다.</h2>
+    </div><br>';
+}
+?>
+<ul class="flex_box--fc ea-4 ea-lg-3 ea-sm-1 space-7 space-top-30">
+<?php
+//if(getenv("REMOTE_ADDR") == "175.198.83.198") { echo "<div align=left><pre>"; var_dump($arrProduct['list']); echo "</pre>"; die("<br>End</div>");}
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        echo '  <li>
+					<div class="products_list_inner ef_bor_hover_wrap on">
+						<figure class="ef_bor_hover">
+							<!-- / 제품 이미지 -->
+							<img src="'.@$val['arrFile']['url'].'" alt="">
+						</figure>
+						<p class="fs_17 fw_300 lh_1_4 t_c mt15">'.$val['title_ko'].'</p>
+						<p class="fs_17 fw_300 lh_1_4 t_c">'.$val['title_en'].'</p>
+						<a href="/'.$val['category_url'].'?tpf=product/view2&category_code='.$val['category_code'].'&code='.$val['code'].'#product_focus"></a><!-- / 제품 링크 -->
+					</div>
+				</li>';
+    }
+}
+else {
+    echo '<li style="width: 100% !important;font-size:2.5rem;font-weight:700;text-align:center;">
+    	<em>&quot;'.$product_name.'&quot;</em>와(과) 일치하는 검색결과가 없습니다.
+    </li>';
+}
+?>
+
+</ul>
+
+</div>
+</div>

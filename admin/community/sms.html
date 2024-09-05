@@ -1,0 +1,174 @@
+<style>
+textarea {
+    width:180px;
+    height:100px;
+}
+</style>
+
+<section class="content-header">
+    <h1>
+    카카오알림톡 문구 지정
+    <small>kakao talk setting</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>커뮤니티 관리</li>
+        <li class="active">카카오알림톡 문구 지정</li>
+    </ol>
+</section>
+
+<section class="content">
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-body">
+                <span style="float:left;">
+				<h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 카카오알림톡 발송 내역</p></h4>
+                </span>
+                <span style="float:right;">
+                <a href="/index.php?tpf=admin/community/sms_kakao"><button type="button" class="btn btn-primary" style="margin-bottom:5px;float:right"><i class="fa fa-commenting-o"></i> 카카오알림톡 문구 설정</button></a>
+                </span>
+
+				<table class="table table-bordered table-hover">
+				<thead>
+                    <tr>
+                        <td rowspan="2" class="menu" style="width:150px;">발송 항목명</td>
+                        <td rowspan="2" class="menu" style="width:120px;">엑션 코드</td>
+                        <td colspan="3">회원</td>
+                        <td colspan="3">관리자</td>
+						<td rowspan="2" class="menu" style="width:160px;">치환문구 설명</td>
+						<td rowspan="2" class="menu" style="width:60px;">명령</td>
+                    </tr>
+                    <tr>
+                        <td class="menu" style="width:120px;">템플릿 코드</td>
+                        <td class="menu" style="width:110px;">문구</td>
+                        <td class="menu" style="width:60px;">자동발송</td>
+                        <td class="menu" style="width:120px;">템플릿 코드</td>
+                        <td class="menu" style="width:110px;">문구</td>
+                        <td class="menu" style="width:60px;">자동발송</td>
+                    </tr>
+                </thead>
+                <tbody>
+<?php
+$index = 1;
+if (!empty($arrCommunityAction['list'])) {
+    foreach($arrCommunityAction['list'] as $key => $val) {
+        echo '  <tr>
+                    <td class="content">'.$val['name'].'</td>
+                    <td class="content">'.$val['action'].'</td>
+                    <td class="content">'.$val['kakao_template'].'</td>
+                    <td style="text-align:left;">'.@nl2br($val["content"]).'</td>
+                    <td class="content"><i class="fa fa-check"></i></td>
+                    <td class="content">'.$val['kakao_template_admin'].'</td>
+                    <td style="text-align:left;">'.@nl2br($val["content_admin"]).'</td>
+                    <td class="content"><i class="fa fa-check"></i></td>
+                    <td align="left">
+                        <ul style="padding-left:15px;">';
+        $arrReplaceKey = getCommunityTemplateKeyword($val["content"]);
+        if (!empty($arrReplaceKey)) {
+            foreach($arrReplaceKey as $val2){
+                echo '  <li>#{'.$val2.'} : '.@$arrCommunityReplaceName[$val2].'</li>';
+            }
+        }
+        echo '			</ul>
+                    </td>
+                    <td class="content"><button type="button" onclick="onclickUpdate('.$val['code'].');" class="btn btn-success btn-xs">수정</button><button type="button" onclick="onclickDelete('.$val['code'].');" class="btn btn-danger btn-xs" style="margin-top:7px;">삭제</button></td>
+                </tr>';
+        $index++;
+    }
+}
+?>
+				</tbody>
+                </table>
+                <br>
+
+				<div><button type="button" onclick="onclickInsert()" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 등록</button></div>
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:660px;">
+        <div class="modal-content">
+            <form name="formContent" method="post" action="?tpf=admin/community/sms_process">
+            <input type="hidden" name="mode" id="mode" value="updateSMS">
+            <input type="hidden" name="code" id="code">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">문구설정 관리</h4>
+            </div>
+            <div class="modal-body">
+
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 문구설정</h4>
+            <table class="table table-bordered">
+            <tr>
+                <td class="menu">발송 항목명</td>
+                <td align="left">
+                <input type="text" name="name" class="form-control input-sm">
+                </td>
+            </tr>
+            <tr>
+                <td class="menu">엑션 코드</td>
+                <td align="left">
+                <input type="text" name="action" class="form-control input-sm">
+                </td>
+            </tr>
+            </table>
+
+            <table class="table table-bordered">
+            <tr>
+                <td class="menu">구분</td>
+                <td class="menu" style="width:240px;">회원</td>
+                <td class="menu" style="width:240px;">관리자</td>
+            </tr>
+            <tr>
+                <td class="menu">자동 발송</td>
+                <td><input type="checkbox" name="is_send" value="y"></td>
+                <td><input type="checkbox" name="is_send_admin" value="y"></td>
+            </tr>
+            <tr>
+                <td class="menu">템플릿 선택</td>
+                <td>
+                <select id="member" name="kakao_template" OnChange="if(this.value) selectTemplate('member')" class="form-control input-sm" style="padding:0; width:100%;">
+                <option value="amount">선택</option>
+<?php
+if (!empty($arrTemplate)) {
+    foreach($arrTemplate as $key => $val) {
+        echo '  <option value="'.$key.'" data-id="'.$val['template_content'].'">'.$key.' ('.$val['template_name'].')</option>';
+    }
+}
+?>
+                </select>
+                </td>
+                <td>
+                <select id="admin" name="kakao_template_admin" OnChange="if(this.value) selectTemplate('admin')" class="form-control input-sm" style="padding:0; width:100%;">
+                <option value="">선택</option>
+<?php
+if (!empty($arrTemplate)) {
+    foreach($arrTemplate as $key => $val) {
+        echo '  <option value="'.$key.'" data-id="'.$val['template_content'].'">'.$key.' ('.$val['template_name'].')</option>';
+    }
+}
+?>
+                </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="menu">문구</td>
+                <td style="text-align:left;"><textarea name="content_member" style="width:100%; height:200px;" readonly></textarea></td>
+                <td style="text-align:left;"><textarea name="content_admin" style="width:100%; height:200px;" readonly></textarea></td>
+            </tr>
+            </table>
+            </div>
+
+            <div class="modal-footer">
+            <button type="button" onclick="registerContent()" class="btn btn-primary">확인</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

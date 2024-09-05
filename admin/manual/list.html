@@ -1,0 +1,181 @@
+<style>
+.table>tbody>tr>td {
+    vertical-align: middle;
+}
+</style>
+
+<section class="content-header">
+    <h1>
+    동영상 메뉴얼
+    <small>manual list</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">동영상 메뉴얼 리스트</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <td style="width:150px;">대메뉴</td>
+                    <td style="width:150px;">서브메뉴</td>
+                    <td>설명</td>
+                    <td style="width:80px;">duration</td>
+                    <td style="width:120px;">동영상 보기</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>기본</td>
+                    <td>기본 메뉴</td>
+                    <td style="text-align:left;">
+                    - 관리자 페이지 기본 구조
+                    </td>
+                    <td>3:20</td>
+                    <td><button type="button" onclick="onclickUpdate(1);" class="btn btn-primary btn-xs">보기</button></td>
+                </tr>
+                <tr>
+                    <td rowspan="4">메뉴 관리</td>
+                    <td>메뉴 관리</td>
+                    <td style="text-align:left;">
+                    - 사이트 GNB 메뉴 설정<br>
+                    - 페이지별 내용 관리
+                    </td>
+                    <td>3:20</td>
+                    <td><button type="button" onclick="onclickUpdate(1);" class="btn btn-primary btn-xs">보기</button></td>
+                </tr>
+                <tr>
+                    <td>헤더 관리</td>
+                    <td style="text-align:left;">- 각 서브 페이지별 상단에 공통으로 표출되는 디자인 관리</td>
+                    <td rowspan="3">3:20</td>
+                    <td rowspan="3"><button type="button" onclick="onclickUpdate(1);" class="btn btn-primary btn-xs">보기</button></td>
+                </tr>
+                <tr>
+                    <td>하단 관리</td>
+                    <td style="text-align:left;">- 카피라이터 관리</td>
+                </tr>
+                <tr>
+                    <td>메타 관리</td>
+                    <td style="text-align:left;">- 사이트내 공통으로 표출될 메타 태그 관리</td>
+                </tr>
+                <tr>
+                    <td>게시판 관리</td>
+                    <td>리스트</td>
+                    <td style="text-align:left;">
+                    - 게시판 생성/수정/삭제<br>
+                    - 게시물 관리
+                    </td>
+                    <td>3:20</td>
+                    <td><button type="button" onclick="onclickUpdate(1);" class="btn btn-primary btn-xs">보기</button></td>
+                </tr>
+                <tr>
+                    <td rowspan="3">제품</td>
+                    <td>리스트</td>
+                    <td style="text-align:left;">- 제품 생성/수정/삭제 관리</td>
+                    <td rowspan="3">3:20</td>
+                    <td rowspan="3"><button type="button" onclick="onclickUpdate(1);" class="btn btn-primary btn-xs">보기</button></td>
+                </tr>
+                <tr>
+                    <td>입력항목 설정</td>
+                    <td style="text-align:left;">- 제품 항목 관리</td>
+                </tr>
+                <tr>
+                    <td>카테고리</td>
+                    <td style="text-align:left;">- 제품 카테고리 관리</td>
+                </tr>
+                <tr>
+                    <td rowspan="4">회원 관리</td>
+                    <td>회원 리스트</td>
+                    <td style="text-align:left;">- 회원 내역/상세보기/수정/삭제, Excel 다운로드</td>
+                    <td rowspan="4">3:20</td>
+                    <td rowspan="4"><button type="button" onclick="onclickUpdate(1);" class="btn btn-primary btn-xs">보기</button></td>
+                </tr>
+                <tr>
+                    <td>탈퇴회원 리스트</td>
+                    <td style="text-align:left;">- 탈퇴한 회원 관리</td>
+                </tr>
+                <tr>
+                    <td>회원 접속이력 관리</td>
+                    <td style="text-align:left;">- 회원별 로그인/로그아웃 이력 관리</td>
+                </tr>
+                <tr>
+                    <td>등급 관리</td>
+                    <td style="text-align:left;">- 회원 등급 관리</td>
+                </tr>
+                <tr>
+                    <td>폼메일 관리</td>
+                    <td>리스트</td>
+                    <td style="text-align:left;">- 폼메일 생성/수정/삭제 관리</td>
+                    <td>3:20</td>
+                    <td><button type="button"  onclick="viewMovie('https://www.youtube.com/embed/05m2-OeLGa4');" class="btn btn-primary btn-xs">보기</button></td>
+                </tr>
+                <tr>
+                    <td rowspan="7">설정</td>
+                    <td>팝업 관리</td>
+                    <td style="text-align:left;">- 팝업 생성/수정/삭제</td>
+                    <td rowspan="7">3:20</td>
+                    <td rowspan="7"><button type="button" onclick="viewMovie('https://www.youtube.com/embed/318wvRMcDKE');" class="btn btn-primary btn-xs">보기</button></td>
+                </tr>
+                <tr>
+                    <td>약도 관리</td>
+                    <td style="text-align:left;">- 약도 생성/수정/삭제</td>
+                </tr>
+                <tr>
+                    <td>연혁 관리</td>
+                    <td style="text-align:left;">- 연혁 생성/수정/삭제</td>
+                </tr>
+                <tr>
+                    <td>배너 관리</td>
+                    <td style="text-align:left;">- 배너 생성/수정/삭제</td>
+                </tr>
+                <tr>
+                    <td>약관 관리</td>
+                    <td style="text-align:left;">- 약관 관리</td>
+                </tr>
+                <tr>
+                    <td>기본 설정</td>
+                    <td style="text-align:left;">- 사이트 기본 설정 : 다국어/썸네일 이미지/파비콘 이미지/전환추적 태그/관리자 메뉴 표출설정/연혁 레이아웃 설정</td>
+                </tr>
+                <tr>
+                    <td>다국어 번역</td>
+                    <td style="text-align:left;">- 다국어 번역 관리</td>
+                </tr>
+                </table>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:740px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">동영상 보기</h4>
+            </div>
+            <div class="modal-body">
+            <iframe id="youtubeURL" width="710" height="400" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="modal-footer">
+            <button type="button" onclick="closeMovie()" class="btn btn-primary">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewMovie(url) {
+    $('#modalContent').modal('show');
+    $('#youtubeURL').attr('src',url);
+}
+function closeMovie() {
+    $('#modalContent').modal('hide');
+}
+</script>

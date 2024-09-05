@@ -1,0 +1,81 @@
+<section class="content-header">
+    <h1>
+    기존URL 관리
+    <small>url</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>메뉴 관리</li>
+        <li class="active">기존URL 관리</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+
+                <div class="col-xs-8">
+                <p class="text-light-blue">
+                <i class="fa fa-fw fa-info-circle"></i> 기존에 사용하던 URL을 신규 URL로 포워딩 할수 있습니다.<br>
+                <i class="fa fa-fw fa-info-circle"></i> 도메인을 제외한 URL만 입력하시기 바랍니다.
+                </p>
+                </div>
+
+                <div class="btn-group pull-right" style="margin-bottom:5px;margin-top:10px; margin-right:15px">
+                    <button type="button" id="button_add" onclick="add_tr()" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i> 추가</button>
+                </div>
+                <form name="form" method="post" action="?tpf=admin/menu/process">
+                    <table class="table table-bordered table-hover" style="" id="table_rows">
+                    <input type="hidden" name="mode" value="makeURL">
+ 					<input type="hidden" name="update_codes" id="update_codes" value="<?=$update_codes?>" />
+ 					<input type="hidden" name="delete_codes" id="delete_codes" value="" />
+
+		            <thead>
+                    <tr>
+                        <td>기존URL</td>
+                        <td>신규URL</td>
+                        <td style="width:100px">명령</td>
+                    </tr>
+                    </thead>
+                    <tbody  id="tr_list">
+<?php
+if (!empty($data['list'])) {
+    foreach($data['list'] as $key => $val) {
+        echo '
+                    <tr>
+                        <td><input type="text" name="link_old[]" value="'.@$val['link_old'].'"  class="form-control input-sm" style="width:100%;" /></td>
+                        <td><input type="text" name="link_new[]" value="'.@$val['link_new'].'"  class="form-control input-sm" style="width:100%;" /></td>
+                        <td><button type="button" onclick="delete_code(this,'.$val['code'].');" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 삭제</button></td>
+                    </tr>
+
+
+    ';}
+}
+else {
+}
+?>
+                    </tbody>
+                    <tbody  id="null_data_tr">
+<?php
+if (empty($data['list'])) {
+        echo '      <tr><td colspan="10"><br>등록된 자료가 없습니다.<br><br></td></tr>';
+}
+?>
+
+                    </tbody>
+                    </table>
+                </form>
+
+                <br>
+                <div align="center">
+                <button type="button" onclick="register();" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 확인</button>
+                </div>
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>

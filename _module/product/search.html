@@ -1,0 +1,45 @@
+<div class="inner">
+<div class="search_result_wrap--fc t_c">
+
+<div class="search_body--fc">
+<h1 class="search_tit--fc">Search results for</h1>
+<div class="ctn--fc">
+<?php
+if (!empty($arrProduct['list'])) {
+    echo '
+    <div class="search_header--fc">
+    <h2 class="result--fc"><em>&quot;'.$product_name.'&quot;</em>에 대해 총 <strong>'.$arrProduct['total'].'</strong>건이 검색되었습니다.</h2>
+    </div><br>';
+}
+?>
+	<div class="product_list--fc row">
+<?php
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        echo '  <div class="product_list_item--fc col-6 col-sm-6 col-md-3">
+                    <a href="/index.php?tpf=shop/detail&category_code='.$val['category_code'].'&code='.$val['code'].'">
+                    <div class="badge_wrap--fc">
+                        <span class="badge--fc best">'; if($val['is_best'] == 'y') { echo 'BEST';} echo '</span>
+                        <span class="badge--fc new">'; if($val['is_new'] == 'y') { echo 'NEW';} echo '</span>
+                    </div>
+                    <div class="product_img_wrap--fc">
+                        <figure>
+                        <img class="list--fc" src="'._USER_URL.'/product/'.$val['code'].'_1" alt="" />
+                        <!-- <figcaption>'.$val['title'].'</figcaption> -->
+                        </figure>
+                    </div>
+                    <p>'.$val['title'].'</p>
+                    </a>
+                </div>';
+    }
+}
+else {
+    echo '<h2 class="result--fc"><em>&quot;'.$product_name.'&quot;</em>와(과) 일치하는 검색결과가 없습니다.</h2>';
+}
+?>
+    </div>
+</div>
+
+</div>
+</div>
+</div>

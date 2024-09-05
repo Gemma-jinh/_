@@ -1,0 +1,41 @@
+<section class="section-cart-list--fc">
+    <div class="inner">
+    <!-- member-wrap -->
+    <section class="member-wrap--fc stipulation-wrap--fc">
+        <h3 class="sub-conts-tit"><?=_LANG('회원가입')?></h3>
+        <!-- join-form-wrap -->
+        <section class="join-form-wrap--fc">
+            <form name="form" action="/member/form" method="post">
+            <input type="hidden" name="url" value="/member/form">
+                <fieldset>
+                    <legend><?=_LANG('이용약관')?></legend>
+                    <div class="box-wrap--fc">
+                    <?=$arrContract['provision']?>
+                    </div>
+                    <p class="join-agree--fc"><input type="checkbox" id="join-provision" name="agree1" /><label for="join-provision"><?=_LANG('이용약관에 동의합니다.')?> <strong>(<?=_LANG('필수')?>)</strong></label></p>
+                </fieldset>
+
+                <fieldset class="mt40">
+                    <legend><?=_LANG('개인정보 수집 및 이용에 대한 안내')?></legend>
+                    <div class="box-wrap--fc">
+                    <?=$arrContract['privacy']?>
+                    </div>
+                    <p class="join-agree--fc"><input type="checkbox" id="join-policy" name="agree2" /><label for="join-policy"><?=_LANG('개인정보 수집 및 이용에 동의합니다.')?> <strong>(<?=_LANG('필수')?>)</strong></label></p>
+                </fieldset>
+            </form>
+
+            <div class="join-btn-wrap--fc">
+				<ul>
+                    <li><a href="#next" onclick="register();" class="btn-confirm"><?=_LANG('회원가입')?></a></li>
+					<li><a href="/" class="btn-cancel"><?=_LANG('취소')?></a></li>
+					
+				</ul>
+			</div>
+
+        </section>
+        <!-- //join-form-wrap -->
+
+    </section>
+    <!-- //member-wrap -->
+    </div>
+</section>

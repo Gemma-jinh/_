@@ -1,0 +1,45 @@
+<!-- member-wrap -->
+<section class="member-wrap--fc">
+    <h3 class="sub-conts-tit"><?=_LANG('회원가입')?></h3>
+    <!-- join-form-wrap -->
+    <section class="join-result-wrap--fc">
+        <div class="inner bg_fafafa">
+        <form action="">
+            <fieldset>
+                <p class="result-title--fc"><?=_LANG('회원가입이 완료되었습니다.')?></p>
+                <!--<p class="result-text--fc"><span>[<?=$site_name?>]</span> <?=_LANG('지금부터 본 사이트에서 제공하는 서비스를 이용하실 수 있습니다.')?></p>
+                <p class="warning-message--fc"><?=_LANG('보안을 위해 비밀번호는 정기적으로 변경해 주시기 바랍니다.')?></p>-->
+                <table class="form-table--fc">
+                    <colgroup>
+                        <col width="30%" />
+                        <col width="*" />
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row"><?=_LANG('아이디')?></th>
+                        <td><?=$id?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?=_LANG('성명')?></th>
+                        <td><?=$name?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">E-mail</th>
+                        <td><?=$email?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </form>
+    </div>
+        <div class="join-btn-wrap--fc">
+			<ul>
+				<li><a href="/member/login" class="btn-cancel"><?=_LANG('로그인')?></a></li>
+				<li><a href="/" class="btn-confirm"><?=_LANG('메인으로')?></a></li>
+			</ul>
+		</div>
+    </section>
+    <!-- //join-form-wrap -->
+</section>
+<!-- //member-wrap -->
+</section>

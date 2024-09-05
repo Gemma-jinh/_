@@ -1,0 +1,77 @@
+<!-- board-wrap -->
+<section class="board-wrap--fc" >
+   
+<?php
+if ($board_info['type'] == 'gallery' or $board_info['type'] == 'movie') {  // 갤러리 or 동영상
+    if (!empty($data['list'])) {
+        echo '<section class="gallery-list--fc gallery-latest--fc">';
+            $start_number = $data['start_number'];
+            foreach($data['list'] as $key => $val) {
+                echo '
+                    <figure class="slide">';
+                if($board_info['is_link'] == 'y')  echo '<a href="'.$val['link'].'" target="_new">';
+                else {
+                    echo '<a href="'.$folder.'?tpf=board/view&board_code='.$board_code.'&code='.$val['code'].'">';
+                }
+                echo '  <p class="thumb-wrap--fc embed-responsive-16by9">
+                        <img src="'; if (file_exists(_USER_DIR.'/board/'.$val['code'].'_tn')) { echo _USER_URL.'/board/'.$val['code'].'_tn';} else if ($val['image_url']) { echo $val['image_url'];} else { echo '/img/noimage.gif';} echo '" />
+                        </p>
+                        <figcaption>
+                            <p class="gallery-title--fc">'.$val['title'].'</p>
+                            <p class="gallery-content--fc">'.strip_tags($val['content']).'</p>
+                                <!-- <li><span>'.$val['name'].' / '.$val['reg_date'].'</span></li> -->
+                                
+                           
+                        </figcaption>
+                        </a>
+                    </figure>';
+            $start_number--;
+        }
+        echo '</section>';
+    }
+    else {
+        echo '<div style="text-align:center; height:30px;">'._LANG('등록된 게시물이 없습니다.').'</div>';
+    }
+}
+else {  // list 포함 그외
+	echo ' <!-- basic-board-list -->
+    <table class="basic-board-list--fc">
+        <tbody>';
+            if (!empty($data['list'])) {
+                $start_number = $data['start_number'];
+            foreach($data['list'] as $key => $val) {
+                echo '  <tr>
+                    <td class="board-date--fc"><strong>'.substr($val['reg_date_short'],8,10).'</strong><span>'.substr($val['reg_date_short'],2,5).'</span></td>';
+                if($board_info['category'] != '') { echo '<td class="board-category--fc">['.$val['category'].']</td>';}
+                if($val['is_secret'] == 'y') {  // 비밀글
+                    echo '  <td class="board-subject--fc"><a href="#none" onclick="onclickView('.$board_code.','.$val['code'].');return false;"><img src="/img/icon_lock.gif" alt="비밀글" class="board-list-lock-icon--fc"> '.$val['title'].'</a><p class="board-content--fc">'.strip_tags($val['content']).'</p>';
+                }
+                else {                          // 일반글
+                    echo '  <td class="board-subject--fc"><a href="'.$folder.'?tpf=board/view&board_code='.$board_code.'&code='.$val['code'].'">'.$val['title'].'</a><p class="board-content--fc">'.strip_tags($val['content']).'</p>';
+                }
+                if ($val['image_url']) {    // 첨부파일 존재할때
+                    echo '<img src="/img/common/icon_file.gif" alt="첨부파일" class="list-file--fc" />';
+                }
+                echo'       </td>
+                            
+                        </tr>';
+                $start_number--;
+        }
+    }
+    else {
+        echo '  <tr class="no-data--fc">
+                    <td>'._LANG('등록된 게시물이 없습니다.').'</td>
+                </tr>';
+    }
+	echo '</tbody>
+    </table>';
+}
+?>
+        
+    <!-- //basic-board-list -->
+</section>
+<!-- //board-wrap -->
+
+<?php
+include_once _DOCUMENT_ROOT_DIR."/html/_module/board/layer_popup.html";
+?>

@@ -1,0 +1,138 @@
+<section class="section-product_list--fc">
+	<div class="inner">
+
+		<!-- <ul class="breadcrumb">
+			<li class="home">home</li>
+			<li>dep: <?=_LANG('제품소개');?></li>
+			<li>dep2: <span class="path_point"><?=$category_name?></span></li>
+		</ul>
+
+		<h3 class="ctn_tle"><?=$category_name?></h3> -->
+
+
+		<script src="/html/_skin/<?=_SKIN?>/js/isotope.pkgd.min.js" type="text/javascript"></script>
+		<script>
+		$(function(){
+            /*
+			var $prdGrid =$('.product_list--fc');
+			$prdGrid.isotope({
+				layoutMode: 'fitRows',
+				itemSelector: '.prd_item--fc'
+				//filter: '.LaBDLU, .LUBodybooster, .Accessories'
+				//masonry: {columnWidth: 280}
+			});
+			$('.category_item--fc a').on( 'click', function(e) {
+				e.preventDefault();
+				$('.category_item--fc').removeClass("on");
+				$(this).parent().addClass("on");
+				var filterValue = $(this).attr('data-filter');
+				$prdGrid.isotope({ filter: filterValue });
+			});
+            */
+		});
+		</script>
+		<?php
+/*
+			$prdList = $arrProduct['list'];
+			$prdList = array_reverse($prdList);
+			if (!empty($prdList)) {
+				$cateList = array();
+				echo '<ul class="category_list--fc">';
+				echo '<li class="category_item--fc on"><a href="#" data-filter="*"><?=_LANG('전체상품보기');?></a>';
+				foreach($prdList as $key => $val) {
+					$cateVal = preg_replace("/\s+/", "", $val['category_name']);
+					if( !in_array($cateVal, $cateList) ) {
+						array_push( $cateList, $cateVal );
+						echo '<li class="category_item--fc"><a href="#" data-filter=".'.$cateVal.'">'.$val['category_name'].'</a></li>';
+					}
+				}
+				echo '</ul>';
+			}
+*/
+		?>
+
+        <ul class="category_list--fc">
+            <li class="category_item--fc<?php if($category_code == '') { echo ' on';}?>"><a href="?tpf=shop/list"><?=_LANG('전체상품보기');?></a>
+<?php
+        if (!empty($arrCategory['list'])) {
+    			foreach($arrCategory['list'] as $key => $val) {
+                    echo '<li class="category_item--fc'; if($val['category_code'] == $category_code) { echo ' on';} echo '"><a href="?tpf=shop/list&category_code='.$val['category_code'].'" >'.$val['title'].'</a></li>';
+				}
+        }
+?>
+        </ul>
+
+		<ul class="product_list--fc">
+		<?php
+        if (!empty($arrProduct['list'])) {
+		    foreach($arrProduct['list'] as $key => $val) {
+				// echo '<img src="'._USER_URL.'/product/'.$val['code'].'_1" style="width:200px;" />';
+				$cateVal = preg_replace("/\s+/", "", $val['category_name']);
+		        echo '<li class="prd_item--fc '.$cateVal.'" data-category="'.$cateVal.'">
+						<a href="/index.php?tpf=shop/detail&category_code='.$category_code.'&code='.$val['code'].'">
+							<div class="imgWrap--fc">
+								<img src="'._USER_URL.'/product/'.$val['code'].'_1" alt="'.$val['title'].'" />
+							</div>
+						</a>
+						<div class="btns--fc">
+							<a href="#none" class="cart--fc" onclick="register(\'cart\',\''.$val['code'].'\');">Add to Cart</a>
+						    <a href="#none" class="like--fc" onclick="register(\'wish\',\''.$val['code'].'\');">Add to Wish list</a>
+						</div>
+						<a href="/index.php?tpf=shop/detail&category_code='.$category_code.'&code='.$val['code'].'">
+							<dl class="prd_info--fc">
+								<dt class="item_category--fc">'.$val['category_name'].'</dt>
+								<dt class="item_name--fc">'.$val['list_title'].'</dt>
+								<dd class="item_capacity--fc">'.$val['capacity'].'</dd>
+								<dd class="item_price--fc">'.displayPriceLocale($val['sale_price']).'</dd>
+							</dl>
+						</a>
+					</a>
+				</li>';
+		    }
+		}
+		else {
+            echo '<div style="text-align:center;">'._LANG("등록된 자료가 없습니다.").'</div>';
+		}
+		?>
+		</ul>
+
+		<!--페이지넘버-->
+		<?php
+
+		?>
+<?php
+if ($arrProduct['page_count'] > 1) {
+    echo $arrProduct['page'];
+}
+?>
+
+	</div><!-- // container -->
+<!-- </div> -->
+
+<!-- 장바구니담기 -->
+<div id="cart_layer" class="cart_layer">
+    <h1><?=_LANG('장바구니 담기')?></h1>
+    <p class="cart_layer_txt">
+        <?=_LANG('장바구니에 상품이 정상적으로 담겼습니다.')?>
+    </p>
+    <p class="cart_layer_btn">
+        <a href="/index.php?tpf=mypage/cart_list&tab=4">
+            <?=_LANG('장바구니 이동')?>
+        </a>
+        <a href="">
+            <?=_LANG('계속 쇼핑하기')?>
+        </a>
+    </p>
+    <p class="cart_layer_close">
+        <?=_LANG('닫기')?>
+    </p>
+</div>
+<!-- //장바구니담기 -->
+
+<form name="formShop" method="post" action="/index.php?tpf=shop/product_process">
+<input type="hidden" name="mode">
+<input type="hidden" name="url" value="{{URL}}">
+<input type="hidden" name="code">
+<input type="hidden" name="product_code">
+<input type="hidden" name="count" value="1">
+</form>

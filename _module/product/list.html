@@ -1,0 +1,186 @@
+<?php
+if(!empty($arrInfo["html_design"])) {   // 별도의 HTML 디자인 사용 시
+    // 텝(카테고리) 표출
+    if (!empty($arrCategory['list'])) {
+        $arrInfo["html_design"] = preg_replace('/\[link_category_all\]/', '?tpf=product/list&category_code='.$parent_category_code, $arrInfo["html_design"]);    // 전체
+        @list($html_design1, $html_design_tmp) = explode('<for_category>', $arrInfo["html_design"]);
+        @list($html_design_orignal, $html_design2) = explode('</for_category>', $html_design_tmp);
+        $category_tag = '';
+        $is_all = true;
+        foreach($arrCategory['list'] as $key => $val) {
+            if ($category_code == $val['category_code']) {
+                $on_tag = ' class="on"';
+                $is_all = false;
+            }
+            else $on_tag = '';
+
+            $tmp = preg_replace('/\[link_category\]/', '?tpf=product/list&category_code='.$val['category_code'], $html_design_orignal);
+            $tmp = preg_replace('/\[title\]/', $val['title'], $tmp);
+            $category_tag .= preg_replace('/\[on\]/', $on_tag, $tmp);
+        }
+        $arrInfo["html_design"] = $html_design1.$category_tag.$html_design2;
+        if ($is_all) {
+            $arrInfo["html_design"] = preg_replace('/\[all_on\]/', ' class="on"', $arrInfo["html_design"]);
+        }
+    }
+
+    // form 검색
+    $arrInfo["html_design"] = preg_replace('/\[keyword\]/', $keyword, $arrInfo["html_design"]);
+    $arrInfo["html_design"] = preg_replace('/\[category_code\]/', $category_code, $arrInfo["html_design"]);
+
+    // 개수 표출
+    $arrInfo["html_design"] = preg_replace('/\[count\]/', $arrProduct['total'], $arrInfo["html_design"]);
+
+    // page 표출
+    $arrInfo["html_design"] = preg_replace('/\[page\]/', $arrProduct['page'], $arrInfo["html_design"]);
+
+    // for 구문 구하기
+    list($html_design1, $html_design_tmp) = explode('<for>', $arrInfo["html_design"]);
+    list($html_design_orignal, $html_design2) = explode('</for>', $html_design_tmp);
+
+    $html_design_result = '';
+    if (!empty($arrProduct['list'])) {
+        foreach($arrProduct['list'] as $key => $val) {
+            $html_design = $html_design_orignal;
+
+            if (!empty($arrItem['list'])) {
+                $result = replaceCode($arrItem['list'], $html_design, $val, $arrFile);  // 첫번째 실행
+                $html_design = replaceCode($arrItem['list'], $result, $val, $arrFile);  // 두번째 실행
+            }
+
+            foreach($arrItem['list'] as $key2 => $val2) {
+                $tm_html_id = (!empty($val2["html_id"])) ? " id=\"".@unserialize($val2['html_id'])[getLocale()]."\"" : "";
+                $tm_html_class = (!empty($val2["html_class"])) ? " class=\"".@unserialize($val2['html_class'])[getLocale()]."\"" : "";
+                $tm_replace_befor = "[code:".$val2["code"]."]";
+                $tm_replace_after = '';
+
+                switch($val2['input_type']) {
+                    case "file":
+                    $arrUploadFile = @$arrFile[$val['code']][$val2['code']];
+                    if($arrUploadFile['orig_name'] != '') {
+                        if (checkImage($arrUploadFile['file_ext'])) {   // 이미지 파일일때
+                            $tm_replace_after .= '<img src="'.$arrUploadFile['url'].'"'.$tm_html_id.$tm_html_class.' style="width:80px;">';
+                        }
+                        else {
+                            $tm_replace_after .= '<a href="#none" onclick="location.replace(\'/index.php?tpf=common/save_as&file_path='.$arrUploadFile['file_path'].'&file_name='.$arrUploadFile['file_name'].'&orig_name='.urlencode($arrUploadFile['orig_name']).'\');"><i class="fa fa-file-text"></i> '.$arrUploadFile['orig_name'].'</a>';
+                        }
+                    }
+                    break;
+
+                    default:
+                    $tm_replace_after .= nl2br(@$val['arrContent'][$val2['code']]);
+                    break;
+                }
+                $html_design = str_replace($tm_replace_befor, $tm_replace_after, $html_design);
+                // 링크 주소 변환
+                if ($val['url']) {  // 링크주소 있을때
+                    $url = $val['url'];
+                }
+                else {              // 디폴트 연결
+                    if ($folder == '' and !empty($val['category_url'])) $folder = '/'.$val['category_url'];
+                    $url = $folder.'?tpf=product/view&category_code='.$val['category_code'].'&code='.$val['code'];
+                }
+                $html_design = preg_replace('/\[link\]/', 'onclick="location.href=\''.$url.'\'" style="cursor:pointer;"', $html_design);
+                // new 아이콘 표출
+                if ($val['diff_date'] > 7) {    // 등록후 7일 지날 경우
+                    $html_design = preg_replace('/\[new\]/', ' style="display:none;"', $html_design);
+                }
+                // 카테고리명 표출
+                $html_design = preg_replace('/\[category_name\]/', $val['category_name'], $html_design);
+            }
+            $html_design_result .= str_replace($tm_replace_befor, $tm_replace_after, $html_design);
+            // [code] 변환
+            $html_design_result = str_replace('[code]', $val['code'], $html_design_result);
+        }
+    }
+    else {
+        $html_design_result = '<div style="width: 100%; text-align: center;">'._LANG('등록된 자료가 없습니다.').'</div>';
+    }
+    echo $html_design1.$html_design_result.$html_design2;
+}
+else {
+?>
+<p class="path--fc">home &lt; <?=_LANG('제품소개');?> &lt; <span class="path_point--fc">제품명</span></p>
+
+<form name="formSearch" method="get" action="?">
+<input type="hidden" name="tpf" value="product/list">
+<input type="hidden" name="field" value="content">
+<input type="hidden" name="category_code" value="<?=$category_code?>">
+<input type="text" name="keyword" value="<?=$keyword?>">
+<input type="button" value="확인" onclick="search();">
+</form>
+
+<!-- 리스트 방식 표출 -->
+<table class="data-list-row--fc">
+	<thead>
+    <tr>
+<?php
+$arrIsShow = array();
+if (!empty($arrItem['list'])) {
+    foreach($arrItem['list'] as $key => $val) {
+        if ($val['is_show'] == 'y') {
+            $arrIsShow[] = $val['code'];
+            echo '<th><strong>'.$val['label'].'</strong></th>';
+        }
+    }
+}
+?>
+    </tr>
+	</thead>
+	<tbody>
+
+<?php
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        if ($val['url']) {  // 링크주소 있을때
+            $url = $val['url'];
+        }
+        else {              // 디폴트 연결
+            if ($folder == '' and !empty($val['category_url'])) $folder = '/'.$val['category_url'];
+            $url = $folder.'?tpf=product/view&category_code='.$val['category_code'].'&code='.$val['code'];
+        }
+        echo '<tr onclick="location.href=\''.$url.'\'" style="cursor:pointer;">';
+        foreach($arrItem['list'] as $key2 => $val2) {
+            if (in_array($val2['code'], $arrIsShow)) {
+                $tm_html_id = (!empty($val2["html_id"])) ? " id=\"".@unserialize($val2['html_id'])[getLocale()]."\"" : "";
+                $tm_html_class = (!empty($val2["html_class"])) ? " class=\"".@unserialize($val2['html_class'])[getLocale()]."\"" : "";
+                switch($val2['input_type']) {
+                    case "file":
+                    $arrUploadFile = @$arrFile[$val['code']][$val2['code']];
+                    echo '  <td>';
+                    if($arrUploadFile['orig_name'] != '') {
+                        if (checkImage($arrUploadFile['file_ext'])) {   // 이미지 파일일때
+                            echo '<img src="'.$arrUploadFile['url'].'"'.$tm_html_id.$tm_html_class.' style="width:80px;">';
+                        }
+                        else {
+                            echo '<a href="#none" onclick="location.replace(\'/index.php?tpf=common/save_as&file_path='.$arrUploadFile['file_path'].'&file_name='.$arrUploadFile['file_name'].'&orig_name='.urlencode($arrUploadFile['orig_name']).'\');"><i class="fa fa-file-text"></i> '.$arrUploadFile['orig_name'].'</a>';
+                        }
+                    }
+                    echo '  </td>';
+                    break;
+
+                    default:
+                    echo '  <td style="text-align:left;">'.nl2br(@$val['arrContent'][$val2['code']]).'</td>';
+                    break;
+                }
+            }
+        }
+        echo '</tr>';
+    }
+}
+else {
+    echo '
+        <tr>
+            <td style="text-align:center; padding:20px;" colspan="'.count(@$arrIsShow).'">등록된 자료가 없습니다.</td>
+        </tr>';
+}
+?>
+	</tbody>
+</table>
+<br><br>
+
+<!--페이지넘버-->
+<?=$arrProduct['page']?>
+<?php
+}
+?>

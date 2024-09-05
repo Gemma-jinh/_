@@ -1,0 +1,140 @@
+<section class="content" style="padding:15px 15px 0 15px;">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                <div style="text-align:right;">
+<?php
+if (count($arrLocal) > 1) {
+    foreach($arrLocal as $key => $val) {
+        echo '  <button type="button" id="locale_'.$key.'" onclick="parent.location.href=\'?tpf=admin/product/list&category_code='.$category_code.'&locale='.$key.'\'" class="btn btn-'; if($key == $locale) { echo 'primary';} else { echo 'default';} echo '"><i class="fa fa-globe" aria-hidden="true"></i> '.$val.'</button>';
+    }
+}
+?>
+                </div>
+
+                    <div class="box-tools pull-right" style="margin-top:20px;">
+                    <form name="form_search" method="post" action="?tpf=admin/product/list_sub">
+                    <input type="hidden" name="locale" value="<?=$locale?>">
+                    <input type="hidden" name="category_code" value="<?=$category_code?>">
+                    <input type="hidden" name="status" value="<?=$status?>">
+                        <div class="has-feedback">
+                        <span>
+                        <input type="text" name="keyword" value="<?=!empty($keyword) ? $keyword : ""?>" class="form-control input-sm" placeholder="상품 검색"/>
+                        <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="box-tools pull-right" style="margin-top:20px;">
+                        <div class="has-feedback">
+<?php
+
+?>
+                        <span style="float:left; width:230px;">
+                        <input type="checkbox" name="is_best" value="y" <?php if($is_best=='y')echo' checked';?>> BEST
+                        <input type="checkbox" name="is_new" value="y" <?php if($is_new=='y')echo' checked';?>> NEW
+                        <input type="checkbox" name="is_event" value="y" <?php if($is_event=='y')echo' checked';?>> EVENT
+                        <input type="checkbox" name="is_main" value="y" <?php if($is_main=='y')echo' checked';?>> MAIN
+                        </span>
+
+                        <select name="field" onchange="location.href='index.php?tpf=admin/product/list_sub&is_best=<?=$is_best?>&is_new=<?=$is_new?>&is_event=<?=$is_event?>&status='+this.value" class="form-control input-sm" style="float:left; padding-right:0; margin-right:5px; width:80px;">
+                        <option value="">상태</option>
+                        <option value="y"<?php if($status == 'y') { echo ' selected';}?>>보임</option>
+                        <option value="n"<?php if($status == 'n') { echo ' selected';}?>>숨김</option>
+                        </select>
+
+                        </div>
+                    </form>
+                    </div>
+
+                    </form>
+                    <p class="text-light-blue"><i class="fa fa-fw fa-list-ul"></i> <a href="<?=$link_root?>">ROOT</a> <?=$category_depth?></p>
+                    <label>총 <?=$data['total']?> 건</label>
+                    <table class="table table-bordered table-hover">
+                    <form name="form_list" method="post" action="?tpf=admin/product/process">
+		            <input type="hidden" name="mode" id="mode">
+                    <thead>
+                    <tr>
+                        <td style="width:30px;"><input type="checkbox" name="select_all" onclick=selectAllCheckBox('form_list'); /></td>
+                        <td style="width:50px;">순번</td>
+                        <td style="width:50px;">CODE</td>
+<?php
+$arrIsShow = array();
+if (!empty($arrItem['list'])) {
+    foreach($arrItem['list'] as $key => $val) {
+        if ($val['is_show'] == 'y') {
+            $arrIsShow[] = $val['code'];
+            echo '      <td>'.$val['label'].'</td>';
+        }
+    }
+}
+?>
+                        <td style="width:90px;">등록일</td>
+                        <td style="width:55px;">상태</td>
+                        <td style="width:60px;">
+                        <i onclick="<?=$onclick_change_down?>" class="fa fa-fw fa-arrow-circle-down cp"></i>
+                        <i onclick="<?=$onclick_change_up?>" class="fa fa-fw fa-arrow-circle-up cp"></i>
+                        </td>
+                        <td style="width:60px;">명령</td>
+                    </tr>
+                    </thead>
+<?php
+if (!empty($data['list'])) {
+    foreach($data['list'] as $key => $val) {
+        echo '      <tr>
+                        <td><input type="checkbox" name="list[]" value="'.$val['code'].'" /></td>
+                        <td>'.$data['start_number'].'</td>
+                        <td>'.$val['code'].'</td>';
+        foreach($arrItem['list'] as $key2 => $val2) {
+            if (in_array($val2['code'], $arrIsShow)) {
+                switch($val2['input_type']) {
+                    case "file":
+                    $arrUploadFile = @$arrFile[$val['code']][$val2['code']];
+                    echo '  <td>';
+                    if($arrUploadFile['orig_name'] != '') {
+                        if (checkImage($arrUploadFile['file_ext'])) {   // 이미지 파일일때
+                            echo '<a href="#none" onclick="location.replace(\'/index.php?tpf=common/save_as&file_path='.$arrUploadFile['file_path'].'&file_name='.$arrUploadFile['file_name'].'&orig_name='.urlencode($arrUploadFile['orig_name']).'\');"><img src="'.$arrUploadFile['url'].'" style="width:80px;"></a>';
+                        }
+                        else {
+                            echo '<a href="#none" onclick="parent.location.replace(\'/index.php?tpf=common/save_as&file_path='.$arrUploadFile['file_path'].'&file_name='.$arrUploadFile['file_name'].'&orig_name='.urlencode($arrUploadFile['orig_name']).'\');"><i class="fa fa-file-text"></i> '.$arrUploadFile['orig_name'].'</a>';
+                        }
+                    }
+                    echo '  </td>';
+                    break;
+
+                    default:
+                    echo '  <td style="text-align:left;">'.nl2br(@$val['arrContent'][$val2['code']]).'</td>';
+                    break;
+                }
+            }
+        }
+        echo '          <td>'.$val['reg_date'].'</td>
+                        <td><span style="font-size:12px;" class="label label-'; if($val['status'] == "y") { echo 'success">보임';} else { echo 'default">숨김';} echo'</span></td>
+                        <td><input type="radio" name="order_code" value="'.$val['order_code'].'"'; if($val['order_code'] == $order_code) { echo ' checked';} echo' /></td>
+                        <td><button type="button" onclick="onclickUpdate('.$val['code'].');" class="btn btn-primary btn-xs">수정하기</button></td>
+                    </tr>';
+        $data['start_number']--;
+    }
+}
+else {
+        echo '      <tr><td colspan="20"><br>등록된 자료가 없습니다.<br><br></td></tr>';
+}
+?>
+                    </table>
+                    <br>
+
+                    <button type="button" onclick="selectDelete('deleteProduct');" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
+<?php
+if ($category_code && $sub_category_count == 0) {
+    echo '          <button type="button" onclick="onclickInsert();" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 제품 등록</button>';
+}
+?>
+                    <button type="button" onclick="onclickCopyProduct()" class="btn btn-warning btn-sm"><i class="fa fa-copy"></i> 제품 복제</button>
+                    <div style="text-align:right;">
+                        <?php echo $data['page'];?>
+                    </div>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>

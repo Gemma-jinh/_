@@ -1,0 +1,43 @@
+<div class="history_wrap1--fc">
+    <?php
+    $year = '';
+    if (!empty($arrHistory)) {
+        foreach($arrHistory as $key => $val) {
+    
+            $tm_html_class = (!empty($val["html_class"])) ? " class=\"".$val["html_class"]."\"" : "";
+    
+            if ($key % 2 == 0) $tag = 'offset-md-6';
+            else $tag = 'col-md-6';
+    
+            if($year != $key) {
+                echo '
+                <div class="his_item">
+                    <h3 class="history_tit1--fc">'.$key.'</h3>
+                    <ul class="'.$tag.'">
+                        <li>
+                            <ul>
+                                <li>
+                                    <dl>';
+            }
+            foreach($val as $key2 => $val2) {
+                if ($arrLayoutSetting['history_view_type'] == '1') {
+                    echo '  			<dt>'.sprintf("%02d",$val2['month']).'</dt>';
+                }
+                else {
+                    echo '				<dt>'.date('M. Y',strtotime($key.'-'.$val2['month'])).'</dt>';
+                }
+                echo '					<dd>'.nl2br($val2['title']);
+                if(file_exists(_USER_DIR.'/history/'.$val2['code'])) {
+                    echo '              <img src="'._USER_URL.'/history/'.$val2['code'].'?dummy='.getDummy().'" style="width:100%;">';
+                }
+                echo '                  </dd>';
+            }
+            echo '              	</dl>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul></div>';
+        }
+    }
+    ?>
+    </div>

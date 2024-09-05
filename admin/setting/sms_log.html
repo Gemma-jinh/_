@@ -1,0 +1,127 @@
+<section class="content-header">
+    <h1>
+    SMS내역 관리
+    <small>sms list</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>설정</li>
+        <li class="active">SMS내역 관리</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <label style="margin-top:5px;">총 <?=$data['total']?> 건</label>
+                    <div class="box-tools pull-right" style="margin:0 0 5px 3px;">
+                        <button type="button" onclick="form_search.submit();" class="btn btn-primary btn-sm">검색</button>
+                    </div>
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                    <form name="form_search" method="post" action="?tpf=admin/setting/sms_log">
+                        <div class="has-feedback">
+                        <span>
+                        <input type="text" name="keyword" id="keyword" value="<?=!empty($keyword) ? $keyword : ""?>" class="form-control input-sm" placeholder="검색"/>
+                        <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                        <div class="has-feedback">
+                        <span style="float:right;">
+                        <select name="field" class="form-control input-sm">
+<?php
+foreach($arrSearch as $key => $val) {
+                echo '  <option value="'.$key.'"'; if(!empty($field) && $field == $key) echo ' selected'; echo '>'.$val.'</option>';
+}
+?>
+                        </select>
+
+                        </span>
+                        </div>
+                    </div>
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                        <div class="has-feedback">
+                        <span style="float:right;">
+                        <select name="month" class="form-control input-sm">
+<?php
+for($i=1; $i<=12; $i++) {
+                $value = $i < 10 ? '0'.$i : $i;
+                echo '  <option value="'.$value.'"'; if($value == $month) echo'selected'; echo'>'.$i.'월</option>';
+}
+?>
+                        </select>
+                        </span>
+                        <span style="padding-left:10px; float:left;">
+                        <select name="year" class="form-control input-sm">
+<?php
+for($i=$start_year; $i<=$last_year; $i++) {
+                echo'   <option value="'.$i.'"'; if($i == $year) echo ' selected'; echo'>'.$i.'년</option>';
+}
+?>
+                        </select>
+                        </span>
+                        </div>
+                    </form>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <td style="width:50px;">종류</td>
+                        <td style="width:110px;">수신자번호</td>
+                        <td style="width:110px;">발신자번호</td>
+                        <td>내용</td>
+                        <td style="width:140px;">발송일</td>
+                        <td style="width:50px;">상태</td>
+                    </tr>
+                    </thead>
+<?php
+if(!empty($data['list'])) {
+    foreach($data['list'] as $key => $val) {
+            echo'   <tr>
+                        <td>'.$arrMsgType[$val['MSG_TYPE']].'</td>
+                        <td>'.divMobile($val['DEST_PHONE']).'</td>
+                        <td>'.$val['SEND_PHONE'].'</td>
+                        <td style="text-align: left;">'.nl2br(preg_replace('/\r\n$/','',$val['MSG_BODY'])).'</td>
+                        <td>'.$val['SEND_TIME'].'</td>
+                        <td style="padding-top:13px;"><span class="label label-success" style="font-size:12px;">'.$arrSmsStatus[$val['STATUS']].'</span></td>
+                    </tr>';
+    }
+} else {
+            echo'   <tr><td colspan="10"><br>등록된 자료가 없습니다.<br><br></td></tr>';
+}
+?>
+                    </table>
+                    <br>
+                    <div style="text-align:right;">
+                        <? echo $data['page'];?>
+                    </div>
+                    <br>
+
+                    <div class="col-xs-5" style="float:right; margin-right:-15px;">
+                        <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3><?=$param['date']?><sup style="font-size: 20px">월</sup></h3>
+                            <p>단문 발송수 : <?=$data['count']['sms']?>건</p>
+                            <p>장문 발송수 : <?=$data['count']['mms']?>건</p>
+                            <p>전체 발송수 : <?=$data['count']['total']?>건</p>
+                            <p>과금 : <?=$data['count']['sms']?> * <?=$fee['sms']?>원 + <?=$data['count']['mms']?> * <?=$fee['mms']?>원 = <?=number_format($charge)?>원</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                            <a href="#" class="small-box-footer">
+                            <i class="fa fa-arrow-circle-right"></i> 비고 : 단문(<?=$fee['sms']?>원), 장문(<?=$fee['mms']?>원)
+                            </a>
+                        </div>
+                    </div>
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>

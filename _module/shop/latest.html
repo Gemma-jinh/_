@@ -1,0 +1,64 @@
+<div class="ctn--fc">
+	<ul class="product_list--fc">
+	<?php
+	//print_r($arrProduct);
+	if (!empty($arrProduct['list'])) {
+    	foreach($arrProduct['list'] as $key => $val) {
+			//echo '<img src="'._USER_URL.'/product/'.$val['code'].'_1" style="width:200px;" />';
+			$cateVal = preg_replace("/\s+/", "", $val['category_name']);
+			echo '<li class="prd_item--fc '.$cateVal.'" data-category="'.$cateVal.'">
+					<a href="/index.php?tpf=shop/detail&category_code='.$category_code.'&code='.$val['code'].'">
+						<div class="imgWrap--fc">
+							<img src="'._USER_URL.'/product/'.$val['code'].'_1" alt="'.$val['title'].'" />
+						</div>
+					</a>
+					<div class="btns--fc">
+						<a href="#none" class="cart--fc" onclick="register(\'cart\',\''.$val['code'].'\');">Add to Cart</a>
+                        <a href="#none" class="like--fc" onclick="register(\'wish\',\''.$val['code'].'\');">Add to Wish list</a>
+					</div>
+					<a href="/index.php?tpf=shop/detail&category_code='.$category_code.'&code='.$val['code'].'">
+						<dl class="prd_info--fc">
+							<dt class="item_category--fc">'.$val['category_name'].'</dt>
+							<dt class="item_name--fc">'.$val['list_title'].'</dt>
+							<dd class="item_capacity--fc">'.$val['capacity'].'</dd>
+							<dd class="item_price--fc">'.displayPriceLocale($val['sale_price']).'</dd>
+						</dl>
+					</a>
+				</a>
+			</li>';
+		}
+	}
+	else {
+		echo '<div style="text-align:center;">'._LANG("등록된 자료가 없습니다.").'</div>';
+	}
+	?>
+	</ul>
+</div>
+
+<!-- 장바구니담기 -->
+<div id="cart_layer" class="cart_layer">
+    <h1><?=_LANG('장바구니 담기')?></h1>
+    <p class="cart_layer_txt">
+        <?=_LANG('장바구니에 상품이 정상적으로 담겼습니다.')?>
+    </p>
+    <p class="cart_layer_btn">
+        <a href="/index.php?tpf=mypage/cart_list&tab=4">
+            <?=_LANG('장바구니 이동')?>
+        </a>
+        <a href="">
+            <?=_LANG('계속 쇼핑하기')?>
+        </a>
+    </p>
+    <p class="cart_layer_close">
+        <?=_LANG('닫기')?>
+    </p>
+</div>
+<!-- //장바구니담기 -->
+
+<form name="formShop" method="post" action="/index.php?tpf=shop/product_process">
+<input type="hidden" name="mode">
+<input type="hidden" name="url" value="{{URL}}">
+<input type="hidden" name="code">
+<input type="hidden" name="product_code">
+<input type="hidden" name="count" value="1">
+</form>

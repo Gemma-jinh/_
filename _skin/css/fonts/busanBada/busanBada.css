@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'BusanBada';
+    src: url('BusanBada.eot');
+    src: url('BusanBada.eot?#iefix') format('embedded-opentype'),
+        url('BusanBada.woff2') format('woff2'),
+        url('BusanBada.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+

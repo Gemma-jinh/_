@@ -1,0 +1,110 @@
+
+
+<?php
+if (!empty($depth)) {
+    echo '
+    <div class="depth" style="margin:30px 0 10px 10px;">
+        <img src="/img/home_icon.png"> '.$depth.'
+    </div>';
+}
+?>
+
+<?php
+if(!empty($arrInfo["html_design"])) {   // 별도의 HTML 디자인 사용 시
+    if (!empty($arrProduct['arrContent'])) {
+        $html_design = $arrInfo["html_design"];
+
+		// 텝(카테고리) 표출
+		if (!empty($arrCategory['list'])) {
+			$html_design = preg_replace('/\[link_category_all\]/', '?tpf=product/list&category_code='.$parent_category_code, $html_design);    // 전체
+			@list($html_design1, $html_design_tmp) = explode('<for_category>', $html_design);
+			@list($html_design_orignal, $html_design2) = explode('</for_category>', $html_design_tmp);
+			$category_tag = '';
+			$is_all = true;
+			foreach($arrCategory['list'] as $key => $val) {
+				if ($category_code == $val['category_code']) {
+					$on_tag = ' class="on"';
+					$is_all = false;
+				}
+				else $on_tag = '';
+
+				$tmp = preg_replace('/\[link_category\]/', '?tpf=product/list&category_code='.$val['category_code'], $html_design_orignal);
+				$tmp = preg_replace('/\[title\]/', $val['title'], $tmp);
+				$category_tag .= preg_replace('/\[on\]/', $on_tag, $tmp);
+			}
+			$html_design = $html_design1.$category_tag.$html_design2;
+			if ($is_all) {
+				$html_design = preg_replace('/\[all_on\]/', ' class="on"', $html_design);
+			}
+		}
+
+        // 텝(상품명) 표출
+        if (!empty($arrProductList['list'])) {
+            @list($html_design1, $html_design_tmp) = explode('<for_product>', $html_design);
+            @list($html_design_orignal, $html_design2) = explode('</for_product>', $html_design_tmp);
+            $product_tag = '';
+            if ($html_design_orignal != '') {
+                foreach($arrProductList['list'] as $key => $val) {
+                    preg_match_all('/\[code:([0-9]*)\]/', $html_design_orignal, $arrCode);
+                    if ($code == $val['code']) $on_tag = ' class="on"';
+                    else $on_tag = '';
+                    $tmp = preg_replace('/\[link_product\]/', '?tpf=product/view&category_code='.$val['category_code'].'&code='.$val['code'], $html_design_orignal);
+                    $tmp = preg_replace('/\[on\]/', $on_tag, $tmp);
+                    $product_tag .= preg_replace('/\[code:'.$arrCode[1][0].'\]/', $val['arrContent'][$arrCode[1][0]], $tmp);
+                }
+            }
+            $html_design = $html_design1.$product_tag.$html_design2;
+        }
+
+        if (!empty($arrItem['list'])) {
+            $result = replaceCode($arrItem['list'], $html_design, $arrProduct);  // 첫번째 실행
+            $html_design = replaceCode($arrItem['list'], $result, $arrProduct);  // 두번째 실행
+        }
+
+        // new 아이콘 표출
+        if ($arrProduct['diff_date'] > 7) {    // 등록후 7일 지날 경우
+            $html_design = preg_replace('/\[new\]/', ' style="display:none;"', $html_design);
+        }
+
+        // 카테고리명 표출
+        $html_design = preg_replace('/\[category_name\]/', $category_name, $html_design);
+        $html_design = preg_replace('/\[category_depth\]/', $category_depth, $html_design);
+
+        // [code] 치환
+        $html_design = preg_replace('/\[code\]/', $code, $html_design);
+
+        echo $html_design;
+    }
+}
+else {
+?>
+<p class="path--fc">home &lt; 제품소개 &lt; <span class="path_point--fc"><?=$category_name?></span></p>
+<h3 class="ctn_tle--fc"><?=$category_name?></h3>
+
+<div style="width:800px;">
+    <div style="float:right;">
+<?php
+if (!empty($arrItem['list'])) {
+    foreach($arrItem['list'] as $key => $val) {
+        // 항목명 : $arrProduct['arrContent'][항목코드값] 형식으로 출력하기
+        switch($val['input_type']) {
+            case "file":    // 파일일때
+            $tm_html_id = (!empty($val["html_id"])) ? " id=\"".@unserialize($val['html_id'])[getLocale()]."\"" : "";
+            $tm_html_class = (!empty($val["html_class"])) ? " class=\"".@unserialize($val['html_class'])[getLocale()]."\"" : "";
+            echo '  <p>';
+            if (@checkImage($arrProduct['arrFile'][$val['code']]['file_ext'])) { echo '<img src="'.$arrProduct['arrFile'][$val['code']]['url'].'"'.$tm_html_id.$tm_html_class.' style="width:120px;">';}
+            echo '  </p>';
+            break;
+
+            default:        // 그 외 (text, textarea, radio, checkbox, webeditor)
+            echo '<p>'.$val['label'].' : '.nl2br(@$arrProduct['arrContent'][$val['code']]).'</p>';
+            break;
+        }
+    }
+}
+?>
+    </div>
+</div>
+<?php
+}
+?>

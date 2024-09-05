@@ -1,0 +1,174 @@
+<style>
+textarea {
+    width:180px;
+    height:100px;
+}
+</style>
+
+<section class="content-header">
+    <h1>
+    카카오알림톡문구 설정
+    <small>kakao talk template</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>커뮤니티 관리</li>
+        <li class="active">카카오알림톡문구 설정</li>
+    </ol>
+</section>
+
+<section class="content">
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-body">
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 카카오알림톡문구발송 정보 설정 </p></h4>
+
+				<form name="form_register" method="post" action="/index.php?tpf=admin/community/sms_process">
+                <input type="hidden" name="mode" value="updateSMS">
+
+                <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="menu">메뉴얼 다운로드</td>
+                    <td align="left">
+                    <span style="line-height:1.0;">
+                    <a href="http://api.mir9.kr/user/bizmsg_manual.pptx" target="_new"><button type="button" class="btn btn-warning btn-xs">다운로드</button></a><br>
+                    <small class="text-red">
+                    ※ 메뉴얼을 확인하시고 가입,설정등을 진행해 주시기 바랍니다.<br>
+                    ※ 비즈엠 회원가입 후 계정정보를 개발 담당자에게 전달해 주시기 바랍니다.<br>
+                    ※ 비즈엠 알림톡 이용요금이 부족할때는 발신이 안될수 있으니 충전요금을 확인하시기 바랍니다.
+                    </small>
+                    </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">비즈엠 잔액</td>
+                    <td align="left">
+                        <?=number_format(@$arrPointInfo['balance'])?>원
+                    </td>
+                </tr>
+<!--
+                <tr>
+                    <td class="menu">사용법</td>
+                    <td align="left">
+                        템플릿 일괄 등록 -> 비즈엠 승인 -> 승인 템플릿 추출 -> 알림톡 문구 지정
+                    </td>
+                </tr>
+-->
+                </tbody>
+                </table>
+                <br>
+
+                <span style="float:left;">
+				<h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 카카오알림톡문구 설정 </p></h4>
+                </span>
+
+                <span style="float:right;">
+                <a href="/index.php?tpf=admin/community/sms"><button type="button" class="btn btn-primary" style="margin-bottom:5px;"><i class="fa fa-send-o"></i> &nbsp;카카오알림톡 문구 지정</button></a>
+                <button type="button" onclick="makeConfirmTemplate()" class="btn btn-warning" style="margin-bottom:5px;"><i class="fa fa-gear"></i> 승인템플릿 추출</button>
+                <button type="button" onclick="registTemplateAll()" class="btn btn-warning" style="margin-bottom:5px;"><i class="fa fa-plus"></i> 템플릿 일괄 등록</button>
+<?php
+if (empty($arrTemplate)) {
+    echo '      <button type="button" onclick="registTemplateAll()" class="btn btn-warning" style="margin-bottom:5px;"><i class="fa fa-plus"></i> 템플릿 일괄 등록</button>';
+}
+?>
+                </span>
+
+				<table class="table table-bordered table-hover">
+				<thead>
+                    <tr>
+                        <td class="menu" style="width:200px;">발송 항목명</td>
+                        <td class="menu" style="width:150px;">템플릿 코드</td>
+                        <td class="menu" style="width:100px;">문구</td>
+                        <td class="menu" style="width:100px;">상태</td>
+						<td class="menu">비고</td>
+						<td class="menu" style="width:100px;">명령</td>
+                    </tr>
+                </thead>
+                <tbody>
+<?php
+$index = 1;
+if (!empty($arrTemplate)) {
+    foreach($arrTemplate as $key => $val) {
+        echo '      <tr>
+                        <td class="content">'.$val['templateName'].'</td>
+                        <td class="content">'.$val['templateCode'].'</td>
+                        <td style="text-align:left;">'.@nl2br($val['templateContent']).'</td>
+                        <td class="content"><span class="label label-'.$arrStatusColor[$val['inspectionStatus']].'">'.$arrStatus[$val['inspectionStatus']].'</span></td>
+                        <td align="left"></td>
+                        <td class="content">';
+        if ($val['inspectionStatus'] == 'REG' or $val['inspectionStatus'] == 'REJ') {   // 등록/반려 일때
+            echo '      <button type="button" onclick="onclickUpdate(\''.$val['templateName'].'\',\''.$val['templateCode'].'\',\''.preg_replace('/\r\n|\r|\n/','\r',$val['templateContent']).'\');" class="btn btn-primary btn-xs">수정</button>';
+        }
+        if ($val['inspectionStatus'] == 'REG') {                                        // 등록 일때
+            echo '      <button type="button" onclick="confirmTemplate(\''.$val['templateCode'].'\');" class="btn label-warning btn-xs">검수요청</button>';
+        }
+        if ($val['inspectionStatus'] != 'APR') {                                        // 등록/심사요청/반려 일때(승인이 아닐때)
+            echo '      <button type="button" onclick="deleteTemplate(\''.$val['templateCode'].'\');" class="btn label-danger btn-xs">삭제</button>';
+        }
+        echo '          </td>';
+        echo '      </tr>';
+        $index++;
+    }
+}
+?>
+				</tbody>
+                </table>
+                <br>
+
+				</form>
+
+                <div><button type="button" onclick="onclickInsert()" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 등록</button></div>
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:380px;">
+        <div class="modal-content">
+            <form name="formContent">
+            <input type="hidden" name="oldTemplateCode">
+            <input type="hidden" name="categoryCode">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">문구설정 관리</h4>
+            </div>
+            <div class="modal-body">
+
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 문구설정</h4>
+            <table class="table table-bordered">
+            <tr>
+                <td class="menu">발송 항목명</td>
+                <td align="left">
+                <input type="text" name="templateName" class="form-control input-sm">
+                </td>
+            </tr>
+            <tr>
+                <td class="menu">템플릿 코드</td>
+                <td align="left">
+                <input type="text" name="templateCode" class="form-control input-sm">
+                </td>
+            </tr>
+            <tr>
+                <td class="menu">템플릿 내용</td>
+                <td style="text-align:left;"><textarea name="templateContent" style="width:200px; height:200px;"></textarea></td>
+            </tr>
+            </table>
+            </div>
+            <div class="modal-footer">
+            <button id="displayRegist" type="button" onclick="registTemplate()" class="btn btn-primary">확인</button>
+            <button id="displayUpdate" type="button" onclick="updateTemplate()" class="btn btn-primary">수정</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<form name="formMakeConfirmTemplate" method="post" action="?tpf=admin/community/sms_process">
+<input type="hidden" name="mode" value="makeConfirmTemplate">
+</form>

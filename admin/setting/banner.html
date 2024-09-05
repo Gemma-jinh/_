@@ -1,0 +1,236 @@
+<section class="content-header">
+    <h1>
+    메인 이미지 배너
+    <small>Main Image Banner</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>설정</li>
+        <li class="active">메인 이미지 배너</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+					<div style="text-align:right;margin-bottom:5px;">
+                    	<select name="" id="" class="form-control input-sm" style="display: inline-block;width:120px;height: 34px;vertical-align: top;">
+							<option value="custom" selected>Custom</option>
+							<option value="fade">Fade</option>
+							<option value="bounce">bounce</option>
+                        </select>
+                        <button type="button" class="btn btn-default">적용</button>
+					</div>
+                    <div style="text-align:right">
+<?php
+if(count($arrLocal) > 1) {
+    foreach($arrLocal as $key => $val) {
+        echo '<button type="button" id="locale_'.$key.'" onclick="parent.location.href=\'?tpf=admin/setting/banner&locale='.$key.'\'" class="btn btn-'; if($key == $locale) {echo 'primary';}else { echo 'default';} echo '" style="margin-left:3px;"><i class="fa fa-globe" aria-hidden="true"></i> '.$val.'</button>';
+    }
+}
+?>
+                    </div>
+                    <label style="margin-top:5px;">총 <?=$data['total']?> 건</label>
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                    <form name="form_list" method="post" action="?tpf=admin/setting/banner_process">
+		            <input type="hidden" name="mode" id="mode">
+		            <thead>
+                    <tr>
+                        <td style="width:30px;"><input type="checkbox" name="select_all" onclick=selectAllCheckBox('form_list'); /></td>
+                        <td style="width:60px;">NO</td>
+                        <td style="width:100px;">category_code</td>
+                        <td style="width:300px;">이미지</td>
+                        <td style="width:150px;">타이틀</td>
+                        <td style="*">URL</td>
+                        <td style="width:140px;">등록일</td>
+                        <td style="width:55px;">상태</td>
+                        <td style="width:50px;">target</td>
+                        <td style="width:60px;">
+                        <i onclick="<?=$onclick_change_down?>" class="fa fa-fw fa-arrow-circle-down cp"></i>
+                        <i onclick="<?=$onclick_change_up?>" class="fa fa-fw fa-arrow-circle-up cp"></i>
+                        </td>
+                        <td style="width:80px;">명령</td>
+                    </tr>
+                    </thead>
+<?php
+// 리스트
+if (!empty($data['list'])) {
+$start_number=$data['total'];
+    foreach($data['list'] as $key => $val) {
+        echo '      <tr>
+                        <td style="vertical-align:middle"><input type="checkbox" name="list[]" value="'.$val['code'].'" /></td>
+                        <td style="vertical-align:middle">'.$start_number.'</td>
+                        <td style="vertical-align:middle">'.$val['category_code'].'('.$arrBannerType[$val['category_code']].')</td>
+                        <td style="vertical-align:middle">'; if (file_exists(_USER_DIR."/banner/".$val['code'])) { echo '<img src="'._USER_URL.'/banner/'.$val['code'].'?dummy='.getDummy().'" width="144">';} echo '</td>
+                        <td style="vertical-align:middle">'.$val['title'].'</td>
+                        <td style="vertical-align:middle">'.$val['url'].'</td>
+                        <td style="vertical-align:middle">'.$val['reg_date'].'</td>
+                        <td style="vertical-align:middle"><span style="font-size:12px;" class="label label-'; if($val['status'] == "y") { echo 'success">보임';} else { echo 'default">숨김';} echo'</span></td>
+                        <td style="vertical-align:middle"><span style="font-size:12px;" class="label label-'; if($val['target'] == "y") { echo 'success">현재창';} else { echo 'success">새창';} echo'</span></td>
+                        <td style="vertical-align:middle"><input type="radio" name="order_code" value="'.$val['order_code'].'"'; if($val['order_code'] == $order_code) { echo ' checked';} echo' /></td>
+                        <td style="vertical-align:middle"><button type="button" onclick="onclickUpdate('.$val['code'].');" class="btn btn-primary btn-xs">상세보기</button></td>
+                    </tr>';
+                    $start_number--;
+    }
+}
+else {
+        echo '      <tr><td colspan="11"><br>등록된 자료가 없습니다.<br><br></td></tr>';
+}
+?>
+                    </form>
+                    </table>
+                    <br>
+                    <button type="button" onclick="selectDelete();" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
+                    <button type="button" onclick="onclickInsert()"  class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 배너 등록</button>
+                    <button type="button" onclick="onclickCopyData('copyData')" class="btn btn-warning btn-sm"><i class="fa fa-random"></i> 배너 복사</button>
+
+                    <div style="text-align:right;">
+                        <?php echo $data['page'];?>
+                    </div>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="form_register" method="post" action="?tpf=admin/setting/banner_process" enctype="multipart/form-data">
+            <input type="hidden" name="mode" id="mode" value="insert">
+            <input type="hidden" name="code" id="code">
+<?php
+if((!empty($locale)) || count($arrLocal) > 1) {
+    echo '  <input type="hidden" name="locale" id="locale" value="'.$locale.'">';
+}
+?>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">배너 관리</h4>
+            </div>
+                <div class="modal-body">
+
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 배너 <span id="board_sub_title">등록</span></p></h4>
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="menu">위치 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+                        <td align="left">
+                        <select name="category_code" id="category_code" class="form-control input-sm" style="width:120px;">
+<?php
+foreach($arrBannerType as $key => $val) {
+    echo '                  <option value="'.$key.'">'.$val.'</option>';
+}
+?>
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="menu">타이틀 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+                        <td align="left"><input type="text" name="title" class="form-control input-sm" style="width:50%;"></td>
+                    </tr>
+                    <tr>
+                        <td class="menu">URL</td>
+                        <td align="left">
+                        <input type="text" name="url" class="form-control input-sm" placeholder="http://<?=_LOGIN_URL?>" style="width:50%; float:left;">
+                        <select name="target" class="form-control input-sm" style="width:80px; margin-left:5px; float:left;">
+<?php
+foreach($arrTargetStatus as $key => $val) {
+    echo '                  <option value="'.$key.'">'.$val.'</option>';
+}
+?>
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="menu">내용 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+                        <td align="left"><textarea name="tag" placeholder="" class="form-control input-sm" style="padding:5px; line-height:20px; width:100%; height:150px;"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td class="menu">파일 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+                        <td align="left">
+                        <input type="file" name="file1" class="form-control input-sm" style="width:70%; display:inline;">
+                        <span id="display_file" style="display:none;">
+                        <button type="button" onclick="winOpen('?tpf=common/image_view&file_name=banner/'+$('[name=code]').val());" class="btn btn-success btn-xs">보기</button>
+                        <button type="button" onclick="confirmIframeDelete('?tpf=common/image_delete&file_name=banner/'+$('[name=code]').val()+'&code='+$('#code').val());" class="btn btn-danger btn-xs">삭제</button>
+                        </span>
+                        <div style="font-weight:normal">※ 권장 이미지 크기 : 1920 X 955</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="menu">파일 (모바일)</td>
+                        <td align="left">
+                        <input type="file" name="file2" class="form-control input-sm" style="width:70%; display:inline;">
+                        <span id="display_m_file" style="display:none;">
+                        <button type="button" onclick="winOpen('?tpf=common/image_view&file_name=banner/'+$('[name=code]').val()+'_m');" class="btn btn-success btn-xs">보기</button>
+                        <button type="button" onclick="confirmIframeDelete('?tpf=common/image_delete&file_name=banner/'+$('[name=code]').val()+'_m&code='+$('#code').val());" class="btn btn-danger btn-xs">삭제</button>
+                        </span>
+                        <div style="font-weight:normal">※ 이미지 크기 : width 767</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="menu">상태 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+                        <td>
+                        <select name="status" id="status" class="form-control input-sm" style="width:100px;">
+<?php
+foreach($arrDisplayStatus as $key => $val) {
+    echo '                  <option value="'.$key.'">'.$val.'</option>';
+}
+?>
+                        </select>
+                        </td>
+                    </tr>
+                </table>
+
+                </div>
+            <div class="modal-footer">
+                <button type="button" onclick="register()" class="btn btn-primary">확인</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalContent2" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:400px;">
+        <div class="modal-content">
+            <form name="form_copy_data" method="post" action="?tpf=admin/setting/banner_process">
+            <input type="hidden" name="mode" id="mode" value="copyData">
+            <input type="hidden" name="code" id="code">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">배너 관리</h4>
+            </div>
+            <div class="modal-body">
+
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 배너 <span>이전</span></p></h4>
+            <table class="table table-bordered">
+            <tbody><tr>
+                <td class="menu">언어</td>
+                <td align="left">
+                <select name="banner_locale" id="banner_locale" class="form-control input-sm">
+                    <option value="">선택</option>
+<?php
+foreach($arrLocal as $key => $val) {
+    echo '          <option value="'.$key.'">'.$val.'</option>';
+}
+?>
+                </select>
+                </td>
+            </tr>
+            </tbody></table>
+            </div>
+
+            <div class="modal-footer">
+            <button type="button" onclick="registerCopyData()" class="btn btn-primary">확인</button>&nbsp;&nbsp;&nbsp;
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

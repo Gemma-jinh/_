@@ -1,0 +1,361 @@
+<section class="content-header">
+    <h1>
+    기본 설정
+    <small>setting</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>기본 설정</li>
+        <li class="active">기본정보 관리</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div>
+            <div class="box">
+                <div class="box-body">
+
+                <div class="col-md-6">
+                <form name="form_register" method="post" action="?tpf=admin/setting/process" enctype="multipart/form-data" onSubmit='return false'>
+                <input type="hidden" name="mode" value="info">
+<?php
+if($arrAdminMenuList['list'][6]['is_use']=='y'){
+?>
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 기본 설정
+                    <button type="button" onclick="register('info_base');" class="btn btn-primary btn-sm"><i class="fa  fa-save"></i> 저장</button>
+                </p></h4>
+
+                <table class="table table-bordered">
+                <tr>
+                    <td class="menu">대표 이메일</td>
+                    <td align="left">
+                    <input type="text" name="email" value="<?=$arrInfo['email']?>" class="form-control input-sm" style="width:80%; display:inline;">
+                    <br>
+                    ※ 각종 메일 수신에 사용됩니다.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">대표 휴대폰 번호</td>
+                    <td align="left">
+                    <input type="text" name="mobile1" value="<?=@$arrInfo['arrMobile'][0]?>" onkeyup="this.value=checkNum(this.value)" class="form-control input-sm" style="width:60px; display:inline;" maxlength="3">
+                    -
+                    <input type="text" name="mobile2" value="<?=@$arrInfo['arrMobile'][1]?>" onkeyup="this.value=checkNum(this.value)"  class="form-control input-sm" style="width:60px; display:inline;" maxlength="4">
+                    -
+                    <input type="text" name="mobile3" value="<?=@$arrInfo['arrMobile'][2]?>" onkeyup="this.value=checkNum(this.value)"  class="form-control input-sm" style="width:60px; display:inline;" maxlength="4">
+                    <br>
+                    ※ SMS 알림 수신에 사용됩니다.
+                    </td>
+                </tr>
+                </table>
+
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 알림톡 설정
+                    <button type="button" onclick="register('info_kakao');" class="btn btn-primary btn-sm"><i class="fa  fa-save"></i> 저장</button>
+                </p></h4>
+                <table class="table table-bordered">
+                <tr>
+                    <td class="menu">카카오 프로파일</td>
+                    <td align="left">
+                    <input type="text" name="kakao_profile" value="<?=$KakaoConfig['Kakao']['kakao_profile']?>" class="form-control input-sm" style="width:80%; display:inline;">
+                    <a href="/index.php?tpf=admin/community/sms_kakao"><button type="button" class="btn btn-warning btn-sm"><i class="fa fa-info-circle"></i> 등록 안내</button></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">유저 ID</td>
+                    <td align="left">
+                    <input type="text" name="user_id" value="<?=$KakaoConfig['Kakao']['user_id']?>" class="form-control input-sm" style="width:200px; display:inline;">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">유저 키</td>
+                    <td align="left">
+                    <input type="text" name="user_key" value="<?=$KakaoConfig['Kakao']['user_key']?>" class="form-control input-sm" style="width:200px; display:inline;">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">발신번호</td>
+                    <td align="left">
+                    <input type="text" name="tel" value="<?=@$arrInfo['tel']?>" class="form-control input-sm" style="width:200px; display:inline;">
+                    <br>
+                    ※ SMS 알림 발송시 발신자 번호로 사용 됩니다. <small class="text-red">(발신번호를 미르나인 담당자에게 알려주기 바랍니다.)</small>
+                    </td>
+                </tr>
+                </table>
+
+<?php
+}
+?>
+
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 기타 설정
+                    <button type="button" onclick="register('info_etc');" class="btn btn-primary btn-sm"><i class="fa  fa-save"></i> 저장</button>
+                </p></h4>
+                <table class="table table-bordered">
+                <tr>
+                    <td class="menu">썸네일 이미지</td>
+                    <td align="left">
+                    <input type="file" name="file1" class="form-control input-sm" style="width:80%; display:inline;">
+                    <button type="button" onclick="winOpen('?tpf=common/image_view&file_name=meta_logo.jpg');" class="btn btn-success btn-xs">보기</button>
+                    <br>
+                    ※ 350 * 285 사이즈로 등록해 주세요 (카카오톡등 메신저 url 노출시 보여지는 이미지 입니다)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">파비콘 이미지</td>
+                    <td align="left">
+                    <input type="file" name="file2" class="form-control input-sm" style="width:80%; display:inline;">
+                    <button type="button" onclick="winOpen('?tpf=common/image_view&file_name=favicon');" class="btn btn-success btn-xs">보기</button>
+                    <br>
+                    ※ 16 * 16 사이즈로 등록해 주세요 (확장자 : <span style="color:red">.ico .png</span>)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">연혁 레이아웃<br> 옵션</td>
+                    <td align="left">
+                    <div>
+                        <span style="float:left; width:200px; text-align:center;">
+                        <img src="/img/skin/history_type1.PNG" style="width:200px; cursor:pointer;" onclick="viewSkinPreview(this)" /><br/>
+                        <input type="radio" name="skin" value="1"<?php if($layoutSetting['history_skin'] == 'skin1') { echo ' checked';}?>/> dispay 1
+                        </span>
+                        <span style="float:left; width:200px; text-align:center;">
+                        <img src="/img/skin/history_type2.PNG" style="width:200px; cursor:pointer;" onclick="viewSkinPreview(this)" /><br/>
+                        <input type="radio" name="skin" value="2"<?php if($layoutSetting['history_skin'] == 'skin2') { echo ' checked';}?>/> display 2
+                        </span>
+                    </div>
+                    <div align="left" style="margin-top:20px; width:100%; height:40%; float:left;">
+                        <select name="historyViewType" class="form-control input-sm" style="width:300px;">
+                        <option value="1"<?php if($layoutSetting['history_view_type'] == 'viewType1') { echo ' selected';}?>>연혁 - 2019/05/28</option>
+                        <option value="2"<?php if($layoutSetting['history_view_type'] == 'viewType2') { echo ' selected';}?>>연혁 - May. 2019</option>
+                        </select>
+                    </div>
+                    </td>
+                </tr>
+                </table>
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> QR코드 생성기
+                </p></h4>
+                <table class="table table-bordered">
+                <tr>
+                    <td class="menu">QR 코드 주소</td>
+                    <td align="left">
+                    <div>
+<?php
+    $site=!empty($this->reqData['url'])?$this->reqData['url']:_HOME_URL;
+?>
+                            <input type="text" name="url" id="url" value="<?=$site?>" class="form-control input-sm" style="width:50%;float:left;">
+                            <button type="button" onclick="createQR()" class="btn  btn-sm"  style="float:left;margin-left:5px">생성하기</button>
+<?php
+if(!empty($this->reqData['url'])){
+
+    include_once _LIBRARY_DIR."/phpqrcode/qrlib.php";
+    $qrContents = $this->reqData['url'];
+    $filePath = 'user/qrcode/'.sha1($qrContents).".png";
+echo'
+    <a href="'.$filePath.'" download><button type="button" class="btn  btn-sm" style="float:left;margin-left:5px">다운로드</button></a>
+';
+    if(!file_exists($filePath)) {
+        $ecc = 'H'; // L, M, Q, H, This parameter specifies the error correction capability of QR.
+        $pixel_Size = 10; // This specifies the pixel size of QR.
+        $frame_Size = 10; // level 1-10
+        QRcode::png($qrContents, $filePath, $ecc, $pixel_Size, $frame_Size);
+    }
+    echo "<center><img src='".$filePath."'/></center>";
+}
+
+?>
+                    </div>
+                    </td>
+                </tr>
+<!--
+                <tr>
+                    <td class="menu">잔여 포인트</td>
+                    <td align="left">
+                    <span style="color:red;">1,200원</span>&nbsp;&nbsp;
+                    <button type="button" onclick="winOpen('?tpf=common/image_view&file_name=favicon');" class="btn btn-success btn-xs">사용 내역 보기</button>&nbsp;
+                    <button type="button" onclick="winOpen('?tpf=common/image_view&file_name=favicon');" class="btn btn-warning btn-xs"><i class="fa fa-krw"></i> 충전하기</button>
+                    <br>
+                    ※ 포인트가 부족할때는 SMS 발송이 되지 않으니 미리 충전하시기 바랍니다.
+                    </td>
+                </tr>
+-->
+                </table>
+                </div>
+
+<?php
+if(getLoginId() == 'admin' or getLoginId() == 'worker') { // 미르나인 관리자 일때만 표출
+?>
+                <div class="col-md-6">
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 언어 설정
+                    <button type="button" onclick="register('info_lang');" class="btn btn-primary btn-sm"><i class="fa  fa-save"></i> 저장</button>
+                </p></h4>
+                <table class="table table-bordered">
+                <tr>
+                    <td class="menu">디폴트 언어</td>
+                    <td align="left">
+                    <select name="default_locale" class="form-control input-sm" style="width:150px;">
+<?php
+if (!empty($arrLocaleList['list'])) {
+    foreach($arrLocaleList['list'] as $key => $val) {
+        echo '      <option value="'.$val['country_code'].'"'; if(!empty($arrInfo['default_locale']) && $arrInfo['default_locale'] == $val['country_code']) echo ' selected'; echo '>'.$val['country'].'</option>';
+    }
+}
+?>
+                    </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">다국어 선택</td>
+                    <td align="left">
+<?php
+if (!empty($arrLocaleList['list'])) {
+    foreach($arrLocaleList['list'] as $key => $val) {
+        echo '      <input type="checkbox" name="locale_list[]" value="'.$val['code'].'"'; if($val['is_use'] == 'y') { echo ' checked';} echo ' /> '.$val['country'].'<br>';
+    }
+}
+?>
+                    </td>
+                </tr>
+                </table>
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 관리자 메뉴 설정
+                    <button type="button" onclick="register('info_admin_menu');" class="btn btn-primary btn-sm"><i class="fa  fa-save"></i> 저장</button>
+                    </p></h4>
+                <table class="table table-bordered">
+                <tr>
+                    <td class="menu">관리자 메뉴<br>표출 설정</td>
+                    <td align="left">
+<?php
+if (!empty($arrAdminMenuList['list'])) {
+    foreach($arrAdminMenuList['list'] as $key => $val) {
+        if($val['code']!='5'&&$val['code']!='8'&&$val['code']!='15'&&$val['code']!='6'&&$val['code']!='11'&&$val['code']!='15'&&$val['code']!='19'&&$val['code']!='20'){
+
+        echo '      <input type="checkbox" name="admin_menu_list[]" value="'.$val['code'].'"'; if($val['is_use'] == 'y') { echo ' checked';} echo ' /> '.$val['title'].'<br>';
+        }
+    }
+}
+?>
+                    </td>
+                </tr>
+
+<?php
+if (getLoginId() == 'admin') {
+?>
+                <tr>
+                    <td class="menu" >Admin 메뉴<br>표출 설정</td>
+                    <td align="left">
+<?php
+if (!empty($arrAdminMenuList['list'])) {
+    foreach($arrAdminMenuList['list'] as $key => $val) {
+        if($val['code']=='5'||$val['code']=='8'||$val['code']=='15'||$val['code']=='6'||$val['code']=='11'||$val['code']=='15'||$val['code']=='19'||$val['code']=='20'){
+            echo '      <input type="checkbox" name="admin_menu_list[]" value="'.$val['code'].'"'; if($val['is_use'] == 'y') { echo ' checked';} echo ' /> '.$val['title'].'<br>';
+        }
+    }
+}
+?>
+                    </td>
+                </tr>
+<?php
+}
+
+?>
+                </table>
+
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i>관리자 제품 설정
+                    <button type="button" onclick="register('info_product');" class="btn btn-primary btn-sm"><i class="fa  fa-save"></i> 저장</button>
+                </p></h4>
+                <table class="table table-bordered">
+<?php
+
+?>
+                <tr>
+                    <td class="menu"> 출력옵션</td>
+                    <td align="left">
+<!--
+                        <div class="col-md-4"><input type="checkbox" name="product_model" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_model'])&&unserialize(@$arrInfo['product_option'])['product_model']=='y'){echo' checked';}?>>모델명</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_title" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_title'])&&unserialize(@$arrInfo['product_option'])['product_title']=='y'){echo' checked';}?>>상품명</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_list_title" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_list_title'])&&unserialize(@$arrInfo['product_option'])['product_list_title']=='y'){echo' checked';}?>>리스트문구</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_hash_keyword" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_hash_keyword'])&&unserialize(@$arrInfo['product_option'])['product_hash_keyword']=='y'){echo' checked';}?>>해쉬키워드</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_consumer_price" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_consumer_price'])&&unserialize(@$arrInfo['product_option'])['product_consumer_price']=='y'){echo' checked';}?>>소비자가격</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_sale_price" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_sale_price'])&&unserialize(@$arrInfo['product_option'])['product_sale_price']=='y'){echo' checked';}?>>판매가격</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_point" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_point'])&&unserialize(@$arrInfo['product_option'])['product_point']=='y'){echo' checked';}?>>개별적릭금</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_option_data" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_option_data'])&&unserialize(@$arrInfo['product_option'])['product_option_data']=='y'){echo' checked';}?>>옵션</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_file1" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_file1'])&&unserialize(@$arrInfo['product_option'])['product_file1']=='y'){echo' checked';}?>>리스트이미지1</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_file2" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_file2'])&&unserialize(@$arrInfo['product_option'])['product_file2']=='y'){echo' checked';}?>>리스트이미지2</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_file3" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_file3'])&&unserialize(@$arrInfo['product_option'])['product_file3']=='y'){echo' checked';}?>>제품 이미지(상세1)</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_file4" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_file4'])&&unserialize(@$arrInfo['product_option'])['product_file4']=='y'){echo' checked';}?>>제품 이미지(상세2)</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_file5" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_file5'])&&unserialize(@$arrInfo['product_option'])['product_file5']=='y'){echo' checked';}?>>제품 이미지(상세3)</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_file6" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_file6'])&&unserialize(@$arrInfo['product_option'])['product_file6']=='y'){echo' checked';}?>>제품 이미지(상세4)</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_file7" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_file7'])&&unserialize(@$arrInfo['product_option'])['product_file7']=='y'){echo' checked';}?>>제품 이미지(상세5)</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_brief" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_brief'])&&unserialize(@$arrInfo['product_option'])['product_brief']=='y'){echo' checked';}?>>간단설명</div>
+                        <div class="col-md-4"><input type="checkbox" name="product_content" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_content'])&&unserialize(@$arrInfo['product_option'])['product_content']=='y'){echo' checked';}?>>내용</div>
+-->
+                        <div class="col-md-4"><input type="checkbox" name="product_bnem" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_bnem'])&&unserialize(@$arrInfo['product_option'])['product_bnem']=='y'){echo' checked';}?>>BEST / NEW / EVENT /MAIN</div>
+<!--
+                        <div class="col-md-4"><input type="checkbox" name="product_stock" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_stock'])&&unserialize(@$arrInfo['product_option'])['product_stock']=='y'){echo' checked';}?>>재고량</div>
+-->
+                        <div class="col-md-4"><input type="checkbox" name="product_seo" value="y"<?php if(!empty(unserialize(@$arrInfo['product_option'])['product_seo'])&&unserialize(@$arrInfo['product_option'])['product_seo']=='y'){echo' checked';}?>>SEO 정보</div>
+                    </td>
+                </tr>
+                </table>
+
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i>퀵메뉴 설정
+                    <button type="button" onclick="register('info_quick');" class="btn btn-primary btn-sm"><i class="fa  fa-save"></i> 저장</button>
+                </p></h4>
+                <table class="table table-bordered">
+                <tr>
+                    <td class="menu">퀵메뉴 노출옵션</td>
+                    <td align="left">
+                        <div class="col-md-4"><input type="checkbox" name="show_side_main" value="y"<?php if(!empty(unserialize(@$arrInfo['quick_option'])['show_side_main'])&&unserialize(@$arrInfo['quick_option'])['show_side_main']=='y'){echo' checked';}?>>메인페이지 표출</div>
+                        <div class="col-md-4"><input type="checkbox" name="show_side_sub" value="y"<?php if(!empty(unserialize(@$arrInfo['quick_option'])['show_side_sub'])&&unserialize(@$arrInfo['quick_option'])['show_side_sub']=='y'){echo' checked';}?>>서브페이지 표출</div>
+                    </td>
+                </tr>
+                </table>
+
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> SCSS 컴파일 on/off</p></h4>
+                <table class="table table-bordered">
+                <tr>
+                    <td class="menu">SCSS 자동 컴파일</td>
+                    <td align="left">
+                    <button type="button" onclick="setSCSSCompile();" class="btn <?php if(!empty($pid)) { echo 'btn-warning';}?> btn-sm"><i class="fa fa-plus-square"></i> 사용하기</button>
+                    </td>
+                </tr>
+                </table>
+
+
+                </div>
+<?php
+}
+?>
+                </form>
+<?php
+/*
+                순간 네트워크 끊길경우 전체 데이터 초기화는 현상 발생 -> 부분 저장으로 변경  전체저장도 정상작동함.
+                <div align="center" class="col-md-12">
+                <button type="button" onclick="register('info');" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> 전체저장</button>
+                </div>
+*/
+?>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:650px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">연혁 관리</h4>
+            </div>
+            <div class="modal-body">
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 연혁 설정 프리뷰 이미지</p></h4>
+                <table class="table table-bordered">
+                    <tr>
+                        <div id="myModalLabelPortfolioSkinPreviewImage">
+                            <img style="display:block; margin:0px auto"/>
+                        </div>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

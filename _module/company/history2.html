@@ -1,0 +1,37 @@
+<div class="history_wrap--fc">
+	<?php
+		$year = '';
+		if (!empty($arrHistory)) {
+			foreach($arrHistory as $key => $val) {
+				if ($key % 2 == 0) $tag = 'offset-md-6';
+				else $tag = 'offset-md-6';
+				if ($year != $key) {
+					echo '
+					<div class="history_line--fc">
+						<h3 class="history_tit--fc">'.$key.'</h3>
+						<ul class="'.$tag.'">
+							<li>
+								<ul>';
+				}
+				foreach($val as $key2 => $val2) {
+					echo '
+									<li>
+										<dl>
+											<dd>
+                                            <span>'.sprintf("%02d",$val2['month']).'.</span> '.nl2br($val2['title']);
+                    if(file_exists(_USER_DIR.'/history/'.$val2['code'])) {
+                        echo '              <img src="'._USER_URL.'/history/'.$val2['code'].'?dummy='.getDummy().'" style="width:100%;">';
+                    }
+                    echo '                  </dd>
+										</dl>
+									</li>';
+				}
+					echo '
+								</ul>
+							</li>
+						</ul>
+					</div>';
+			}
+		}
+	?>
+</div>

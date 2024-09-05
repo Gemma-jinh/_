@@ -1,0 +1,44 @@
+<article class="sitemap_wrap--fc">
+	<nav class="sitemap__nav--fc">
+		<ul class="sitemap__nav__depth1">
+			<?php
+foreach($arrNav as $key => $val) {
+    $val['title'] = unserialize($val['title'])[getLocale()];
+    $val['status'] = @unserialize($val['status'])[getLocale()];
+    if (!empty($val['title']) and $val['status'] == 'y') {
+        echo '
+            <li>
+                <a href="'; if($val['is_outer_link'] == 'n') { echo $prefix_link.'/'.$val['full_url'].'"'; } else { echo $val['full_url'].'" target="'.$val['target'].'"';} echo '><span>'.$val['title'].'</span></a><!-- 1차 -->';
+        if (!empty($val['sub'])) {
+          echo '<ul class="sitemap__nav__depth2">';
+          foreach($val['sub'] as $key2 => $val2) {
+                $val2['title'] = unserialize($val2['title'])[getLocale()];
+                $val2['status'] = unserialize($val2['status'])[getLocale()];
+                if ($val2['title'] and $val2['status'] == 'y') {
+                    echo '
+                    <li>
+                        <a href="'.$prefix_link.'/'.$val2['full_url'].'">'.$val2['title'].'</a>';
+                    if (!empty($val2['sub'])) {
+                        echo '<ul class="sitemap__nav__depth3">';
+                        foreach($val2['sub'] as $key3 => $val3) {
+                            $val3['title'] = unserialize($val3['title'])[getLocale()];
+                            $val3['status'] = unserialize($val3['status'])[getLocale()];
+                            if ($val3['title'] and $val3['status'] == 'y') {
+                                echo '  <li><a href="'.$prefix_link.'/'.$val3['full_url'].'">'.$val3['title'].'</a></li><!-- 3차 -->';
+                            }
+                        }
+                        echo '</ul>';
+                    }
+                    echo '</li><!-- 2차 -->';
+                }
+          }
+          echo '</ul>';
+        }
+        echo '</li>';
+    }
+}
+?>
+
+		</ul>
+	</nav>
+</article>

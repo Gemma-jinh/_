@@ -1,0 +1,274 @@
+    <div class="tab_event_wrap ce_item">
+      <div class="main_section01__tab_btn tab_btn_box mt30">
+        <ul>
+          <li class="on">
+            <a href="#tab">
+              <figure><img src="/html/_skin/img/main/img_main_products_tab02.png" alt="MOTOVARIO" /></figure>
+            </a>
+          </li>
+          <li>
+            <a href="#tab">
+              <figure><img src="/html/_skin/img/main/img_main_products_tab01.png" alt="CR Drive" /></figure>
+            </a>
+          </li>
+          <li>
+            <a href="#tab">
+              <figure><img src="/html/_skin/img/main/img_main_products_tab03.png" alt="Nidec" /></figure>
+            </a>
+          </li>
+          <li>
+            <a href="#tab">
+              <figure><img src="/html/_skin/img/main/img_main_products_tab04.png" alt="Haydon" /></figure>
+            </a>
+          </li>
+          <li>
+            <a href="#tab">
+              <figure><img src="/html/_skin/img/main/img_main_products_tab06.png" alt="GTR" /></figure>
+            </a>
+          </li>
+          <li>
+            <a href="#tab">
+              <figure><img src="/html/_skin/img/main/img_main_products_tab05.png" alt="AMETEK" /></figure>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="main_section01__tab_conts tab_conts_box mt40">
+        <ul>
+          <li>
+            <!-- tab01 -->
+<?php
+//if(getenv("REMOTE_ADDR") == "175.198.83.198") { echo "<div align=left><pre>"; var_dump($arrProduct['list']); echo "</pre>"; die("<br>End</div>");}
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        if (substr($val['category_code'],0,2)=="10") {
+?>
+            <div class="main_products_conts_wrap bor_gradient">
+              <div class="main_products_conts__info">
+                <div class="main_products_conts__info__inner">
+                  <h4 class="fs_20 fw_400" style="color:rgba(17,17,17,.8);">
+                    <?=unserialize($val['category_name'])[$this->reqData['locale']]?>
+                  </h4>
+                  <h6 class="fs_50 fw_500 lh_1_3">
+                    <?=$val['title_en']?>
+                  </h6>
+                  <ul class="bullet_ul fs_18 fw_400 mt25">
+                  <?=$val['content']?>
+                  </ul>
+                  <div class="fs_0 mt40">
+                    <a class="btn_squ color_fff bg_gradient" href="/item-discription/motovario">더보기</a>
+                  </div>
+                </div>
+              </div>
+              <div class="main_products_conts__img">
+                <figure>
+                  <img src="/html/_skin/img/main/img_main_products_thumb_01.jpg" alt="" />
+                </figure>
+              </div>
+            </div>
+<?php
+        }
+    }
+}
+?>
+            <!-- // tab01 -->
+          </li>
+
+          <li>
+            <!-- tab02 -->
+<?php
+//if(getenv("REMOTE_ADDR") == "175.198.83.198") { echo "<div align=left><pre>"; var_dump($arrProduct['list']); echo "</pre>"; die("<br>End</div>");}
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        if (substr($val['category_code'],0,2)=="11") {
+?>
+            <div class="main_products_conts_wrap bor_gradient">
+              <div class="main_products_conts__info">
+                <div class="main_products_conts__info__inner">
+                  <h4 class="fs_20 fw_400" style="color:rgba(17,17,17,.8);">
+                    <?=unserialize($val['category_name'])[$this->reqData['locale']]?>
+                  </h4>
+                  <h6 class="fs_50 fw_500 lh_1_3">
+                    <?=$val['title_en']?>
+                  </h6>
+                  <ul class="bullet_ul fs_18 fw_400 mt25">
+                  <?=$val['content']?>
+                  </ul>
+                  <div class="fs_0 mt40">
+                    <a class="btn_squ color_fff bg_gradient" href="/item-discription/cr-drive">더보기</a>
+                  </div>
+                </div>
+              </div>
+              <div class="main_products_conts__img">
+                <figure>
+                  <img src="/html/_skin/img/main/img_main_products_thumb_01.jpg" alt="" />
+                </figure>
+              </div>
+            </div>
+<?php
+        }
+    }
+}
+?>
+            <!-- // tab02 -->
+          </li>
+
+          <li>
+            <!-- tab03 -->
+<?php
+//if(getenv("REMOTE_ADDR") == "175.198.83.198") { echo "<div align=left><pre>"; var_dump($arrProduct['list']); echo "</pre>"; die("<br>End</div>");}
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        if (substr($val['category_code'],0,2)=="12") {
+?>
+            <div class="main_products_conts_wrap bor_gradient">
+              <div class="main_products_conts__info">
+                <div class="main_products_conts__info__inner">
+                  <h4 class="fs_20 fw_400" style="color:rgba(17,17,17,.8);">
+                    <?=unserialize($val['category_name'])[$this->reqData['locale']]?>
+                  </h4>
+                  <h6 class="fs_50 fw_500 lh_1_3">
+                    <?=$val['title_en']?>
+                  </h6>
+                  <ul class="bullet_ul fs_18 fw_400 mt25">
+                  <?=$val['content']?>
+                  </ul>
+                  <div class="fs_0 mt40">
+                    <a class="btn_squ color_fff bg_gradient" href="/item-discription/shimpo">더보기</a>
+                  </div>
+                </div>
+              </div>
+              <div class="main_products_conts__img">
+                <figure>
+                  <img src="/html/_skin/img/main/img_main_products_thumb_01.jpg" alt="" />
+                </figure>
+              </div>
+            </div>
+<?php
+        }
+    }
+}
+?>
+            <!-- // tab03 -->
+          </li>
+
+          <li>
+            <!-- tab04 -->
+<?php
+//if(getenv("REMOTE_ADDR") == "175.198.83.198") { echo "<div align=left><pre>"; var_dump($arrProduct['list']); echo "</pre>"; die("<br>End</div>");}
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        if (substr($val['category_code'],0,2)=="13") {
+?>
+            <div class="main_products_conts_wrap bor_gradient">
+              <div class="main_products_conts__info">
+                <div class="main_products_conts__info__inner">
+                  <h4 class="fs_20 fw_400" style="color:rgba(17,17,17,.8);">
+                    <?=unserialize($val['category_name'])[$this->reqData['locale']]?>
+                  </h4>
+                  <h6 class="fs_50 fw_500 lh_1_3">
+                    <?=$val['title_en']?>
+                  </h6>
+                  <ul class="bullet_ul fs_18 fw_400 mt25">
+                  <?=$val['content']?>
+                  </ul>
+                  <div class="fs_0 mt40">
+                    <a class="btn_squ color_fff bg_gradient" href="/item-discription/haydonkerk">더보기</a>
+                  </div>
+                </div>
+              </div>
+              <div class="main_products_conts__img">
+                <figure>
+                  <img src="/html/_skin/img/main/img_main_products_thumb_01.jpg" alt="" />
+                </figure>
+              </div>
+            </div>
+<?php
+        }
+    }
+}
+?>
+            <!-- // tab04 -->
+          </li>
+
+          <li>
+            <!-- tab05 -->
+<?php
+//if(getenv("REMOTE_ADDR") == "175.198.83.198") { echo "<div align=left><pre>"; var_dump($arrProduct['list']); echo "</pre>"; die("<br>End</div>");}
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        if (substr($val['category_code'],0,2)=="14") {
+?>
+            <div class="main_products_conts_wrap bor_gradient">
+              <div class="main_products_conts__info">
+                <div class="main_products_conts__info__inner">
+                  <h4 class="fs_20 fw_400" style="color:rgba(17,17,17,.8);">
+                    <?=unserialize($val['category_name'])[$this->reqData['locale']]?>
+                  </h4>
+                  <h6 class="fs_50 fw_500 lh_1_3">
+                    <?=$val['title_en']?>
+                  </h6>
+                  <ul class="bullet_ul fs_18 fw_400 mt25">
+                  <?=$val['content']?>
+                  </ul>
+                  <div class="fs_0 mt40">
+                    <a class="btn_squ color_fff bg_gradient" href="/item-discription/gtr">더보기</a>
+                  </div>
+                </div>
+              </div>
+              <div class="main_products_conts__img">
+                <figure>
+                  <img src="/html/_skin/img/main/img_main_products_thumb_01.jpg" alt="" />
+                </figure>
+              </div>
+            </div>
+<?php
+        }
+    }
+}
+?>
+            <!-- // tab05 -->
+          </li>
+
+          <li>
+            <!-- tab06 -->
+<?php
+//if(getenv("REMOTE_ADDR") == "175.198.83.198") { echo "<div align=left><pre>"; var_dump($arrProduct['list']); echo "</pre>"; die("<br>End</div>");}
+if (!empty($arrProduct['list'])) {
+    foreach($arrProduct['list'] as $key => $val) {
+        if (substr($val['category_code'],0,2)=="15") {
+?>
+            <div class="main_products_conts_wrap bor_gradient">
+              <div class="main_products_conts__info">
+                <div class="main_products_conts__info__inner">
+                  <h4 class="fs_20 fw_400" style="color:rgba(17,17,17,.8);">
+                    <?=unserialize($val['category_name'])[$this->reqData['locale']]?>
+                  </h4>
+                  <h6 class="fs_50 fw_500 lh_1_3">
+                    <?=$val['title_en']?>
+                  </h6>
+                  <ul class="bullet_ul fs_18 fw_400 mt25">
+                  <?=$val['content']?>
+                  </ul>
+                  <div class="fs_0 mt40">
+                    <a class="btn_squ color_fff bg_gradient" href="/item-discription/ametec">더보기</a>
+                  </div>
+                </div>
+              </div>
+              <div class="main_products_conts__img">
+                <figure>
+                  <img src="/html/_skin/img/main/img_main_products_thumb_01.jpg" alt="" />
+                </figure>
+              </div>
+            </div>
+<?php
+        }
+    }
+}
+?>
+            <!-- // tab06 -->
+          </li>
+        </ul>
+      </div>
+    </div>

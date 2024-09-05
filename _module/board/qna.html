@@ -1,0 +1,108 @@
+<?=@$board_info['header']?>
+<?php
+if ($board_info['google_translate']) {
+    echo '<div id="google_translate_element" style="text-align:right;"></div><script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: \'ko\', includedLanguages: \''.$board_info['google_translate'].'\', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay:false}, \'google_translate_element\');
+    }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>';
+}
+?>
+
+<!-- board-wrap -->
+<section class="board-wrap--fc">
+
+<?php
+if (!empty($arrCategory)) {
+?>
+<!-- 게시판 네비 -->
+<section class="category-tab--fc">
+    <ul>
+<?php
+if ($board_info['is_category_total'] == 'y') {  // 카테고리 [전체] 사용할때
+    echo '<li'; if(empty($this->reqData['category'])) { echo ' class="on"';} echo '><a href="'.$current_url.'">'._LANG('전체').'</a></li>';
+}
+foreach($arrCategory as $key => $val) {
+    echo '  <li'; if(@$this->reqData['category'] == $val or ($board_info['is_category_total'] != 'y' and empty($this->reqData['category']) and $key == 0)) { echo ' class="on"';} echo '><a href="'.$current_url.'&category='.base64_encode(base64_encode(trim($val))).'"><span>'.$val.'</span></a></li>';
+}
+?>
+    </ul>
+</section>
+<!-- //게시판 네비 -->
+<?php
+}
+?>
+
+    <!-- board-search-wrap -->
+    <section class="board-search-wrap--fc">
+        <form name="form_search" method="get" action="?tpf=board/list">
+        <input type="hidden" name="tpf" value="board/list">
+        <input type="hidden" name="url" value="{{URL}}">
+        <input type="hidden" name="board_code" value="<?=$board_code?>">
+        <input type="hidden" name="category" value="<?=base64_encode(base64_encode(trim(@$category)))?>">
+            <fieldset>
+                <legend><?=_LANG('검색')?></legend>
+                <p class="search-select-wrap--fc">
+                	<select name="field">
+<?php
+foreach($arrSearch as $key => $val) {
+    echo '      <option value="'.$key.'"'; if(!empty($field) && $field == $key) echo ' selected'; echo '>'.$val.'</option>';
+}
+?>
+                	</select>
+                </p>
+                <p class="search-input-wrap--fc"><input type="text" name="keyword" placeholder="<?=_LANG('검색어를 입력하세요.')?>"value="<?=!empty($keyword) ? $keyword : ""?>" onkeyup="if(event.keyCode == 13) form_search.submit();" /><a href="#" onclick="form_search.submit();"><?=_LANG('검색')?></a></p>
+            </fieldset>
+        </form>
+        <div class="board_list_total--fc">
+			Total <span class="search-total-num__accent--fc"><?=$data['total']?></span> 
+		</div>
+    </section>
+    <!-- //board-search-wrap -->
+
+    <!-- faq-wrap -->
+    <section class="faq-wrap--fc">
+        <!-- faq-list -->
+<?php
+if (!empty($data['list'])) {
+    $start_number = $data['start_number'];
+    foreach($data['list'] as $key => $val) {
+    echo '
+        <section class="faq-list--fc">
+            <h4 class="f-wrap--fc"><a href="#">'; if($val['category'] != '') { echo '<strong>['.$val['category'].']</strong> ';} echo $val['title'].'</a></h4>
+            <div class="q-wrap--fc">
+                <p>'.nl2br($val['content']).'</p>
+            </div>
+        </section>';
+        $start_number--;
+    }
+}
+else {
+    echo '  <div align="center" style="margin:20px;">'._LANG('등록된 게시물이 없습니다.').'</div>';
+}
+?>
+        <!-- //faq-list -->
+    </section>
+    <!-- //faq-wrap -->
+
+    <!-- btn -->
+<?php
+if ($board_info['auth_write'] != 1) {   // 최고관리자 권한이 아닐때
+    echo '<p class="btn-write-wrap--fc"><a href="'.$folder.'?tpf=board/write&board_code='.$board_code.'" class="btn-write--fc">'._LANG('글쓰기').'</a></p>';
+}
+?>
+    <!-- //btn -->
+
+    <!-- paging -->
+    <?php echo $data['page'];?>
+    <!-- paging -->
+
+</section>
+<!-- //board-wrap -->
+<script type="text/javascript">
+	$(function(){
+		// 답변 글 보이기
+
+	});
+  </script>

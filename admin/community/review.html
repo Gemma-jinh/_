@@ -1,0 +1,149 @@
+<section class="content-header">
+    <h1>
+        주문후기 관리
+        <small>주문후기 list</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">주문후기 관리</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <label style="margin-top:5px;">총 <?=$data['total']?>건</label>
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                        <form name="form_search" method="post" action="?tpf=admin/community/review">
+                        <div class="has-feedback">
+                            <span>
+                                <input type="text" name="keyword" id="keyword" value="<?=!empty($keyword) ? $keyword : ""?>" class="form-control input-sm" placeholder="검색"/>
+                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                        <div class="has-feedback">
+                            <select name="field" class="form-control input-sm" style="float:left; width:130px;">
+<?php
+foreach($arrSearch as $key => $val) {
+    echo '      <option value="'.$key.'"'; if(!empty($field) && $field == $key) echo ' selected'; echo '>'.$val.'</option>';
+}
+?>
+                            </select>
+                        </div>
+                        </form>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                        <form name="form_list" method="post" action="?tpf=admin/community/review_process">
+                            <input type="hidden" name="mode" id="mode">
+                            <input type="hidden" name="review_code" value="<?=$review_code?>">
+                            <thead>
+                            <tr>
+                                <td style="width:30px;"><input type="checkbox" name="select_all" onclick=selectAllCheckBox('form_list'); /></td>
+                                <td style="width:60px;">NO</td>
+                                <td style="width:100px;">작성자</td>
+                                <td style="width:150px;">구입상품</td>
+                                <td>내용</td>
+                                <td style="width:100px;">후기종류</td>
+                                <td style="width:100px;">등록일</td>
+                                <td style="width:80px;">명령</td>
+                            </tr>
+                            </thead>
+<?php
+if(!empty($data['list'])) {
+    foreach($data['list'] as $key => $val) {
+        $no = $key+1;
+        echo '              <tr>
+                                <td><input type="checkbox" name="list[]" value="'.$val['code'].'" /></td>
+                                <td>'.$no.'</td>
+                                <td>'.$val['name'].'</td>
+                                <td>'.$val['title'].'</td>
+                                <td>'.$val['content'].'</td>';
+                                if($val['type'] == 'normal') {
+                                    echo '<td>일반 상품평</td>';
+                                }
+                                else {
+                                    echo '<td>포토 상품평</td>';
+                                }
+        echo '                  <td>'.$val['reg_date'].'</td>
+                                <td><button type="button" onclick="onclick_update('.$val['code'].');" class="btn btn-primary btn-xs">상세보기</button></td>
+                            </tr>';
+    }
+}
+else {
+        echo '              <tr><td colspan="10"><br>등록된 자료가 없습니다.<br><br></td></tr>';
+}
+?>
+                        </form>
+                    </table>
+                    <br>
+
+                    <button type="button" onclick="selectDelete();" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
+
+                    <div style="text-align:right;">
+                        <?php echo $data['page'];?>
+                    </div>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
+
+<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="form_register" method="post" action="?tpf=admin/community/review_process" enctype="multipart/form-data">
+            <input type="hidden" name="review_code" id="review_code" class="form-control input-sm" readonly>
+            <input type="hidden" name="mode" id="mode" class="form-control input-sm" value="update" readonly>
+            <input type="hidden" name="delete_file" id="delete_file">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelPortfolio">주문후기 관리</h4>
+            </div>
+            <div class="modal-body">
+
+            <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 글 <span id="board_sub_title">등록</span></p></h4>
+            <table class="table table-bordered">
+                <tr>
+                    <td class="menu">작성자</td>
+                    <td align="left"><input type="text" name="name" id="name" class="form-control input-sm" ></td>
+                </tr>
+                <tr>
+                    <td class="menu">한줄후기</td>
+                    <td align="left"><input type="text" name="title" id="title" class="form-control input-sm" ></td>
+                </tr>
+                <tr>
+                    <td class="menu">구매후기</td>
+                    <td align="left"><input type="text" name="content" id="content" class="form-control input-sm" ></td>
+                </tr>
+                <tr>
+                    <td class="menu">이미지</td>
+                    <td align="left">
+                    <p>
+                        <span id="file_list"></span>
+                    </p>
+                    <p style="padding-top:10px; float:left; width:100%;" id="show_add_button">
+                        <button type="button" class="btn btn-primary btn-xs" onclick="addFile();"><span class="glyphicon glyphicon-plus"></span> 파일추가</button><br>
+                    </p>
+                    <div id="list_file">
+                    </div>
+                    </td>
+                </tr>
+            </table>
+                <div style="text-align:center;"><button type="button" onclick="register()" class="btn btn-primary">확인</button></div>
+
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="list_file_tag" class="sr-only">
+    <input type="file" name="file[]" class="form-control input-sm" style="width:100%; display:inline; margin-bottom:10px;">
+</div>

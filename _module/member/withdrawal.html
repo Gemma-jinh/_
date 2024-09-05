@@ -1,0 +1,63 @@
+<section class="section-cart-list--fc">
+    <div class="inner">
+<?php
+if (isLogin()) {
+    // include('html/_skin/'._SKIN.'/layout/inc_mypage_tabs.php');
+}
+?>
+    <!-- member-wrap -->
+    <section class="member-wrap--fc">
+        <!-- join-form-wrap -->
+        <section class="join-form-wrap--fc">
+            <form name="form" method="post" action="/index.php?tpf=_module/member/process">
+            <input type="hidden" name="mode" value="withdrawal">
+                <fieldset>
+                    <!-- join-form-table -->
+                    <table class="form-table--fc">
+                        <colgroup>
+                            <col width="220" />
+                            <col width="*" />
+                        </colgroup>
+                        <tbody>
+                            <tr class="cancel-form-id--fc">
+                                <th scope="row" class="required"><label for="id"><?=_LANG('아이디')?></label></th>
+                                <td><input type="text" name="id" value="<?=@$member_id?>" placeholder="" required /></td>
+                            </tr>
+                            <tr class="cancel-form-password--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('비밀번호')?></label></th>
+                                <td>
+                                    <input type="password" name="password" placeholder="" required />
+                                </td>
+                            </tr>
+                            <tr class="join-form-password--fc">
+                                <th scope="row" class="required"><label for=""><?=_LANG('탈퇴사유')?></label></th>
+                                <td>
+                                    <textarea name="reason" rows="5" style="width:100%;"></textarea>
+                                    <span class="info-text--fc"><?=_LANG('탈퇴하시면 기존 회원관련 정보가 모두 삭제됩니다.')?></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- //join-form-table -->
+                </fieldset>
+            </form>
+
+            <div class="join-btn-wrap--fc">
+				<ul>
+					<li><a href="/" class="btn-cancel"><?=_LANG('취소')?></a></li>
+					<li><a href="#none" onclick="register();" class="btn-confirm"><?=_LANG('확인')?></a></li>
+				</ul>
+			</div>
+
+        </section>
+        <!-- //join-form-wrap -->
+
+    </section>
+    <!-- //member-wrap -->
+    </div>
+
+    <form name="formID" method="post" action="?tpf=member/process">
+    <input type="hidden" name="mode" value="checkId">
+    <input type="hidden" name="id">
+    </form>
+</section>

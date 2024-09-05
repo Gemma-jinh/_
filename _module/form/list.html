@@ -1,0 +1,96 @@
+<?php
+if(!empty($arrInfo["html_design_list"])) {   // 별도의 HTML 디자인 사용 시
+    // 개수 표출
+    $arrInfo["html_design_list"] = preg_replace('/\[count\]/', $arrReply['total'], $arrInfo["html_design_list"]);
+    echo $arrInfo["html_design_list"];
+}
+else {
+?>
+<!-- 카테고리 탭 -->
+<section class="board-wrap--fc">
+    <section class="category-tab--fc">
+        <ul>
+            <li<?php if(empty($this->reqData['category'])) { echo ' class="on"';}?>><a href="<?=$current_url?>"><?=_LANG('전체')?></a></li>
+<?php
+if(!empty($arrCategory)) {
+    foreach($arrCategory as $key => $val) {
+        echo '
+            <li'; if(@$this->reqData['category'] == $val) { echo ' class="on"';} echo '><a href="'.$current_url.'&category='.$val.'"><span>'.$val.'</span></a></li>';
+    }
+}
+?>
+        </ul>
+    </section>
+</section>
+<table class="common_table--fc blue">
+	<colgroup>
+		<col width="10%">
+		<col width="10%">
+		<col width="10%">
+		<col width="10%">
+		<col width="25%">
+		<col width="10%">
+		<col width="25%">
+	</colgroup>
+	<thead>
+		<tr>
+<?php
+$arrIsShow = array();
+if (!empty($arrItem['list'])) {
+    foreach($arrItem['list'] as $key => $val) {
+        if ($val['is_show'] == 'y') {
+            $arrIsShow[] = $val['code'];
+            echo '<th><strong>'.$val['label'].'</strong></th>';
+        }
+    }
+}
+?>
+		</tr>
+	</thead>
+	<tbody>
+<?php
+if (!empty($arrReply['list'])) {
+    foreach($arrReply['list'] as $key => $val) {
+        echo '<tr>';
+        foreach($arrItem['list'] as $key2 => $val2) {
+            if (in_array($val2['code'], $arrIsShow)) {
+                switch($val2['input_type']) {
+                    case "file":
+                    $arrUploadFile = @$arrFile[$val['code']][$val2['code']];
+                    echo '  <td>';
+                    if($arrUploadFile['orig_name'] != '') {
+                        if (checkImage($arrUploadFile['file_ext'])) {   // 이미지 파일일때
+                            echo '<a href="#none" onclick="location.replace(\'/index.php?tpf=common/save_as&file_path='.$arrUploadFile['file_path'].'&file_name='.$arrUploadFile['file_name'].'&orig_name='.urlencode($arrUploadFile['orig_name']).'\');"><img src="'.$arrUploadFile['url'].'" style="width:80px;"></a>';
+                        }
+                        else {
+                            echo '<a href="#none" onclick="location.replace(\'/index.php?tpf=common/save_as&file_path='.$arrUploadFile['file_path'].'&file_name='.$arrUploadFile['file_name'].'&orig_name='.urlencode($arrUploadFile['orig_name']).'\');"><i class="fa fa-file-text"></i> '.$arrUploadFile['orig_name'].'</a>';
+                        }
+                    }
+                    echo '  </td>';
+                    break;
+
+                    default:
+                    echo '  <td style="text-align:left;">'.nl2br(@$val['arrContent'][$val2['code']]).'</td>';
+                    break;
+                }
+            }
+        }
+        echo '</tr>';
+    }
+}
+else {
+    echo '
+        <tr>
+            <td colspan="'.$arrItem['total'].'">'._LANG('등록된 자료가 없습니다').'</td>
+        </tr>';
+}
+?>
+	</tbody>
+</table>
+
+<!--페이지넘버-->
+<!--
+<?=$arrReply['page']?>
+-->
+<?php
+}

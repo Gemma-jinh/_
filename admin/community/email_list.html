@@ -1,0 +1,98 @@
+<section class="content-header">
+    <h1>
+        이메일 발송 내역
+        <small>이메일 발송 내역 list</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+		<li>커뮤니티 관리</li>
+        <li class="active">이메일 발송 내역</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <label style="margin-top:5px;">총 <?=$data['total']?>건</label>
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                        <form name="form_search" method="post" action="?tpf=admin/community/email_list">
+                        <input type="hidden" name="tpf" value="admin/community/email_list">
+                        <div class="has-feedback">
+                            <span>
+                                <input type="text" name="keyword" id="keyword" value="<?=!empty($keyword) ? $keyword : ""?>" class="form-control input-sm" placeholder="검색"/>
+                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                        <div class="has-feedback">
+                            <select name="field" class="form-control input-sm" style="float:left; width:130px;">
+<?php
+foreach($arrSearch as $key => $val) {
+    echo '      <option value="'.$key.'"'; if(!empty($field) && $field == $key) echo ' selected'; echo '>'.$val.'</option>';
+}
+?>
+                            </select>
+                        </div>
+                        </form>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+						<colgroup>
+							<col width="50px" />
+							<col width="80px" />
+							<col width="150px" />
+							<col width="300px" />
+							<col width="*" />
+							<col width="100px" />
+							<col width="150px" />
+						</colgroup>
+						<thead>
+                            <tr>
+                                <td >NO</td>
+                                <td >구분</td>
+								<td >수신이메일</td>
+                                <td >제목</td>
+                                <td>내용</td>
+								<td >사용 포인트</td>
+                                <td >등록일시</td>
+                            </tr>
+						</thead>
+						<tbody>
+<?php
+if(!empty($data['list'])) {
+	$no = $data['start_number'];
+    foreach($data['list'] as $key => $val) {
+        echo '              <tr>
+                                <td>'.$no.'</td>
+                                <td>'.$val['type'].'</td>
+								<td>'.$val['receive'].'</td>
+                                <td align="left">'.$val['title'].'</td>
+                                <td align="left">'.(strip_tags($val['content'])).'</td>
+								<td>'.$val['point'].'</td>
+								<td>'.$val['reg_date'].'</td>
+                            </tr>';
+		$no--;
+    }
+}
+else {
+        echo '              <tr><td colspan="10"><br>등록된 자료가 없습니다.<br><br></td></tr>';
+}
+?>
+						</tbody>
+                    </table>
+                    <br>
+
+
+                    <div style="text-align:right;">
+                        <?php echo $data['page'];?>
+                    </div>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>

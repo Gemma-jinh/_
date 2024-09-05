@@ -1,0 +1,151 @@
+<style>
+textarea {
+    width:180px;
+    height:100px;
+}
+</style>
+
+<section class="content-header">
+    <h1>
+    카카오알림톡 설정
+    <small>kakao talk setting</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>커뮤니티 관리</li>
+        <li class="active">카카오알림톡 설정</li>
+    </ol>
+</section>
+
+<section class="content">
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-body">
+                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 카카오알림톡 발송 정보 설정 </p></h4>
+
+				<form name="form_register" method="post" action="/index.php?tpf=admin/community/sms_process">
+                <input type="hidden" name="mode" value="updateSMS">
+
+                <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="menu">메뉴얼 다운로드</td>
+                    <td align="left">
+                    <span style="line-height:1.0;">
+                    <a href="http://api.mir9.kr/user/bizmsg_manual.pptx" target="_new"><button type="button" class="btn btn-warning btn-xs">다운로드</button></a><br>
+                    <small class="text-red">
+                    ※ 메뉴얼을 확인하시고 가입,설정등을 진행해 주시기 바랍니다.<br>
+                    ※ 비즈엠 회원가입 후 계정정보를 개발 담당자에게 전달해 주시기 바랍니다.<br>
+                    ※ 비즈엠 알림톡 이용요금이 부족할때는 발신이 안될수 있으니 충전요금을 확인하시기 바랍니다.
+                    </small>
+                    </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">비즈엠 잔액</td>
+                    <td align="left">
+                        <?=number_format($myPointInfo['data']['balance'])?>원
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">index 설명</td>
+                    <td align="left">
+0 : 대기(동기화전 초기 상태)  1이상 : 등록완료  변경문구에 내용 있을경우 : 검수중
+                    </td>
+                </tr>
+                <tr>
+                    <td class="menu">흐름도</td>
+                    <td align="left">
+* 초기 상태 : index 0 && 기본문구와 변경 문구에 기본 content 표출 <br>
+* 요청 문구 초기화 버튼 : 변경 문구에 기본 요청문구 삽입 <br>
+* 동기화 버튼 : <br>
+1) 기존 신청 검수 상태 확인 [type][index]-1 값과 일치하는 승인 데이터 처리 -> index +1 , 변경문구에서 등록문구로 데이터 이전 , 변경문구는 null값으로 변경<br>
+2) [tpye]과 [index] +1 값으로 검수신청 기록이 없고 변경문구에 내용이 있는 모든 리스트 검수신청
+                    </td>
+                </tr>
+				</tbody>
+                </table>
+                <br>
+
+				<h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 카카오알림톡 발송 문구 설정 </p>
+                <button type="button" onclick="gogo()" class="btn btn-primary" style="margin-bottom:5px;float:right"><i class="fa fa-gear"></i> 동기화</button>
+                <button type="button" onclick="register()" class="btn btn-primary" style="margin-bottom:5px;margin-right:5px;float:right">변경문구저장</button><br>
+                </h4>
+				<table class="table table-bordered table-hover">
+				<thead>
+                    <tr>
+                        <td colspan="1">[type] [index]</td>
+						<td colspan="6">발송대상 및 카카오알림톡 문구설정</td>
+                        <td rowspan="2" >치환문구 설명</td>
+                    </tr>
+					<tr>
+                        <td rowspan="1" class="menu" style="width:150px;">발송항목</td>
+                        <td style="width:250px;">회원등록문구</td>
+                        <td style="width:250px;">회원변경문구</td>
+                        <td style="width:250px;">관리자등록문구</td>
+                        <td style="width:250px;">관리자변경문구</td>
+						<td style="width:250px;">기본문구</td>
+                        <td rowspan="1" style="width:250px;">상태</td>
+                    </tr>
+                </thead>
+                <tbody>
+<?php
+$index = 1;
+foreach($arrCommunityAction as $key => $val) {
+
+    echo '      <tr>
+					<td class="content"><b>['.$key.']</b><br>'.$val.'</td>
+                    <td class="content">
+                        <input type="hidden" name="msg['.$key.'][code]" value="'.@$smsInfo[$key]["code"].'" />
+                        '.@nl2br($smsInfo[$key]["content"]).'
+                    </td>
+                    <td><textarea name="msg['.$key.'][content_admin]" style="height:200px;">'.@$smsInfo[$key]["content_admin"].'</textarea>
+                                        <button type="button" onclick="getDefaultTemplate(\'sms\', \''.$key.'\', \'\');" class="btn btn-primary btn-xs" style="margin-top:5px;">회원 변경문구 초기화</button><br>
+
+                    </td>
+                    <td class="content">
+                        <input type="hidden" name="msg['.$key.'][code]" value="'.@$smsInfo[$key]["code"].'" />
+                        '.@nl2br($smsInfo[$key]["content"]).'
+                    </td>
+                    <td><textarea name="msg['.$key.'][content_admin]" style="height:200px;">'.@$smsInfo[$key]["content_admin"].'</textarea>
+                    <button type="button" onclick="getDefaultTemplate(\'sms\', \''.$key.'\', \'\');" class="btn btn-primary btn-xs" style="margin-top:5px;">관리자 변경문구 초기화</button><br>
+                    </td>
+                    <td class="content">'.@nl2br($smsInfo[$key]["default_template"]).'
+                    <br>
+                    <td class="content">
+                    회원 자동발송<input type="checkbox" name="msg['.$key.'][is_send]" value="y" '.checkBoxChecked(@$smsInfo[$key]["is_send"], 'y').'/><br>
+                    관리자 자동발송<input type="checkbox" name="msg['.$key.'][is_send_admin]" value="y" '.checkBoxChecked(@$smsInfo[$key]["is_send_admin"], 'y').'/><br>
+                    검수 : 검수중 or 검수완료<br>
+                    </td>
+                    ';
+        echo '		<td align="left">
+						<ul>
+			';
+		$arrReplaceKey = getCommunityTemplateKeyword("sms", $key, getLocale());
+
+		foreach($arrReplaceKey as $val2){
+			echo '		<li>#{'.$val2.'} : '.$arrCommunityReplaceName[$val2].'</li>';
+		}
+		echo '			</ul>
+					</td>';
+
+    echo '      </tr>';
+    $index++;
+}
+?>
+				</tbody>
+                </table>
+                <br>
+
+				</form>
+
+                <div style="text-align:center;"><button type="button" onclick="register()" class="btn btn-primary">변경문구저장</button></div>
+
+
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col-xs-12 -->
+    </div><!-- /.row -->
+</section>
