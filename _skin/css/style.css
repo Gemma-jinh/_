@@ -12947,6 +12947,7 @@ col-lg-20,
   .btn_view-more {
     font-size: 0.875rem;
     padding-right: 40px;
+    background-color: #071b39;
   }
   .btn_view-more:before {
     top: calc(50% - 12px);
